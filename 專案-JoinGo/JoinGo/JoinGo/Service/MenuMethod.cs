@@ -205,7 +205,7 @@ namespace JoinGo.Service
 
 		protected string composeLeaf2(string name, string uri)
 		{
-			string content_begin = "<li><a class='dropdown-item nav-link' href=\"" + uri + "\">";
+			string content_begin = "<li><a class='dropdown-item' href=\"" + uri + "\">";
 			string content_name = name;// "各式報表列印";
 			string content_end = "</a></li>";
 			string result = "";

@@ -119,7 +119,7 @@ namespace JoinGo.Controllers
 
 
 
-//第三方登入------------------------------------------------------------------------------------------------
+		//第三方登入------------------------------------------------------------------------------------------------
 		//提供你一個統一入口，來操作目前使用者的 OWIN 身份驗證狀態
 		private IAuthenticationManager AuthenticationManager
 		{
@@ -596,10 +596,19 @@ namespace JoinGo.Controllers
 
 
 
+		//註冊=>服務條款
+		public ActionResult  ServiceTerms()
+		{
+			return View();
+		}
 
 
-		//Menu
-		public ActionResult MenuView()
+
+
+
+
+			//Menu
+			public ActionResult MenuView()
 		{
 			MenuMethod MenuMethod = new MenuMethod();
 			string ConnStr = ConfigurationManager.ConnectionStrings["Connectionstring"].ConnectionString;

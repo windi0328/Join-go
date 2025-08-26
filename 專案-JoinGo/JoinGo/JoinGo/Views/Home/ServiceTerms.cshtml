@@ -1,0 +1,191 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="zh-Hant-TW" data-bs-theme="auto">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>服務條款｜JoinGo</title>
+    <meta name="description" content="YourBrand 活動報名與建立平台之服務條款。">
+    <!-- Bootstrap 5.3 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    :root { scroll-behavior: smooth; }
+    body { line-height: 1.75; }
+    .toc { position: sticky; top: 1rem; max-height: calc(100dvh - 2rem); overflow: auto; }
+    .toc .list-group-item { border: none; }
+    .toc .list-group-item.active { font-weight: 600; }
+    .section-title { scroll-margin-top: 6rem; }
+    .legal-card { border-radius: 1rem; }
+    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    /* print */
+    @@media print {
+      .navbar, .back-to-top, .toc-col { display: none !important; }
+      .container { max-width: 100% !important; }
+      .legal-card { box-shadow: none !important; border: none !important; }
+      a[href]::after { content: " (" attr(href) ")"; font-size: .8em; }
+    }
+    </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#tocNav" data-bs-smooth-scroll="true" tabindex="0">
+
+
+    <main class="container my-4 my-md-5">
+        <div class="row g-4">
+            <!-- TOC -->
+            <aside class="col-lg-3 toc-col">
+                <div id="tocNav" class="toc list-group shadow-sm rounded-4">
+                    <a href="#intro" class="list-group-item list-group-item-action">總則</a>
+                    <a href="#account" class="list-group-item list-group-item-action">會員資格與帳號管理</a>
+                    <a href="#user-duties" class="list-group-item list-group-item-action">使用者義務</a>
+                    <a href="#organizer" class="list-group-item list-group-item-action">主辦方規範</a>
+                    <a href="#attendee" class="list-group-item list-group-item-action">報名與付款</a>
+                    <a href="#ip" class="list-group-item list-group-item-action">智慧財產權</a>
+                    <a href="#privacy" class="list-group-item list-group-item-action">隱私與個資保護</a>
+                    <a href="#disclaimer" class="list-group-item list-group-item-action">免責聲明</a>
+                    <a href="#termination" class="list-group-item list-group-item-action">違約與終止</a>
+                    <a href="#law" class="list-group-item list-group-item-action">準據法與管轄</a>
+                    <a href="#changes" class="list-group-item list-group-item-action">條款變更</a>
+                </div>
+            </aside>
+
+            <!-- Content -->
+            <section class="col-lg-9">
+                <div class="card legal-card shadow-sm" id="terms">
+                    <div class="card-body p-4 p-md-5">
+                        <h1 class="h2 fw-bold mb-3">服務條款</h1>
+                        <p class="text-secondary mb-4">最後更新：<time id="lastUpdated" datetime="@DateTime.Now.ToString("yyyy-MM-dd")">@DateTime.Now.ToString("yyyy-MM-dd")</time>｜網站：<span class="fw-semibold">JoinGo</span></p>
+
+                        <div class="alert alert-info" role="alert">
+                            使用或註冊本平台，即表示您已閱讀、理解並同意本服務條款。若您不同意，請停止使用本平台服務。
+                        </div>
+
+                        <h2 id="intro" class="section-title h4 mt-4">一、服務總則</h2>
+                        <ol class="ps-3">
+                            <li>本平台提供活動建立、活動報名及相關管理功能。</li>
+                            <li>本平台保留隨時修改或調整服務內容及條款之權利，修改後將公告於網站。</li>
+                            <li>未成年人應於法定代理人同意下使用本平台。</li>
+                        </ol>
+
+                        <h2 id="account" class="section-title h4 mt-4">二、會員資格與帳號管理</h2>
+                        <ol class="ps-3">
+                            <li>會員應提供真實、完整且正確之註冊資料，並隨時更新。</li>
+                            <li>會員應妥善保管帳號與密碼，不得轉借、轉讓或與他人共用。</li>
+                            <li>若違反本條款或法令，本平台得視情況暫停或終止帳號。</li>
+                        </ol>
+
+                        <h2 id="user-duties" class="section-title h4 mt-4">三、使用者義務</h2>
+                        <ol class="ps-3">
+                            <li>不得從事非法、侵權或妨害系統運作之行為。</li>
+                            <li>不得上傳或散布違反公共秩序善良風俗之內容。</li>
+                            <li>應遵守智慧財產權及相關法律，尊重第三人權利。</li>
+                        </ol>
+
+                        <h2 id="organizer" class="section-title h4 mt-4">四、活動建立（主辦方規範）</h2>
+                        <ol class="ps-3">
+                            <li>主辦方應確保活動資訊（時間、地點、內容）真實、完整且合法。</li>
+                            <li>主辦方自行負責活動之舉辦與管理，本平台僅提供活動刊登與報名功能。</li>
+                            <li>若主辦方提供任何票券或收費方式，均屬主辦方與參加者之間之行為，本平台不涉入金流處理。</li>
+                        </ol>
+
+                        <h2 id="attendee" class="section-title h4 mt-4">五、報名（參加者規範）</h2>
+                        <ol class="ps-3">
+                            <li>參加者應於報名時提供正確資料，並遵守主辦方所訂定之活動規則。</li>
+                            <li>活動相關問題（如取消、延期、退費等）應由參加者與主辦方自行協調，本平台不參與其中。</li>
+                        </ol>
+
+                        <h2 id="ip" class="section-title h4 mt-4">六、智慧財產權</h2>
+                        <ol class="ps-3">
+                            <li>本平台內容（含文字、圖片、程式設計）均受智慧財產權保護。</li>
+                            <li>會員於平台發佈之內容，仍屬會員本人所有，但會員同意授予本平台合理範圍內之使用權，以利平台服務運作。</li>
+                        </ol>
+
+                        <h2 id="privacy" class="section-title h4 mt-4">七、隱私與個人資料保護</h2>
+                        <ol class="ps-3">
+                            <li>本平台依個人資料保護法與隱私權政策蒐集、處理與利用個人資料。</li>
+                            <li>個人資料之蒐集目的僅限於會員管理、活動通知、系統服務之提供。</li>
+                            <li>除法律規定或司法機關要求外，本平台不會任意提供會員資料予第三方。</li>
+                        </ol>
+
+                        <h2 id="disclaimer" class="section-title h4 mt-4">八、免責聲明</h2>
+                        <ol class="ps-3">
+                            <li>本平台僅提供技術服務，不保證活動內容之真實性、合法性或安全性。</li>
+                            <li>因活動取消、延期或其他爭議所生之糾紛，由主辦方與參加者自行處理，本平台不負責任。</li>
+                            <li>因不可抗力（如系統故障、駭客攻擊、天災等）造成資料遺失或服務中斷，本平台不負賠償責任。</li>
+                        </ol>
+
+                        <h2 id="termination" class="section-title h4 mt-4">九、違約與終止</h2>
+                        <ol class="ps-3">
+                            <li>若會員違反本條款，本平台得隨時停止提供服務或刪除帳號。</li>
+                            <li>會員可隨時停止使用服務，但應尊重已參加或建立之活動相關規範。</li>
+                        </ol>
+
+                        <h2 id="changes" class="section-title h4 mt-4">十、條款變更</h2>
+                        <ol class="ps-3">
+                            <li>本平台得隨時修訂本條款並公告於網站；修訂後之條款自公告時起生效，或依公告載明之生效日生效。</li>
+                            <li>重大變更時，得以電子郵件或站內通知告知會員。</li>
+                        </ol>
+
+                        <hr class="my-5">
+                        <div class="d-flex flex-column flex-md-row gap-3 align-items-md-center">
+                            <a href="@Url.Action("Index","Home")" class="btn btn-primary ms-md-auto">回到首頁</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <button type="button" class="btn btn-outline-secondary position-fixed bottom-0 end-0 m-3 back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+
+
+
+    <!-- Footer 區塊 -->
+    <footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container text-md-left">
+            <div class="row">
+                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-4">
+                    <h2 class="logo-text mb-4">
+                        <span class="logo-join">Join</span>
+                        <span class="logo-go">Go</span>
+                    </h2>
+                    <p>
+                        我們是一個專為活動主辦方與參與者設計的 活動報名平台，致力於讓報名流程變得簡單、有系統、好管理。
+                        無論是線上講座、實體市集、工作坊、演唱會，從活動建立、票券管理到參與者通知，我們都替你搞定！
+                    </p>
+                </div>
+                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mb-4">
+                    <h5 class="text-uppercase fw-bold mb-4">快速連結</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">關於我們</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">服務項目</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">常見問題</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">聯絡我們</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-md-0 mb-4">
+                    <h5 class="text-uppercase fw-bold mb-4">聯絡資訊</h5>
+                    <p><i class="fa fa-home fa-fw me-2"></i> 台北市某某區某某路123號</p>
+                    <p><i class="fa fa-envelope fa-fw me-2"></i> contact@example.com</p>
+                    <p><i class="fa fa-phone fa-fw me-2"></i> 02-1234-5678</p>
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(255, 255, 255, 0.05);">
+            © 2025 JoinGo. 保留所有權利。
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 年份與更新日自動
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
+

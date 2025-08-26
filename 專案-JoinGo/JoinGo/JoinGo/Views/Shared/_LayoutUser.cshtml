@@ -51,7 +51,7 @@
         <div class="w-100 d-flex flex-column">
             <!-- LOGO -->
             <nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
-                <a class="d-block text-start" href="/">
+                <a class="d-block text-start" href="@(AuthorModel.Current.Role == "User" ? "/User/Index" : AuthorModel.Current.Role == "Admin" ? "/Admin/Index"  : "/Home/Index" )" >
                     <picture>
                         <source media="(min-width: 1200px)" srcset="~/image/logo.svg" alt="JoinGo">
                         <img src="~/image/logo.svg" style="width: 80%;" alt="JoinGo">
@@ -138,13 +138,6 @@
             </div>
         </div>
     </nav>
-
-
-
-
-
-
-
 
 
 
