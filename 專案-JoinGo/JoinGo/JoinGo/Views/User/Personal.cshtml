@@ -1,0 +1,329 @@
+﻿@model JoinGo.Models.ViewModels.AccountVM
+@{
+    ViewBag.Title = "Personal";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+
+<style>
+    /*大頭貼更新按鈕*/
+    .avatar-upload label {
+        width: 100%;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        font-size: 14px;
+        user-select: none;
+        align-items: center;
+        z-index: 10;
+        box-shadow: 0 0 6px rgba(0,0,0,0.3);
+        transition: background-color 0.3s ease;
+    }
+
+        .avatar-upload label:hover {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0.85);
+        }
+
+        .avatar-upload label svg {
+            margin-left: 6px;
+            width: 18px;
+            height: 18px;
+            fill: white;
+            transform: rotate(-90deg);
+        }
+
+
+
+
+    .avatar-upload {
+        position: relative;
+        width: 180px;
+        padding-bottom: 180px; /* 1:1比例 */
+        border-radius: 50%;
+        overflow: hidden;
+        background: #ddd;
+        cursor: pointer;
+    }
+
+        .avatar-upload img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .avatar-upload input[type="file"] {
+            display: none;
+        }
+
+        .avatar-upload img {
+            transition: transform 0.6s ease; /* 改成0.6秒 */
+        }
+
+        .avatar-upload:hover img {
+            transform: scale(1.05); /* 滑過放大 5% */
+        }
+</style>
+
+
+
+<section class="containerArea" id="content">
+    <article class="main-content">
+        <div class="container">
+            <a accesskey="C" href="#start-C" id="start-C" role="button" class="text-start" title="中間內容呈現區">:::</a>
+            <div class="row d-flex justify-content-center">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    @using (Html.BeginForm("EditPersonal", "User", FormMethod.Post, new { @enctype = "multipart/form-data", id = "EditPersonalForm", @data_toggle = "validator", style = "width:100%;" }))
+                    {
+                            @Html.AntiForgeryToken()
+                        <input type="hidden" id="ACID" name="ACID" value="@Model.ACID" />
+
+                        <nav aria-label="breadCrumbs">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="@Url.Action("Index", "Home")">首頁</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">個人資料</li>
+                            </ol>
+                        </nav>
+                        <div class="container card">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="titleText d-flex align-items-center">
+                                        <h1>個人資料</h1>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row justify-content-center mb-1">
+                                <div class="col-12">
+                                    <!-- 列表 -->
+                                    <div class="table-responsive-xl my-4 table-container" id="ListArea">
+
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                        <div class="avatar-upload m-auto">
+                                                            <img id="avatarPreview" src="@(Model.AvatarUrl != null ? Url.Content("~/image/Files/AvatarPhoto/" + Model.AvatarUrl) : "/image/default-avatar.jpg")" class="avatar-preview" />
+                                                            <label for="AvatarPhoto">
+                                                                更新
+                                                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M18 12h2.793a.5.5 0 0 1 .353.854l-3.792 3.792a.5.5 0 0 1-.708 0l-3.792-3.792a.5.5 0 0 1 .353-.854H16c0-3.31-2.69-6-6-6s-6 2.69-6 6a6.006 6.006 0 0 0 5.5 5.98c.275.022.5.244.5.52v1a.477.477 0 0 1-.5.485A7.998 7.998 0 0 1 2 12c0-4.42 3.58-8 8-8s8 3.58 8 8Z" />
+                                                                </svg>
+                                                            </label>
+                                                            <input type="file" id="AvatarPhoto" name="AvatarPhoto" accept="image/*" />
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <label for="Email" class="input-title"><h3>Email</h3></label>
+                                                        <div class="input--horizontal input-group-lg">
+                                                            <input type="text" class="form-control" id="Email" value="@Model.Email" disabled>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <label for="Name" class="input-title"><h3>姓名</h3></label>
+                                                        <div class="input--horizontal input-group-lg">
+                                                            <input type="text" class="form-control" id="Name" name="Name" maxlength="30" placeholder="請填寫姓名" aria-label="請填寫姓名" value="@Model.Name">
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <label for="Gender_M" class="input-title"><h3>性別</h3></label>
+                                                        <div class="input--horizontal input-group-lg">
+                                                            @foreach (var item in ViewBag.Gender)
+                                                            {
+                                                                <div class="form-check form-check-inline mx-3">
+                                                                    <input class="form-check-input" type="radio" name="Gender" id="Gender_@item.Code" value="@item.Code" @(item.Code == Model.Gender ? "checked" : "") />
+                                                                    <label class="form-check-label ml-4" for="Gender_@item.Code">@item.Text</label>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <label for="Birthday" class="input-title"><h3>生日</h3></label>
+                                                        <div class="input--horizontal input-group-lg">
+                                                            <input type="date" class="form-control" placeholder="請輸入生日" id="Birthday" name="Birthday" min="1911-01-01" required aria-label="請選擇生日" value="@(Model.Birthday.HasValue ? Model.Birthday.Value.ToString("yyyy-MM-dd") : "")">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <label for="Phone" class="input-title"><h3>連絡電話</h3></label>
+                                                        <div class="input--horizontal input-group-lg">
+                                                            <input type="text" class="form-control" id="Phone" name="Phone" maxlength="30" placeholder="請填寫連絡電話" aria-label="請填寫連絡電話" value="@Model.Phone">
+                                                            <small class="form-text text-muted">輸入電話格式範例如：02-22345678</small>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <label for="Company" class="input-title"><h3>單位/公司</h3></label>
+                                                        <div class="input--horizontal input-group-lg">
+                                                            <input type="text" class="form-control" id="Company" name="Company" maxlength="30" placeholder="請填寫單位/公司" aria-label="請填寫單位/公司" value="@Model.Company">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <label for="JobTitle" class="input-title"><h3>職稱</h3></label>
+                                                        <div class="input--horizontal input-group-lg">
+                                                            <input type="text" class="form-control" id="JobTitle" name="JobTitle" maxlength="30" placeholder="請填寫職稱" aria-label="請填寫職稱" value="@Model.JobTitle">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <label for="EduLevel_1" class="input-title"><h3>最高學歷</h3></label>
+                                                        <div class="input--horizontal input-group-lg">
+                                                            <select id="EduLevel" name="EduLevel" class="form-control form-select" aria-label="請選擇最高學歷">
+                                                                <option value="">請選擇最高學歷</option>
+                                                                @foreach (var item in (IEnumerable<SelectListItem>)ViewBag.EduLevel)
+                                                                {
+                                                                    <option value="@item.Value" @(item.Value == (Model.EduLevel?.ToString() ?? "") ? "selected" : "")>@item.Text</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <label for="ContactName" class="input-title"><h3>緊急聯絡人</h3></label>
+                                                        <div class="input--horizontal input-group-lg">
+                                                            <input type="text" class="form-control" id="ContactName" name="ContactName" maxlength="30" placeholder="請填寫緊急聯絡人" aria-label="請填寫緊急聯絡人" value="@Model.ContactName">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <label for="ContactPhone" class="input-title"><h3>緊急聯絡人電話</h3></label>
+                                                        <div class="input--horizontal input-group-lg">
+                                                            <input type="text" class="form-control" id="ContactPhone" name="ContactPhone" maxlength="30" placeholder="請填寫緊急聯絡人電話" aria-label="請填寫緊急聯絡人電話" value="@Model.ContactPhone">
+                                                            <small class="form-text text-muted">輸入電話格式範例如：02-22345678</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- bnt -->
+                                            <div class="text-center submit-btn">
+                                                <button type="submit" class="btn btn-main w-auto" aria-label="儲存" id="submitBtn">儲存</button>
+                                                <button type="button" class="btn btn-secondary backList" aria-label="返回" onclick="window.history.back()">返回</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </article>
+</section>
+
+
+
+@section Scripts {
+    <script>
+        $(function () {
+            // 表單提交處理
+            $('#submitBtn').on('click', function (e) {
+                e.preventDefault();
+
+                var form = $('#EditPersonalForm')[0]; // 原生表單元素
+                var formData = new FormData(form);   // 用 FormData 包含檔案
+
+                $.ajax({
+                    url: $('#EditPersonalForm').attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.Result === true) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: response.Message
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: response.Message,
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '系統錯誤',
+                            text: '請檢查網路連線或重新整理頁面'
+                        });
+                    }
+                });
+            });
+
+            // 預覽頭像圖片
+            $('#AvatarPhoto').on('change', function () {
+                const file = this.files[0];
+                if (!file) return;
+
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    Swal.fire({
+                        title: "請上傳有效的圖片檔案 (JPEG, PNG, GIF, webp)。",
+                        confirmButtonText: "確定"
+                    });
+                    $(this).val(''); // 清除檔案選擇
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#avatarPreview').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // 檢查檔案大小（5MB限制）
+            $('input[type="file"]').on('change', function () {
+                const files = this.files;
+                const maxSize = 5 * 1024 * 1024; // 5MB
+                let errorMessages = [];
+                let hasError = false;
+
+                if (files) {
+                    for (let i = 0; i < files.length; i++) {
+                        if (files[i].size > maxSize) {
+                            errorMessages.push("檔案: " + files[i].name + "，大小超過限制 (5MB)。");
+                            hasError = true;
+                        }
+                    }
+
+                    if (hasError) {
+                        Swal.fire({
+                            title: "檔案大小超過限制",
+                            html: errorMessages.join("<br>"),
+                            confirmButtonText: "確定"
+                        });
+                        $(this).val('');
+                    }
+                }
+            });
+        });
+    </script>
+}

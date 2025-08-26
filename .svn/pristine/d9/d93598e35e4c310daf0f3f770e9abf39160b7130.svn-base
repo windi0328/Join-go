@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="JoinGoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Account">
+    <Key>
+      <PropertyRef Name="ACID" />
+    </Key>
+    <Property Name="ACID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Email" Type="nvarchar" MaxLength="150" Nullable="false" />
+    <Property Name="PasswordHash" Type="nvarchar" MaxLength="200" />
+    <Property Name="EmailVerifyCode" Type="nvarchar" MaxLength="500" />
+    <Property Name="EmailVerified" Type="bit" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="150" />
+    <Property Name="Origin" Type="nvarchar" MaxLength="50" />
+    <Property Name="ProviderKey" Type="nvarchar" MaxLength="100" />
+    <Property Name="Role" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="AvatarUrl" Type="nvarchar" MaxLength="500" />
+    <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+    <Property Name="Gender" Type="char" MaxLength="1" />
+    <Property Name="Birthday" Type="date" />
+    <Property Name="Company" Type="nvarchar" MaxLength="100" />
+    <Property Name="JobTitle" Type="nvarchar" MaxLength="50" />
+    <Property Name="EduLevel" Type="nvarchar" MaxLength="50" />
+    <Property Name="ContactName" Type="nvarchar" MaxLength="50" />
+    <Property Name="ContactPhone" Type="nvarchar" MaxLength="20" />
+    <Property Name="LastPwdChange" Type="datetime" />
+    <Property Name="PwdExpireNotified" Type="bit" />
+    <Property Name="LastLoginTime" Type="datetime" />
+    <Property Name="Enable" Type="bit" Nullable="false" />
+    <Property Name="Creator" Type="int" />
+    <Property Name="Created" Type="datetime" />
+    <Property Name="CreatedIP" Type="nvarchar" MaxLength="100" />
+    <Property Name="Updator" Type="int" />
+    <Property Name="Updated" Type="datetime" />
+    <Property Name="UpdatedIP" Type="nvarchar" MaxLength="100" />
+    <Property Name="PasswordResetToken" Type="nvarchar" MaxLength="200" />
+    <Property Name="PasswordResetExpiry" Type="datetime" />
+  </EntityType>
+  <EntityType Name="LoginLog">
+    <Key>
+      <PropertyRef Name="LLID" />
+    </Key>
+    <Property Name="LLID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ACID" Type="int" Nullable="false" />
+    <Property Name="Provider" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="ProviderKey" Type="nvarchar" MaxLength="256" />
+    <Property Name="AccessToken" Type="nvarchar(max)" />
+    <Property Name="Creator" Type="int" />
+    <Property Name="Created" Type="datetime" />
+    <Property Name="CreatedIP" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="MenuFunction">
+    <Key>
+      <PropertyRef Name="MFID" />
+    </Key>
+    <Property Name="MFID" Type="int" Nullable="false" />
+    <Property Name="ParentMFID" Type="int" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="Describe" Type="nvarchar(max)" />
+    <Property Name="Role" Type="nvarchar" MaxLength="50" />
+    <Property Name="Controller" Type="nvarchar" MaxLength="50" />
+    <Property Name="Action" Type="nvarchar" MaxLength="50" />
+    <Property Name="Url" Type="nvarchar" MaxLength="500" />
+    <Property Name="Serial" Type="int" Nullable="false" />
+    <Property Name="Enable" Type="bit" Nullable="false" />
+    <Property Name="Creator" Type="int" />
+    <Property Name="Created" Type="datetime" />
+    <Property Name="CreatorIP" Type="nvarchar" MaxLength="100" />
+    <Property Name="Updator" Type="int" />
+    <Property Name="Updated" Type="datetime" />
+    <Property Name="UpdatorIP" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Option">
+    <Key>
+      <PropertyRef Name="OID" />
+    </Key>
+    <Property Name="OID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GroupKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Code" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="Text" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Serial" Type="int" />
+    <Property Name="Enable" Type="bit" Nullable="false" />
+    <Property Name="Created" Type="datetime" Nullable="false" />
+    <Property Name="Updated" Type="datetime" />
+  </EntityType>
+  <Association Name="FK_LoginLog_Account">
+    <End Role="Account" Type="Self.Account" Multiplicity="1" />
+    <End Role="LoginLog" Type="Self.LoginLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Account">
+        <PropertyRef Name="ACID" />
+      </Principal>
+      <Dependent Role="LoginLog">
+        <PropertyRef Name="ACID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="JoinGoModelStoreContainer">
+    <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LoginLog" EntityType="Self.LoginLog" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MenuFunction" EntityType="Self.MenuFunction" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Option" EntityType="Self.Option" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_LoginLog_Account" Association="Self.FK_LoginLog_Account">
+      <End Role="Account" EntitySet="Account" />
+      <End Role="LoginLog" EntitySet="LoginLog" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

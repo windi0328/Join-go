@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33529.622
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoinGo", "JoinGo\JoinGo.csproj", "{18B84AC1-DD18-41A2-88B6-CC21A20D408D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{18B84AC1-DD18-41A2-88B6-CC21A20D408D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18B84AC1-DD18-41A2-88B6-CC21A20D408D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18B84AC1-DD18-41A2-88B6-CC21A20D408D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18B84AC1-DD18-41A2-88B6-CC21A20D408D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C8FCAB26-4E11-487E-860B-2696508669E6}
+	EndGlobalSection
+EndGlobal

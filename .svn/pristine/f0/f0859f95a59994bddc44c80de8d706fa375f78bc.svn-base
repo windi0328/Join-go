@@ -1,0 +1,133 @@
+﻿@{
+    ViewBag.Title = "首頁";
+}
+
+
+@TempData["Msg"]
+@TempData["Error"]
+
+@* 註冊modal *@
+<div class="modal fade" id="RegisterModal" tabindex="-1" aria-labelledby="RegisterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4">
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="RegisterModalBody">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@* 登入modal *@
+<div class="modal fade" id="LoginModal" tabindex="-1" aria-labelledby="LoginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4">
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="LoginModalBody">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--  忘記密碼Modal -->
+<div class="modal fade" id="ForgotPasswordModal" tabindex="-1" aria-labelledby="ForgotPasswordLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4">
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="ForgotPasswordModalContent">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--  重設密碼Modal -->
+<div class="modal fade" id="ResetPasswordModal" tabindex="-1" aria-labelledby="ResetPasswordLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4">
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="ResetPasswordModalContent">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+
+        $(document).on('click', '#ChgVCodeBtn', function () {
+            $('#Veri1').attr("src", "/Home/VerificationCode?t=" + Math.random());
+        });
+
+        $(function () {
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('resetToken');
+
+            if (token) {
+                // 載入 ResetPasswordPartial 並顯示 Modal
+                $.get('/Home/ResetPasswordPartial', { token: token }, function (html) {
+                    $('#ResetPasswordModal .modal-body').html(html);
+                    $('#ResetPasswordModal').modal('show');
+                });
+            }
+
+
+           if ('@TempData["Error"]' != '') {
+                Swal.fire({
+                    title: "@TempData["Error"]",
+                    icon: "error",
+                    confirmButtonText: "確定"
+                });
+            }
+
+            if ('@TempData["Msg"]' != '') {
+                Swal.fire({
+                    title: "@TempData["Msg"]",
+                    icon: "success",
+                    confirmButtonText: "確定"
+                });
+            }
+
+            $('.ShowRegister').click(function () {
+                $.get('@Url.Action("RegisterPartial", "Home")', function (html) {
+                $('#RegisterModalBody').html(html);
+                $('#RegisterModal').modal('show');
+                });
+            });
+
+
+            $('.ShowLogin').click(function () {
+                $.get('@Url.Action("LoginPartial", "Home")', function (html) {
+                $('#LoginModalBody').html(html);
+                $('#LoginModal').modal('show');
+                });
+            });
+
+
+
+
+
+        });
+
+
+
+
+    </script>
+}

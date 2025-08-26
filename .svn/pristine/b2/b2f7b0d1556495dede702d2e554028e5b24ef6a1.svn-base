@@ -1,0 +1,365 @@
+﻿@model JoinGo.Models.ViewModels.RegisterVM
+
+
+<style>
+    .position-relative .toggle-password {
+        position: absolute;
+        top: 38px;
+        right: 15px;
+        cursor: pointer;
+        color: #6c757d;
+        user-select: none;
+        z-index: 10;
+    }
+
+    .form-icon {
+        position: absolute;
+        top: 50%;
+        left: 12px;
+        transform: translateY(-50%);
+        color: #aaa;
+    }
+
+    .form-control-with-icon {
+        padding-left: 40px;
+    }
+
+    .social-btn {
+        background-color: #4c69ba;
+        color: white;
+        text-transform: uppercase;
+        width: 100%;
+        font-weight: bold;
+        border: none;
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+
+        .social-btn svg {
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+    .divider-text {
+        text-align: center;
+        margin: 15px 0;
+        position: relative;
+    }
+
+        .divider-text::before,
+        .divider-text::after {
+            content: "";
+            height: 1px;
+            background: #ddd;
+            position: absolute;
+            top: 50%;
+            width: 40%;
+        }
+
+        .divider-text::before {
+            left: 0;
+        }
+
+        .divider-text::after {
+            right: 0;
+        }
+</style>
+
+<h2 class="h4 fw-bold text-center mb-3">登入JoinGo</h2>
+<div class="d-grid mb-3">
+    <a href="@Url.Action("ExternalLogin", "Home", new { provider = "Google" })"
+       class="btn d-flex align-items-center justify-content-center text-uppercase fw-bold"
+       style="background-color: #f1f3f4; border: none; color: #000; padding: 10px 24px; border-radius: 5px; width: 100%; margin-top: 10px; text-decoration: none;">
+        <svg width="20" height="20" viewBox="0 0 46 46" xmlns="http://www.w3.org/2000/svg" style="margin-right: 10px;">
+            <defs>
+                <path id="a" d="M44.5 20H24v6h11.9C34 32.4 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l4.7-4.7C33.9 6.6 29.3 5 24 5 12.95 5 4.5 13.45 4.5 24.5S12.95 44 24 44c11 0 19.5-8.5 19.5-19.5 0-1.3-.1-2.4-.3-3.5z" />
+            </defs>
+            <clipPath id="b">
+                <use href="#a" overflow="visible" />
+            </clipPath>
+            <path fill="#FBBC05" d="M0 37V9l17 14z" clip-path="url(#b)" />
+            <path fill="#EA4335" d="M0 9l17 14 7-6.1L48 14V0H0z" clip-path="url(#b)" />
+            <path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z" clip-path="url(#b)" />
+            <path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z" clip-path="url(#b)" />
+        </svg>
+        Google 登入
+    </a>
+</div>
+
+<div class="divider-text">或</div>
+
+<form class="mx-auto" style="max-width: 400px;" id="LoginForm" action='@Url.Action("Login","Home")' method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <!-- Email -->
+    <div class="mb-4">
+        <div class="input-group">
+            <span class="input-group-text bg-light text-muted">
+                <i class="fa fa-envelope"></i>
+            </span>
+            <input type="email" class="form-control" id="email" name="email" placeholder="請輸入Email" maxlength="50" required>
+        </div>
+        <div class="invalid-feedback"></div>
+    </div>
+
+
+    <!-- 密碼 -->
+    <div class="mb-4">
+        <div class="input-group">
+            <span class="input-group-text bg-light text-muted">
+                <i class="fa fa-lock"></i>
+            </span>
+            <input type="password" class="form-control" id="password" name="password" placeholder="請輸入密碼" required>
+            <span class="input-group-text bg-light text-muted toggle-password cursor-pointer" toggle="#password" style="user-select:none;">
+                <i class="fa fa-eye"></i>
+            </span>
+        </div>
+        <div class="invalid-feedback"></div>
+    </div>
+
+
+    <div class="col-12 mb-4">
+        <div>
+            <label for="VCode" class="mb-2"><strong>驗證碼</strong></label>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="請輸入驗證碼" id="VCode" name="VCode" value="" aria-label="請輸入驗證碼">
+                <div class="input-group-append">
+                    <img id="Veri1" src="@Url.Action("VerificationCode", "Home")" alt="驗證碼" class="img-fluid" style="height: 2.5em; max-width: 7.5em;">
+                </div>
+            </div>
+            <div class="invalid-feedback"></div>
+            <div class="d-flex justify-content-end align-items-center mt-2">
+                <div class="mx-1">
+                    <a href="javascript:void(0)" id="ChgVCodeBtn" class="text-decoration-none btn btn-sm btn-light" style="cursor:pointer;" aria-label="重新產生驗證碼">
+                        <i class="fa fa-refresh" aria-hidden="true"></i> 重新產生
+                    </a>
+                </div>
+                <div class="mx-1">
+                    <button type="button" id="PlayVCode" class="btn btn-sm btn-light" aria-label="語音播放驗證碼">
+                        <i class="fa fa-volume-down" aria-hidden="true"></i> 語音播放
+                    </button>
+                </div>
+            </div>
+            <audio id="audioPlayer" controls class="d-none">
+                <source id="audioSource" type="audio/mp3">
+            </audio>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="text-end mb-3">
+        @*<a href="#" class="small text-decoration-none">忘記密碼？</a>*@
+        <a href="javascript:void(0)" id="ForgotPasswordLink">忘記密碼？</a>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 fw-bold">登入</button>
+</form>
+
+<div class="text-center mt-3">
+    <span class="text-muted small">還不是 JoinGo 會員？</span>
+    <a href="javascript:void(0);" class="small text-primary" id="btnSwitchToRegister">註冊</a>
+</div>
+
+
+
+
+
+
+
+    <script>
+    // ===== 驗證輔助函式 =====
+    // 錯誤顯示
+    function setError(selector, message) {
+        $(selector).addClass('is-invalid');
+        $(selector).closest('.mb-4').find('.invalid-feedback')
+            .text(message)
+            .show();
+    }
+
+    // 清除錯誤
+    function clearError(selector) {
+        $(selector).removeClass('is-invalid');
+        $(selector).closest('.mb-4').find('.invalid-feedback').text('').hide();
+    }
+
+    // Email 格式驗證
+    function validateEmail(email) {
+        const re = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+        return re.test(email);
+    }
+
+    // 密碼強度驗證（至少三種：大小寫、數字、特殊字元）
+    function isValidPassword(pwd) {
+        if (pwd.length < 8) return false;
+        let types = 0;
+        if (/[A-Z]/.test(pwd)) types++;       // 大寫
+        if (/[a-z]/.test(pwd)) types++;       // 小寫
+        if (/\d/.test(pwd)) types++;          // 數字
+        if (/[^A-Za-z0-9]/.test(pwd)) types++; // 特殊符號
+        return types >= 3;
+    }
+
+
+
+
+
+
+
+    // ===== 主程式 =====
+    $(document).ready(function () {
+        // --- blur 驗證 ---
+        $('#email').on('blur', function () {
+            const val = $(this).val().trim();
+            if (!val) setError(this, 'Email 為必填');
+            else if (!validateEmail(val)) setError(this, '請輸入有效的 Email');
+            else clearError(this);
+        });
+
+        $('#password').on('blur', function () {
+            const val = $(this).val();
+            if (!val) setError(this, '密碼為必填');
+            else if (!isValidPassword(val)) setError(this, '密碼至少8碼，需包含大寫、小寫、數字、特殊符號中的三種');
+            else clearError(this);
+        });
+
+        $('#VCode').on('blur', function () {
+            const val = $(this).val();
+            if (!val) setError(this, '驗證碼為必填');
+            else clearError(this);
+        });
+
+        // --- 密碼眼睛切換 ---
+        $('.toggle-password').click(function () {
+            var inputSelector = $(this).attr('toggle');
+            var input = $(inputSelector);
+            var icon = $(this).find('i');
+
+            if (input.attr('type') === 'password') {
+                input.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                input.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+
+
+
+        //語音撥放驗證碼
+        $("#PlayVCode").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/Home/VerificationCodeAudio',
+                type: 'GET',
+                success: function (response) {
+                    if (response.url) {
+                        let audioElement = $('#audioPlayer')[0];
+                        let audioSource = $('#audioSource');
+                        audioSource.attr('src', response.url);
+                        audioElement.load();
+                        audioElement.play();
+                    }
+                },
+                error: function () {
+                    console.log("播放驗證碼音檔失敗");
+                }
+            });
+        });
+
+
+        //註冊按鈕
+        $('#btnSwitchToRegister').on('click', function () {
+            // 關閉登入 modal
+            $('#LoginModal').modal('hide');
+
+             // 等登入 modal 完全關閉後再載入註冊 partial 並開啟 modal
+            $('#LoginModal').on('hidden.bs.modal', function () {
+                // 移除事件，避免觸發多次
+                $(this).off('hidden.bs.modal');
+
+                // 載入註冊畫面後再打開 modal
+                $.get('@Url.Action("RegisterPartial", "Home")', function (html) {
+                    $('#RegisterModalBody').html(html);
+                    $('#RegisterModal').modal('show');
+                });
+            });
+        });
+
+
+
+         // 點擊「忘記密碼」連結
+        $('#ForgotPasswordLink').click(function () {
+              // 關閉登入 modal
+            $('#LoginModal').modal('hide');
+
+             // 等登入 modal 完全關閉後再載入註冊 partial 並開啟 modal
+            $('#LoginModal').on('hidden.bs.modal', function () {
+                // 移除事件，避免觸發多次
+                $(this).off('hidden.bs.modal');
+
+                // 載入註冊畫面後再打開 modal
+                $.get('@Url.Action("ForgotPasswordPartial", "Home")', function (html) {
+                    $('#ForgotPasswordModalContent').html(html);
+                    $('#ForgotPasswordModal').modal('show');
+                });
+            });
+        });
+
+
+
+
+
+
+
+        // --- submit 驗證 ---
+        $('#LoginForm').on('submit', function (e) {
+            e.preventDefault();
+
+            // 清空錯誤
+            $(this).find('input').removeClass('is-invalid');
+            $(this).find('.invalid-feedback').text('').hide();
+
+            let isValid = true;
+            const email = $('#email').val().trim();
+            const password = $('#password').val();
+            const VCode = $('#VCode').val();
+
+            if (!email) {
+                setError('#email', 'Email 為必填');
+                isValid = false;
+            } else if (!validateEmail(email)) {
+                setError('#email', '請輸入有效的 Email');
+                isValid = false;
+            }
+
+            if (!password) {
+                setError('#password', '密碼為必填');
+                isValid = false;
+            } else if (!isValidPassword(password)) {
+                setError('#password', '密碼至少8碼，需包含大寫、小寫、數字、特殊符號中的三種');
+                isValid = false;
+            }
+
+
+            if (!VCode) {
+                setError('#VCode', '驗證碼為必填');
+                isValid = false;
+            }
+
+
+
+            if (isValid) {
+                // 設定已送出，防止重複送出
+                $(this).data('submitted', true);
+
+                // 可以把送出按鈕禁用，避免使用者還是一直點
+                $(this).find('button[type="submit"]').prop('disabled', true);
+
+                this.submit(); // 真正送出表單
+            }
+        });
+    });
+    </script>
+

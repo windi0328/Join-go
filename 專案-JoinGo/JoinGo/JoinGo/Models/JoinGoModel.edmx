@@ -1,0 +1,337 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="JoinGoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="ACID" />
+          </Key>
+          <Property Name="ACID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar" MaxLength="200" />
+          <Property Name="EmailVerifyCode" Type="nvarchar" MaxLength="500" />
+          <Property Name="EmailVerified" Type="bit" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="150" />
+          <Property Name="Origin" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="100" />
+          <Property Name="Role" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AvatarUrl" Type="nvarchar" MaxLength="500" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+          <Property Name="Gender" Type="char" MaxLength="1" />
+          <Property Name="Birthday" Type="date" />
+          <Property Name="Company" Type="nvarchar" MaxLength="100" />
+          <Property Name="JobTitle" Type="nvarchar" MaxLength="50" />
+          <Property Name="EduLevel" Type="nvarchar" MaxLength="50" />
+          <Property Name="ContactName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ContactPhone" Type="nvarchar" MaxLength="20" />
+          <Property Name="LastPwdChange" Type="datetime" />
+          <Property Name="PwdExpireNotified" Type="bit" />
+          <Property Name="LastLoginTime" Type="datetime" />
+          <Property Name="Enable" Type="bit" Nullable="false" />
+          <Property Name="Creator" Type="int" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="CreatedIP" Type="nvarchar" MaxLength="100" />
+          <Property Name="Updator" Type="int" />
+          <Property Name="Updated" Type="datetime" />
+          <Property Name="UpdatedIP" Type="nvarchar" MaxLength="100" />
+          <Property Name="PasswordResetToken" Type="nvarchar" MaxLength="200" />
+          <Property Name="PasswordResetExpiry" Type="datetime" />
+        </EntityType>
+        <EntityType Name="LoginLog">
+          <Key>
+            <PropertyRef Name="LLID" />
+          </Key>
+          <Property Name="LLID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ACID" Type="int" Nullable="false" />
+          <Property Name="Provider" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="256" />
+          <Property Name="AccessToken" Type="nvarchar(max)" />
+          <Property Name="Creator" Type="int" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="CreatedIP" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="MenuFunction">
+          <Key>
+            <PropertyRef Name="MFID" />
+          </Key>
+          <Property Name="MFID" Type="int" Nullable="false" />
+          <Property Name="ParentMFID" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Describe" Type="nvarchar(max)" />
+          <Property Name="Role" Type="nvarchar" MaxLength="50" />
+          <Property Name="Controller" Type="nvarchar" MaxLength="50" />
+          <Property Name="Action" Type="nvarchar" MaxLength="50" />
+          <Property Name="Url" Type="nvarchar" MaxLength="500" />
+          <Property Name="Serial" Type="int" Nullable="false" />
+          <Property Name="Enable" Type="bit" Nullable="false" />
+          <Property Name="Creator" Type="int" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="CreatorIP" Type="nvarchar" MaxLength="100" />
+          <Property Name="Updator" Type="int" />
+          <Property Name="Updated" Type="datetime" />
+          <Property Name="UpdatorIP" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Option">
+          <Key>
+            <PropertyRef Name="OID" />
+          </Key>
+          <Property Name="OID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Text" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Serial" Type="int" />
+          <Property Name="Enable" Type="bit" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="Updated" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_LoginLog_Account">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="LoginLog" Type="Self.LoginLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="ACID" />
+            </Principal>
+            <Dependent Role="LoginLog">
+              <PropertyRef Name="ACID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="JoinGoModelStoreContainer">
+          <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoginLog" EntityType="Self.LoginLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MenuFunction" EntityType="Self.MenuFunction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Option" EntityType="Self.Option" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_LoginLog_Account" Association="Self.FK_LoginLog_Account">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="LoginLog" EntitySet="LoginLog" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="JoinGoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="JoinGoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Account" EntityType="JoinGoModel.Account" />
+          <EntitySet Name="LoginLog" EntityType="JoinGoModel.LoginLog" />
+          <AssociationSet Name="FK_LoginLog_Account" Association="JoinGoModel.FK_LoginLog_Account">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="LoginLog" EntitySet="LoginLog" />
+          </AssociationSet>
+          <EntitySet Name="MenuFunction" EntityType="JoinGoModel.MenuFunction" />
+          <EntitySet Name="Option" EntityType="JoinGoModel.Option" />
+        </EntityContainer>
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="ACID" />
+          </Key>
+          <Property Name="ACID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordHash" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="EmailVerifyCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="EmailVerified" Type="Boolean" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Origin" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProviderKey" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Role" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AvatarUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Birthday" Type="DateTime" Precision="0" />
+          <Property Name="Company" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="JobTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EduLevel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ContactName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ContactPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="LastPwdChange" Type="DateTime" Precision="3" />
+          <Property Name="PwdExpireNotified" Type="Boolean" />
+          <Property Name="LastLoginTime" Type="DateTime" Precision="3" />
+          <Property Name="Enable" Type="Boolean" Nullable="false" />
+          <Property Name="Creator" Type="Int32" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="CreatedIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Updator" Type="Int32" />
+          <Property Name="Updated" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordResetToken" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordResetExpiry" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="LoginLog" Relationship="JoinGoModel.FK_LoginLog_Account" FromRole="Account" ToRole="LoginLog" />
+        </EntityType>
+        <EntityType Name="LoginLog">
+          <Key>
+            <PropertyRef Name="LLID" />
+          </Key>
+          <Property Name="LLID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ACID" Type="Int32" Nullable="false" />
+          <Property Name="Provider" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProviderKey" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="AccessToken" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Creator" Type="Int32" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="CreatedIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Account" Relationship="JoinGoModel.FK_LoginLog_Account" FromRole="LoginLog" ToRole="Account" />
+        </EntityType>
+        <Association Name="FK_LoginLog_Account">
+          <End Type="JoinGoModel.Account" Role="Account" Multiplicity="1" />
+          <End Type="JoinGoModel.LoginLog" Role="LoginLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="ACID" />
+            </Principal>
+            <Dependent Role="LoginLog">
+              <PropertyRef Name="ACID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="MenuFunction">
+          <Key>
+            <PropertyRef Name="MFID" />
+          </Key>
+          <Property Name="MFID" Type="Int32" Nullable="false" />
+          <Property Name="ParentMFID" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Describe" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Controller" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Action" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Url" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Serial" Type="Int32" Nullable="false" />
+          <Property Name="Enable" Type="Boolean" Nullable="false" />
+          <Property Name="Creator" Type="Int32" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="CreatorIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Updator" Type="Int32" />
+          <Property Name="Updated" Type="DateTime" Precision="3" />
+          <Property Name="UpdatorIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Option">
+          <Key>
+            <PropertyRef Name="OID" />
+          </Key>
+          <Property Name="OID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Serial" Type="Int32" />
+          <Property Name="Enable" Type="Boolean" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Updated" Type="DateTime" Precision="3" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="JoinGoModelStoreContainer" CdmEntityContainer="JoinGoEntities">
+          <EntitySetMapping Name="Account">
+            <EntityTypeMapping TypeName="JoinGoModel.Account">
+              <MappingFragment StoreEntitySet="Account">
+                <ScalarProperty Name="PasswordResetExpiry" ColumnName="PasswordResetExpiry" />
+                <ScalarProperty Name="PasswordResetToken" ColumnName="PasswordResetToken" />
+                <ScalarProperty Name="UpdatedIP" ColumnName="UpdatedIP" />
+                <ScalarProperty Name="Updated" ColumnName="Updated" />
+                <ScalarProperty Name="Updator" ColumnName="Updator" />
+                <ScalarProperty Name="CreatedIP" ColumnName="CreatedIP" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Creator" ColumnName="Creator" />
+                <ScalarProperty Name="Enable" ColumnName="Enable" />
+                <ScalarProperty Name="LastLoginTime" ColumnName="LastLoginTime" />
+                <ScalarProperty Name="PwdExpireNotified" ColumnName="PwdExpireNotified" />
+                <ScalarProperty Name="LastPwdChange" ColumnName="LastPwdChange" />
+                <ScalarProperty Name="ContactPhone" ColumnName="ContactPhone" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="EduLevel" ColumnName="EduLevel" />
+                <ScalarProperty Name="JobTitle" ColumnName="JobTitle" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
+                <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="AvatarUrl" ColumnName="AvatarUrl" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="Origin" ColumnName="Origin" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="EmailVerified" ColumnName="EmailVerified" />
+                <ScalarProperty Name="EmailVerifyCode" ColumnName="EmailVerifyCode" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="ACID" ColumnName="ACID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LoginLog">
+            <EntityTypeMapping TypeName="JoinGoModel.LoginLog">
+              <MappingFragment StoreEntitySet="LoginLog">
+                <ScalarProperty Name="CreatedIP" ColumnName="CreatedIP" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Creator" ColumnName="Creator" />
+                <ScalarProperty Name="AccessToken" ColumnName="AccessToken" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="Provider" ColumnName="Provider" />
+                <ScalarProperty Name="ACID" ColumnName="ACID" />
+                <ScalarProperty Name="LLID" ColumnName="LLID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MenuFunction">
+            <EntityTypeMapping TypeName="JoinGoModel.MenuFunction">
+              <MappingFragment StoreEntitySet="MenuFunction">
+                <ScalarProperty Name="UpdatorIP" ColumnName="UpdatorIP" />
+                <ScalarProperty Name="Updated" ColumnName="Updated" />
+                <ScalarProperty Name="Updator" ColumnName="Updator" />
+                <ScalarProperty Name="CreatorIP" ColumnName="CreatorIP" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Creator" ColumnName="Creator" />
+                <ScalarProperty Name="Enable" ColumnName="Enable" />
+                <ScalarProperty Name="Serial" ColumnName="Serial" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="Describe" ColumnName="Describe" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ParentMFID" ColumnName="ParentMFID" />
+                <ScalarProperty Name="MFID" ColumnName="MFID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Option">
+            <EntityTypeMapping TypeName="JoinGoModel.Option">
+              <MappingFragment StoreEntitySet="Option">
+                <ScalarProperty Name="Updated" ColumnName="Updated" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Enable" ColumnName="Enable" />
+                <ScalarProperty Name="Serial" ColumnName="Serial" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="GroupKey" ColumnName="GroupKey" />
+                <ScalarProperty Name="OID" ColumnName="OID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

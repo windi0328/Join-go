@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="JoinGoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="JoinGoEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Account" EntityType="JoinGoModel.Account" />
+    <EntitySet Name="LoginLog" EntityType="JoinGoModel.LoginLog" />
+    <AssociationSet Name="FK_LoginLog_Account" Association="JoinGoModel.FK_LoginLog_Account">
+      <End Role="Account" EntitySet="Account" />
+      <End Role="LoginLog" EntitySet="LoginLog" />
+    </AssociationSet>
+    <EntitySet Name="MenuFunction" EntityType="JoinGoModel.MenuFunction" />
+    <EntitySet Name="Option" EntityType="JoinGoModel.Option" />
+  </EntityContainer>
+  <EntityType Name="Account">
+    <Key>
+      <PropertyRef Name="ACID" />
+    </Key>
+    <Property Name="ACID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="PasswordHash" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="EmailVerifyCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="EmailVerified" Type="Boolean" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="Origin" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ProviderKey" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Role" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="AvatarUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+    <Property Name="Birthday" Type="DateTime" Precision="0" />
+    <Property Name="Company" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="JobTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="EduLevel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ContactName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ContactPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="LastPwdChange" Type="DateTime" Precision="3" />
+    <Property Name="PwdExpireNotified" Type="Boolean" />
+    <Property Name="LastLoginTime" Type="DateTime" Precision="3" />
+    <Property Name="Enable" Type="Boolean" Nullable="false" />
+    <Property Name="Creator" Type="Int32" />
+    <Property Name="Created" Type="DateTime" Precision="3" />
+    <Property Name="CreatedIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Updator" Type="Int32" />
+    <Property Name="Updated" Type="DateTime" Precision="3" />
+    <Property Name="UpdatedIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="PasswordResetToken" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="PasswordResetExpiry" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="LoginLog" Relationship="JoinGoModel.FK_LoginLog_Account" FromRole="Account" ToRole="LoginLog" />
+  </EntityType>
+  <EntityType Name="LoginLog">
+    <Key>
+      <PropertyRef Name="LLID" />
+    </Key>
+    <Property Name="LLID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ACID" Type="Int32" Nullable="false" />
+    <Property Name="Provider" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ProviderKey" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="AccessToken" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Creator" Type="Int32" />
+    <Property Name="Created" Type="DateTime" Precision="3" />
+    <Property Name="CreatedIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Account" Relationship="JoinGoModel.FK_LoginLog_Account" FromRole="LoginLog" ToRole="Account" />
+  </EntityType>
+  <Association Name="FK_LoginLog_Account">
+    <End Type="JoinGoModel.Account" Role="Account" Multiplicity="1" />
+    <End Type="JoinGoModel.LoginLog" Role="LoginLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Account">
+        <PropertyRef Name="ACID" />
+      </Principal>
+      <Dependent Role="LoginLog">
+        <PropertyRef Name="ACID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="MenuFunction">
+    <Key>
+      <PropertyRef Name="MFID" />
+    </Key>
+    <Property Name="MFID" Type="Int32" Nullable="false" />
+    <Property Name="ParentMFID" Type="Int32" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Describe" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Controller" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Action" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Url" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Serial" Type="Int32" Nullable="false" />
+    <Property Name="Enable" Type="Boolean" Nullable="false" />
+    <Property Name="Creator" Type="Int32" />
+    <Property Name="Created" Type="DateTime" Precision="3" />
+    <Property Name="CreatorIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Updator" Type="Int32" />
+    <Property Name="Updated" Type="DateTime" Precision="3" />
+    <Property Name="UpdatorIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Option">
+    <Key>
+      <PropertyRef Name="OID" />
+    </Key>
+    <Property Name="OID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GroupKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Text" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Serial" Type="Int32" />
+    <Property Name="Enable" Type="Boolean" Nullable="false" />
+    <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Updated" Type="DateTime" Precision="3" />
+  </EntityType>
+</Schema>

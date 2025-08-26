@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="JoinGoModelStoreContainer" CdmEntityContainer="JoinGoEntities">
+    <EntitySetMapping Name="Account">
+      <EntityTypeMapping TypeName="JoinGoModel.Account">
+        <MappingFragment StoreEntitySet="Account">
+          <ScalarProperty Name="PasswordResetExpiry" ColumnName="PasswordResetExpiry" />
+          <ScalarProperty Name="PasswordResetToken" ColumnName="PasswordResetToken" />
+          <ScalarProperty Name="UpdatedIP" ColumnName="UpdatedIP" />
+          <ScalarProperty Name="Updated" ColumnName="Updated" />
+          <ScalarProperty Name="Updator" ColumnName="Updator" />
+          <ScalarProperty Name="CreatedIP" ColumnName="CreatedIP" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="Creator" ColumnName="Creator" />
+          <ScalarProperty Name="Enable" ColumnName="Enable" />
+          <ScalarProperty Name="LastLoginTime" ColumnName="LastLoginTime" />
+          <ScalarProperty Name="PwdExpireNotified" ColumnName="PwdExpireNotified" />
+          <ScalarProperty Name="LastPwdChange" ColumnName="LastPwdChange" />
+          <ScalarProperty Name="ContactPhone" ColumnName="ContactPhone" />
+          <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+          <ScalarProperty Name="EduLevel" ColumnName="EduLevel" />
+          <ScalarProperty Name="JobTitle" ColumnName="JobTitle" />
+          <ScalarProperty Name="Company" ColumnName="Company" />
+          <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="AvatarUrl" ColumnName="AvatarUrl" />
+          <ScalarProperty Name="Role" ColumnName="Role" />
+          <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+          <ScalarProperty Name="Origin" ColumnName="Origin" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="EmailVerified" ColumnName="EmailVerified" />
+          <ScalarProperty Name="EmailVerifyCode" ColumnName="EmailVerifyCode" />
+          <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="ACID" ColumnName="ACID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LoginLog">
+      <EntityTypeMapping TypeName="JoinGoModel.LoginLog">
+        <MappingFragment StoreEntitySet="LoginLog">
+          <ScalarProperty Name="CreatedIP" ColumnName="CreatedIP" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="Creator" ColumnName="Creator" />
+          <ScalarProperty Name="AccessToken" ColumnName="AccessToken" />
+          <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+          <ScalarProperty Name="Provider" ColumnName="Provider" />
+          <ScalarProperty Name="ACID" ColumnName="ACID" />
+          <ScalarProperty Name="LLID" ColumnName="LLID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MenuFunction">
+      <EntityTypeMapping TypeName="JoinGoModel.MenuFunction">
+        <MappingFragment StoreEntitySet="MenuFunction">
+          <ScalarProperty Name="UpdatorIP" ColumnName="UpdatorIP" />
+          <ScalarProperty Name="Updated" ColumnName="Updated" />
+          <ScalarProperty Name="Updator" ColumnName="Updator" />
+          <ScalarProperty Name="CreatorIP" ColumnName="CreatorIP" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="Creator" ColumnName="Creator" />
+          <ScalarProperty Name="Enable" ColumnName="Enable" />
+          <ScalarProperty Name="Serial" ColumnName="Serial" />
+          <ScalarProperty Name="Url" ColumnName="Url" />
+          <ScalarProperty Name="Action" ColumnName="Action" />
+          <ScalarProperty Name="Controller" ColumnName="Controller" />
+          <ScalarProperty Name="Role" ColumnName="Role" />
+          <ScalarProperty Name="Describe" ColumnName="Describe" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ParentMFID" ColumnName="ParentMFID" />
+          <ScalarProperty Name="MFID" ColumnName="MFID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Option">
+      <EntityTypeMapping TypeName="JoinGoModel.Option">
+        <MappingFragment StoreEntitySet="Option">
+          <ScalarProperty Name="Updated" ColumnName="Updated" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="Enable" ColumnName="Enable" />
+          <ScalarProperty Name="Serial" ColumnName="Serial" />
+          <ScalarProperty Name="Text" ColumnName="Text" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="GroupKey" ColumnName="GroupKey" />
+          <ScalarProperty Name="OID" ColumnName="OID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

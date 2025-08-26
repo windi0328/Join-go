@@ -1,0 +1,280 @@
+﻿@model JoinGo.Models.ViewModels.RegisterVM
+
+
+
+<style>
+    .position-relative .toggle-password {
+        position: absolute;
+        top: 38px;
+        right: 15px;
+        cursor: pointer;
+        color: #6c757d;
+        user-select: none;
+        z-index: 10;
+    }
+</style>
+
+
+<h2 class="h4 fw-bold text-center mb-3">成為 JoinGo 會員</h2>
+<p class="text-muted text-center mb-3">成為會員，讓活動報名與創建更簡單：快速報名活動、隨時創建並管理您的活動、掌握活動最新動態，讓每個精彩時刻都不錯過！</p>
+
+<div class="d-grid mb-3">
+    <a href="@Url.Action("ExternalLogin", "Home", new { provider = "Google" })"
+       class="btn d-flex align-items-center justify-content-center text-uppercase fw-bold"
+       style="background-color: #f1f3f4; border: none; color: #000; padding: 10px 24px; border-radius: 5px; width: 100%; margin-top: 10px; text-decoration: none;">
+        <svg width="20" height="20" viewBox="0 0 46 46" xmlns="http://www.w3.org/2000/svg" style="margin-right: 10px;">
+            <defs>
+                <path id="a" d="M44.5 20H24v6h11.9C34 32.4 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l4.7-4.7C33.9 6.6 29.3 5 24 5 12.95 5 4.5 13.45 4.5 24.5S12.95 44 24 44c11 0 19.5-8.5 19.5-19.5 0-1.3-.1-2.4-.3-3.5z" />
+            </defs>
+            <clipPath id="b">
+                <use href="#a" overflow="visible" />
+            </clipPath>
+            <path fill="#FBBC05" d="M0 37V9l17 14z" clip-path="url(#b)" />
+            <path fill="#EA4335" d="M0 9l17 14 7-6.1L48 14V0H0z" clip-path="url(#b)" />
+            <path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z" clip-path="url(#b)" />
+            <path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z" clip-path="url(#b)" />
+        </svg>
+        Google 登入
+    </a>
+</div>
+
+<div class="text-center text-muted mb-3">或</div>
+
+
+<form class="mx-auto" style="max-width: 400px;" id="RegisterForm" action='@Url.Action("Register","Home")' method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <!-- Email -->
+    <div class="mb-4">
+        <div class="input-group">
+            <span class="input-group-text bg-light text-muted">
+                <i class="fa fa-envelope"></i>
+            </span>
+            <input type="email" class="form-control" id="email" name="email" placeholder="請輸入Email" maxlength="50" required>
+        </div>
+        <div class="invalid-feedback"></div>
+    </div>
+
+    <!-- 密碼 -->
+    <div class="mb-4">
+        <div class="input-group">
+            <span class="input-group-text bg-light text-muted">
+                <i class="fa fa-lock"></i>
+            </span>
+            <input type="password" class="form-control" id="password" name="password" placeholder="請輸入密碼" required>
+            <span class="input-group-text bg-light text-muted toggle-password cursor-pointer" toggle="#password" style="user-select:none;">
+                <i class="fa fa-eye"></i>
+            </span>
+        </div>
+        <div class="invalid-feedback"></div>
+    </div>
+
+    <!-- 確認密碼 -->
+    <div class="mb-4">
+        <div class="input-group">
+            <span class="input-group-text bg-light text-muted">
+                <i class="fa fa-lock"></i>
+            </span>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="請再次輸入密碼" required>
+            <span class="input-group-text bg-light text-muted toggle-password cursor-pointer" toggle="#confirmPassword" style="user-select:none;">
+                <i class="fa fa-eye"></i>
+            </span>
+        </div>
+        <div class="invalid-feedback"></div>
+    </div>
+
+    <!-- 姓名 -->
+    <div class="mb-4">
+        <div class="input-group">
+            <span class="input-group-text bg-light text-muted">
+                <i class="fa fa-user"></i>
+            </span>
+            <input type="text" class="form-control" id="name" name="name" placeholder="請輸入姓名" required>
+        </div>
+        <div class="invalid-feedback"></div>
+    </div>
+
+    <div class="form-text mb-4 small text-secondary">
+        成為會員即代表我已同意 JoinGo
+        <a href="https://www.accupass.com/terms/accupass_terms" target="_blank">服務條款</a> 及
+        <a href="https://www.accupass.com/terms/privacy" target="_blank">隱私權政策</a>
+    </div>
+
+    <div class="d-grid mb-3">
+        <button type="submit" class="btn btn-success text-white fw-bold text-uppercase py-2">成為會員</button>
+    </div>
+    <div class="text-center small text-secondary">
+
+        已經是 JoinGo 會員？  <a href="javascript:void(0);"  id="btnSwitchToLogin">登入</a>
+    </div>
+</form>
+
+
+
+<script>
+    // ===== 驗證輔助函式 =====
+    // 錯誤顯示
+    function setError(selector, message) {
+        $(selector).addClass('is-invalid');
+        $(selector).closest('.mb-4').find('.invalid-feedback')
+            .text(message)
+            .show();
+    }
+
+    // 清除錯誤
+    function clearError(selector) {
+        $(selector).removeClass('is-invalid');
+        $(selector).closest('.mb-4').find('.invalid-feedback').text('').hide();
+    }
+
+    // Email 格式驗證
+    function validateEmail(email) {
+        const re = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+        return re.test(email);
+    }
+
+    // 密碼強度驗證（至少三種：大小寫、數字、特殊字元）
+    function isValidPassword(pwd) {
+        if (pwd.length < 8) return false;
+        let types = 0;
+        if (/[A-Z]/.test(pwd)) types++;       // 大寫
+        if (/[a-z]/.test(pwd)) types++;       // 小寫
+        if (/\d/.test(pwd)) types++;          // 數字
+        if (/[^A-Za-z0-9]/.test(pwd)) types++; // 特殊符號
+        return types >= 3;
+    }
+
+
+
+
+
+
+
+    // ===== 主程式 =====
+    $(document).ready(function () {
+
+        // --- blur 驗證 ---
+        $('#email').on('blur', function () {
+            const val = $(this).val().trim();
+            if (!val) setError(this, 'Email 為必填');
+            else if (!validateEmail(val)) setError(this, '請輸入有效的 Email');
+            else clearError(this);
+        });
+
+        $('#password').on('blur', function () {
+            const val = $(this).val();
+            if (!val) setError(this, '密碼為必填');
+            else if (!isValidPassword(val)) setError(this, '密碼至少8碼，需包含大寫、小寫、數字、特殊符號中的三種');
+            else clearError(this);
+        });
+
+        $('#confirmPassword').on('blur', function () {
+            const pwd = $('#password').val();
+            const val = $(this).val();
+            if (!val) setError(this, '請再次輸入密碼');
+            else if (pwd !== val) setError(this, '兩次密碼輸入不一致');
+            else clearError(this);
+        });
+
+        $('#name').on('blur', function () {
+            const val = $(this).val().trim();
+            if (!val) setError(this, '姓名為必填');
+            else clearError(this);
+        });
+
+        // --- 密碼眼睛切換 ---
+        $('.toggle-password').click(function () {
+            var inputSelector = $(this).attr('toggle');
+            var input = $(inputSelector);
+            var icon = $(this).find('i');
+
+            if (input.attr('type') === 'password') {
+                input.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                input.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+
+
+
+
+
+        // --- submit 驗證 ---
+        $('#RegisterForm').on('submit', function (e) {
+            e.preventDefault();
+
+            // 清空錯誤
+            $(this).find('input').removeClass('is-invalid');
+            $(this).find('.invalid-feedback').text('').hide();
+
+            let isValid = true;
+            const email = $('#email').val().trim();
+            const password = $('#password').val();
+            const confirmPassword = $('#confirmPassword').val();
+            const name = $('#name').val().trim();
+
+            if (!email) {
+                setError('#email', 'Email 為必填');
+                isValid = false;
+            } else if (!validateEmail(email)) {
+                setError('#email', '請輸入有效的 Email');
+                isValid = false;
+            }
+
+            if (!password) {
+                setError('#password', '密碼為必填');
+                isValid = false;
+            } else if (!isValidPassword(password)) {
+                setError('#password', '密碼至少8碼，需包含大寫、小寫、數字、特殊符號中的三種');
+                isValid = false;
+            }
+
+            if (!confirmPassword) {
+                setError('#confirmPassword', '請再次輸入密碼');
+                isValid = false;
+            } else if (confirmPassword !== password) {
+                setError('#confirmPassword', '兩次密碼輸入不一致');
+                isValid = false;
+            }
+
+            if (!name) {
+                setError('#name', '姓名為必填');
+                isValid = false;
+            }
+
+            if (isValid) {
+                // 設定已送出，防止重複送出
+                $(this).data('submitted', true);
+
+                // 可以把送出按鈕禁用，避免使用者還是一直點
+                $(this).find('button[type="submit"]').prop('disabled', true);
+
+                this.submit(); // 真正送出表單
+            }
+        });
+
+
+
+        //登入按鈕
+        $('#btnSwitchToLogin').on('click', function () {
+            // 關閉註冊 modal
+            $('#RegisterModal').modal('hide');
+
+            // 等註冊 modal 關閉後再載入登入畫面
+            $('#RegisterModal').on('hidden.bs.modal', function () {
+                $(this).off('hidden.bs.modal'); // 避免重複綁定
+
+                // 透過 AJAX 載入登入 partial
+                $.get('@Url.Action("LoginPartial", "Home")', function (html) {
+                    $('#LoginModalBody').html(html);
+                    $('#LoginModal').modal('show');
+                });
+            });
+        });
+
+
+
+    });
+</script>
+

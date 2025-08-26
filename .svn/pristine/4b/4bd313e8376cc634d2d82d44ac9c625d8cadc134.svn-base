@@ -1,0 +1,478 @@
+﻿@model JoinGo.Models.ViewModels.AccountVM
+@{
+    ViewBag.Title = "帳號管理";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+
+
+<style>
+    .account-wrapper {
+        max-width: 1100px;
+        margin: auto;
+        padding: 2rem 1rem;
+    }
+
+    .account-title {
+        font-weight: bold;
+        font-size: 1.75rem;
+        color: #1c1c1e;
+    }
+
+    .account-subtitle {
+        color: #6b7280;
+        font-size: 15px;
+        margin-top: 0.25rem;
+    }
+
+    .account-wrapper .nav-tab {
+        border-radius: 0.5rem;
+        padding: 1rem;
+        transition: all 0.2s ease;
+        color: #1f2937;
+        background-color: transparent;
+        border: none;
+        text-align: left;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .account-wrapper .nav-tab:hover {
+            background-color: #f5f7fb;
+            cursor: pointer;
+        }
+
+        .account-wrapper .nav-tab.active {
+            background-color: #e8f0fe;
+            font-weight: 600;
+            color: #0d6efd;
+        }
+
+    .side-menu-icon {
+        flex-shrink: 0;
+        font-size: 1.25rem;
+    }
+
+    .account-content h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1c1c1e;
+        margin-bottom: 0.5rem;
+    }
+
+    .account-content .desc {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+    }
+
+    .account-label {
+        font-weight: 600;
+        font-size: 15px;
+        color: #374151;
+        margin-bottom: 0.25rem;
+    }
+
+    .account-email {
+        color: #4b5563;
+        font-size: 14px;
+    }
+
+    .account-hint {
+        font-size: 14px;
+        color: #6c757d;
+    }
+
+        .account-hint a {
+            color: #0d6efd;
+            text-decoration: underline;
+        }
+</style>
+
+<section class="containerArea" id="content">
+    <article class="main-content">
+        <div class="container">
+            <a accesskey="C" href="#start-C" id="start-C" role="button" class="text-start" title="中間內容呈現區">:::</a>
+            <div class="row d-flex justify-content-center">
+                <nav aria-label="breadCrumbs">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="@Url.Action("Index", "Home")">首頁</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">帳號管理</li>
+                    </ol>
+                </nav>
+
+                <div class="account-wrapper">
+                    <div class="row">
+                        <!-- 左側選單 -->
+                        <div class="col-md-4">
+                            <div class="mb-4 card">
+                                <h3 class="account-title">帳號管理</h3>
+                                <p class="account-subtitle">你可以在這裡管理跟 JoinGo 帳號有關的所有設定。</p>
+                            </div>
+
+                            <div class="d-grid gap-2 card">
+                                <button class="nav-tab active" type="button" onclick="showTab('email')">
+                                    <span><i class="bi bi-envelope me-2"></i>變更 Email</span>
+                                    <i class="bi bi-chevron-right side-menu-icon"></i>
+                                </button>
+                                <button class="nav-tab" type="button" onclick="showTab('password')">
+                                    <span><i class="bi bi-shield-lock me-2"></i>變更密碼</span>
+                                    <i class="bi bi-chevron-right side-menu-icon"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 右側內容區 -->
+                        <div class="col-md-8">
+                            <div class="account-content card" id="email-tab">
+                                <h3>變更 Email</h3>
+
+                                <div class="mb-3">
+                                    <div class="account-label">目前 Email</div>
+                                    <div class="account-email">@Model.Email</div>
+                                </div>
+
+                                @if (Model.Origin == "註冊")
+                                {
+                                    using (Html.BeginForm("ResetEmail", "User", FormMethod.Post, new { id = "EditEmailForm" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.HiddenFor(m => m.ACID)
+                                        <!-- Email -->
+                                        <div class="mb-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light text-muted">
+                                                    <i class="fa fa-envelope"></i>
+                                                </span>
+                                                <input type="email" class="form-control" id="NewEmail" name="NewEmail" placeholder="請輸入新Email" maxlength="50" required>
+                                            </div>
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+
+                                        <button class="btn btn-primary" id="submitEmailBtn">變更Email</button>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="account-hint">
+                                        你目前是透過 Google 登入，無法變更 Email。
+                                    </p>
+                                }
+                            </div>
+
+                            <div class="account-content d-none card" id="password-tab">
+                                <h3>變更密碼</h3>
+                                <p class="desc">請輸入新的密碼來更新您的帳號安全性。</p>
+                                <!-- 密碼表單... -->
+                                @using (Html.BeginForm("ResetPassword", "User", FormMethod.Post, new { id = "EditAccountForm" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.HiddenFor(m => m.ACID)
+                                    <div class="mb-3">
+                                        <label class="form-label">新密碼</label>
+                                        <!-- 新密碼 -->
+                                        <div class="mb-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light text-muted">
+                                                    <i class="fa fa-lock"></i>
+                                                </span>
+                                                <input type="password" class="form-control" id="NewPassword" name="NewPassword" placeholder="請輸入新密碼" required>
+                                                <span class="input-group-text bg-light text-muted toggle-password cursor-pointer" toggle="#NewPassword" style="user-select:none;">
+                                                    <i class="fa fa-eye"></i>
+                                                </span>
+                                            </div>
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">確認新密碼</label>
+                                        <div class="mb-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light text-muted">
+                                                    <i class="fa fa-lock"></i>
+                                                </span>
+                                                <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" placeholder="請再次輸入新密碼" required>
+                                                <span class="input-group-text bg-light text-muted toggle-password cursor-pointer" toggle="#ConfirmPassword" style="user-select:none;">
+                                                    <i class="fa fa-eye"></i>
+                                                </span>
+                                            </div>
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary" id="submitBtn">儲存密碼</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*</div>*@
+            </div>
+        </div>
+    </article>
+</section>
+
+
+
+
+
+
+
+
+
+@section Scripts {
+    <script>
+
+        function showTab(tabName) {
+            // 切換內容區塊
+            $('#email-tab, #password-tab').addClass('d-none');
+            $('#' + tabName + '-tab').removeClass('d-none');
+
+            // 切換左側選單的 active 樣式
+            $('.nav-tab').removeClass('active');
+            if (tabName === 'email') {
+                $('.nav-tab').eq(0).addClass('active');
+            } else {
+                $('.nav-tab').eq(1).addClass('active');
+            }
+        }
+
+
+
+        // ===== 驗證輔助函式 =====
+        // 錯誤顯示
+        function setError(selector, message) {
+            $(selector).addClass('is-invalid');
+            $(selector).closest('.mb-4').find('.invalid-feedback')
+                .text(message)
+                .show();
+        }
+
+        // 清除錯誤
+        function clearError(selector) {
+            $(selector).removeClass('is-invalid');
+            $(selector).closest('.mb-4').find('.invalid-feedback').text('').hide();
+        }
+
+
+
+        // 密碼強度驗證（至少三種：大小寫、數字、特殊字元）
+        function isValidPassword(pwd) {
+            if (pwd.length < 8) return false;
+            let types = 0;
+            if (/[A-Z]/.test(pwd)) types++;       // 大寫
+            if (/[a-z]/.test(pwd)) types++;       // 小寫
+            if (/\d/.test(pwd)) types++;          // 數字
+            if (/[^A-Za-z0-9]/.test(pwd)) types++; // 特殊符號
+            return types >= 3;
+        }
+
+
+        // Email 格式驗證
+        function validateEmail(email) {
+            const re = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            return re.test(email);
+        }
+
+
+
+
+        // ===== 主程式 =====
+        $(document).ready(function () {
+            // --- blur 驗證 ---
+            $('#NewEmail').on('blur', function () {
+                const val = $(this).val().trim();
+                if (!val) setError(this, 'Email 為必填');
+                else if (!validateEmail(val)) setError(this, '請輸入有效的 Email');
+                else clearError(this);
+            });
+
+            $('#NewPassword').on('blur', function () {
+                const val = $(this).val();
+                if (!val) setError(this, '新密碼為必填');
+                else if (!isValidPassword(val)) setError(this, '密碼至少8碼，需包含大寫、小寫、數字、特殊符號中的三種');
+                else clearError(this);
+            });
+
+
+            $('#ConfirmPassword').on('blur', function () {
+                const pwd = $('#NewPassword').val();
+                const val = $(this).val();
+                if (!val) setError(this, '請再次輸入新密碼');
+                else if (pwd !== val) setError(this, '兩次密碼輸入不一致');
+                else clearError(this);
+            });
+
+            // --- 密碼眼睛切換 ---
+            $('.toggle-password').click(function () {
+                var inputSelector = $(this).attr('toggle');
+                var input = $(inputSelector);
+                var icon = $(this).find('i');
+
+                if (input.attr('type') === 'password') {
+                    input.attr('type', 'text');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    input.attr('type', 'password');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+
+
+
+
+
+
+
+            // --- submit 驗證(密碼) ---
+            $('#EditAccountForm').on('submit', function (e) {
+                e.preventDefault();
+
+                // 清空錯誤
+                $(this).find('input').removeClass('is-invalid');
+                $(this).find('.invalid-feedback').text('').hide();
+
+                let isValid = true;
+                const password = $('#NewPassword').val();
+                const confirmPassword = $('#ConfirmPassword').val();
+
+                if (!password) {
+                    setError('#NewPassword', '新密碼為必填');
+                    isValid = false;
+                } else if (!isValidPassword(password)) {
+                    setError('#NewPassword', '新密碼至少8碼，需包含大寫、小寫、數字、特殊符號中的三種');
+                    isValid = false;
+                }
+
+                if (!confirmPassword) {
+                    setError('#confirmPassword', '請再次輸入密碼');
+                    isValid = false;
+                } else if (confirmPassword !== password) {
+                    setError('#confirmPassword', '兩次密碼輸入不一致');
+                    isValid = false;
+                }
+
+
+
+                if (isValid) {
+                    // 3. 驗證通過後，進行 AJAX 上傳（含檔案）
+                    const form = this;
+                    const formData = new FormData(form); // 支援檔案上傳
+
+                    $.ajax({
+                        url: $(form).attr('action'),
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if (response.Result === true) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: response.Message
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: response.Message,
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '系統錯誤',
+                                text: '請檢查網路或重新整理頁面'
+                            });
+                        },
+                        complete: function () {
+                            // 重新啟用送出按鈕
+                            $(form).find('button[type="submit"]').prop('disabled', false);
+                        }
+                    });
+                }
+            });
+
+
+
+
+
+            // --- submit 驗證(Email) ---
+            $('#EditEmailForm').on('submit', function (e) {
+                e.preventDefault();
+
+                // 清空錯誤
+                $(this).find('input').removeClass('is-invalid');
+                $(this).find('.invalid-feedback').text('').hide();
+
+                let isValid = true;
+                const NewEmail = $('#NewEmail').val();
+                if (!NewEmail) {
+                    setError('#email', '新Email 為必填');
+                    isValid = false;
+                } else if (!validateEmail(NewEmail)) {
+                    setError('#email', '請輸入有效的 Email');
+                    isValid = false;
+                }
+
+
+                if (isValid) {
+                    // 3. 驗證通過後，進行 AJAX 上傳（含檔案）
+                    const form = this;
+                    const formData = new FormData(form); // 支援檔案上傳
+
+                    $.ajax({
+                        url: $(form).attr('action'),
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if (response.Result === true) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: response.Message
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: response.Message,
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '系統錯誤',
+                                text: '請檢查網路或重新整理頁面'
+                            });
+                        },
+                        complete: function () {
+                            // 重新啟用送出按鈕
+                            $(form).find('button[type="submit"]').prop('disabled', false);
+
+                            // 延遲一點點時間再重新整理（讓使用者看到 SweetAlert）
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1000); // 1 秒後重新整理
+                        }
+                    });
+                }
+            });
+
+
+
+
+
+
+        });
+
+
+    </script>
+
+    }
+

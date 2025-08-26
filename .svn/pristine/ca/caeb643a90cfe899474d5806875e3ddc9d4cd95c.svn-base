@@ -1,0 +1,103 @@
+﻿@model IEnumerable<JoinGo.Models.LoginLog>
+@* 我只是拿來練習表格排序套件用) *@
+@{
+    ViewBag.Title = "Test";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<h2>Test</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LLID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ACID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Provider)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProviderKey)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccessToken)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Creator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Created)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedIP)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LLID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ACID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Provider)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProviderKey)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccessToken)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Creator)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedIP)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+        </tbody>
+
+</table>
+
+
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+@section Scripts {
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable();
+        });
+
+    </script>
+}
