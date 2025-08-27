@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <title>@ViewBag.Title | JoinGo</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta property="og:description" content="">
+    <meta property="og:title" content="JoinGo">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    @*<link rel="icon" href="~/image/logo.ico" type="image/x-icon" />*@
+    @*<link href="~/Scripts/ckeditor5-builder-43.3.1/ckeditor5/ckeditor5.css" rel="stylesheet" />*@
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("Styles", false)
+
+
+</head>
+
+
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light p-0">
+        <div class="w-100 d-flex flex-column">
+            <!-- LOGO -->
+            <div class="w-100 d-flex justify-content-between align-items-center py-2 px-md-2 px-lg-4">
+                <a href="#content" id="gotocenter" title="移到主要內容" class="visually-hidden-focusable">跳到主要內容</a>
+                <a class="d-block text-start" href="/">
+                    <picture>
+                        <source media="(min-width: 1200px)" srcset="~/image/logo.svg" alt="JoinGo">
+                        <img src="~/image/logo.svg" style="width: 80%;" alt="JoinGo">
+                    </picture>
+                </a>
+
+                <div class="align-items-center d-none d-lg-block">
+                    <div class="nav-user text-right mb-2">
+                        <div class="nav-user text-right mb-2">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <hr class="m-0">
+    <article class="main-content">
+        @RenderBody()
+    </article>
+
+    <!-- Footer 區塊 -->
+    <footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container text-md-left">
+            <div class="row">
+                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-4">
+                    <h2 class="logo-text mb-4">
+                        <span class="logo-join">Join</span>
+                        <span class="logo-go">Go</span>
+                    </h2>
+                    <p>
+                        我們是一個專為活動主辦方與參與者設計的 活動報名平台，致力於讓報名流程變得簡單、有系統、好管理。
+                        無論是線上講座、實體市集、工作坊、演唱會，從活動建立、票券管理到參與者通知，我們都替你搞定！
+                    </p>
+                </div>
+                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mb-4">
+                    <h5 class="text-uppercase fw-bold mb-4">快速連結</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">關於我們</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">服務項目</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">常見問題</a></li>
+                        <li><a href="@Url.Action("ContactUs","Admin")" class="text-white text-decoration-none">聯絡我們</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-md-0 mb-4">
+                    <h5 class="text-uppercase fw-bold mb-4">聯絡資訊</h5>
+                    <p><i class="fa fa-home fa-fw me-2"></i> 台北市某某區某某路123號</p>
+                    <p><i class="fa fa-envelope fa-fw me-2"></i> contact@example.com</p>
+                    <p><i class="fa fa-phone fa-fw me-2"></i> 02-1234-5678</p>
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(255, 255, 255, 0.05);">
+            © 2025 JoinGo. 保留所有權利。
+        </div>
+    </footer>
+
+
+
+
+
+
+
+
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/Script")
+
+    @RenderSection("scripts", required: false)
+
+
+
+
+
+
+    <script>
+
+        $(function () {
+
+        })
+    </script>
+</body>
+</html>

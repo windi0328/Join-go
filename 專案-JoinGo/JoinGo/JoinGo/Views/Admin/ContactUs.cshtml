@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "聯絡我們";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+<style>
+    .contact-card {
+        border-radius: 15px;
+        padding: 30px;
+        background: #ffffff;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+    }
+
+    .social-links a {
+        text-decoration: none;
+        color: #495057;
+        font-weight: 500;
+        margin-right: 15px;
+    }
+
+        .social-links a:hover {
+            color: #0d6efd;
+        }
+
+    h2 {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+</style>
+<banner>
+    <img src="~/image/官網_聯絡我們.png" width="100%" alt="聯絡我們Banner">
+</banner>
+
+<div class="container py-5">
+    <div class="row g-5">
+        <!-- 聯絡資訊 -->
+        <div class="col-lg-5">
+            <div class="contact-card h-100">
+                <h2 class="mb-4">聯絡資訊</h2>
+                <p><strong>電話：</strong> (02) 1234-5678</p>
+                <p><strong>傳真：</strong> (02) 1234-5678</p>
+                <p><strong>地址：</strong> 台北市某某區某某路123號</p>
+                <p><strong>聯絡人：</strong> 李依錚</p>
+                <hr>
+                <h5 class="mt-4 mb-3">社群媒體</h5>
+                <div class="social-links d-flex mt-3">
+                    <a href="#" target="_blank" class="btn btn-primary btn-circle text-white">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                    <a href="#" target="_blank" class="btn btn-danger btn-circle text-white">
+                        <i class="fa fa-instagram"></i>
+                    </a>
+                    <a href="#" target="_blank" class="btn btn-info btn-circle text-white">
+                        <i class="fa fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 線上表單 -->
+        <div class="col-lg-7">
+            <div class="contact-card h-100">
+                <h2 class="mb-4">線上留言</h2>
+                <form id="ContactForm">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label for="Questioner" class="form-label font-weight-bold">發問者姓名</label>
+                        <input type="text" class="form-control form-control-lg" id="Questioner" name="Questioner" placeholder="請輸入姓名" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Email" class="form-label font-weight-bold">電子郵件</label>
+                        <input type="email" class="form-control form-control-lg" id="Email" name="Email" placeholder="請輸入電子郵件" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Question1" class="form-label font-weight-bold">問題內容</label>
+                        <textarea class="form-control form-control-lg" id="Question1" name="Question1" rows="6" placeholder="請輸入問題內容" required></textarea>
+                    </div>
+
+                    <!-- 按鈕區塊 -->
+                    <div class="d-flex flex-column flex-md-row gap-2 mt-3">
+                        <a href="/" class="btn btn-secondary btn-lg flex-md-fill">回到首頁</a>
+                        <button type="submit" class="btn btn-main btn-lg flex-md-fill">送出留言</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Map -->
+    <div class="mt-5">
+        <h2 class="mb-3 text-center">我們的位置</h2>
+        <div class="ratio ratio-16x9 shadow rounded">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3615.123456789!2d121.5654!3d25.0339!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442abc123456789%3A0xabcdef1234567890!2z5p2x5Lqs5Y2X5p2x5Lqs!5e0!3m2!1szh-TW!2stw!4v1693132800000!5m2!1szh-TW!2stw"
+                    style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $("#ContactForm").submit(function(e) {
+                e.preventDefault(); // 阻止表單傳統提交
+                var formData = $(this).serialize(); // 序列化表單資料
+                $.ajax({
+                    url: '@Url.Action("CreateQna", "Admin")',
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: response,
+                            html: '您的訊息已收到，我們將會在稍後回覆，並寄信通知您。',
+                            confirmButtonText: '確定'
+                        });
+                        $("#ContactForm")[0].reset(); // 清空表單
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,62 @@
+﻿@model JoinGo.Models.ViewModels.QuestionVM
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="Questioner" class="input-title"><h3>發問者</h3></label>
+                <div class="input--horizontal input-group-lg">
+                    @Html.TextBoxFor(n => n.Questioner, new { id = "Questioner", @class = "form-control", maxlength = "100", placeholder = "請填寫發問者", @disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="Email" class="input-title"><h3>發問者E-Mail</h3></label>
+                <div class="input--horizontal input-group-lg">
+                    @Html.TextBoxFor(n => n.Email, new { id = "Email", @class = "form-control", maxlength = "100", placeholder = "請填寫E-Mail" , @disabled = "disabled" })
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="Question" class="input-title"><h3>問題</h3></label>
+                <div class="input--horizontal input-group-lg">
+                    @Html.TextAreaFor(n => n.Question1, new { id = "Question1", @class = "form-control", placeholder = "請填寫問題", rows = "5", @disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="Response" class="input-title"><h3><span class="text-danger mx-2">*</span>回覆</h3></label>
+                <div class="input--horizontal input-group-lg">
+                    @Html.TextAreaFor(n => n.Response, new { id = "Response", @class = "form-control", placeholder = "請填寫回覆" ,rows="5"})
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="IsSendToQus" class="input-title"><h3><span class="text-danger mx-2">*</span>發送回應給發問者</h3></label>
+                <span class="text-danger" style="font-size:.7rem">* 勾選後儲存將會自動寄信給發問者。</span><br />
+                <div class="form-group ms-5">
+                    <input type="checkbox" class="item-checkbox" id="IsSend" name="IsSend"/>
+                    <label for="IsSend" class="item-checkbox-label">確定發送回應給提問者</label>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="Status" class="input-title"><h3><span class="text-danger mx-2">*</span>狀態</h3></label>
+                <div class="input--horizontal input-group-lg">
+                    <div class="form-group ms-5">
+                        <input id="Status_0" type="radio" name="Status" value="1" @(Model.Status != null && Model.Status == 1 ? "checked" : "") />
+                        <label for="Status_0"> 尚未</label>
+
+                        <input id="Status_1" type="radio" name="Status" value="2" class="ms-2" @(Model.Status != null && Model.Status == 2 ? "checked" : "") />
+                        <label for="Status_1"> 處理中</label>
+
+                        <input id="Status_2" type="radio" name="Status" value="3" class="ms-2" @(Model.Status != null && Model.Status == 3 ? "checked" : "") />
+                        <label for="Status_2"> 完成</label>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- bnt -->
+    <div class="text-center submit-btn">
+        <button type="button" class="btn btn-main w-auto" onclick="EditFun(@Model.QuID);">儲存</button>
+        <button type="button" class="btn btn-main-line w-auto" data-bs-dismiss="modal" aria-label="Close">關閉</button>
+    </div>
+</div>

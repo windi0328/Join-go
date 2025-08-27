@@ -1,0 +1,295 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model PagedList.IPagedList<JoinGo.Models.ViewModels.QuestionVM>
+
+@{
+    Layout = null;
+}
+
+<input type="hidden" id="page" value="@ViewBag.page" />
+
+<table id="tabelhorizontal" class="table table-bordered mb-0" style="word-wrap:break-word;word-break:break-all;">
+    <thead>
+        <tr>
+            <th scope="col" class="align-middle gray-dark" width="5%">序號</th>
+            <th scope="col" class="align-middle gray-dark" width="10%">發問者</th>
+            <th scope="col" class="align-middle gray-dark" width="25%">發問者Email</th>
+            <th scope="col" class="align-middle gray-dark" width="30%">問題</th>
+            <th scope="col" class="align-middle gray-dark" width="10%">發問日期</th>
+            <th scope="col" class="align-middle gray-dark" width="5%">狀態</th>
+            <th scope="col" class="align-middle gray-dark" width="5%">查看</th>
+            <th scope="col" class="align-middle gray-dark" width="5%">回覆</th>
+            <th scope="col" class="align-middle gray-dark" width="5%">刪除</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            int serialNumber = Model.PageNumber * Model.PageSize - Model.PageSize + 1;
+  
+            foreach (var m in Model)
+            {
+                <tr class="text-left">
+                    <td class="font-weight-bold text-center">@serialNumber</td>
+                    <td class="font-weight-bold text-center">@m.Questioner</td>
+                    <td class="font-weight-bold text-center">@m.Email</td>
+                    <td class="font-weight-bold">@m.Question1</td>
+                    <td class="font-weight-bold text-center"> @(m.Created.HasValue ? m.Created.Value.ToString("yyyy-MM-dd HH:mm") : String.Empty)</td>
+
+                    @if (m.StatusName == "尚未")
+                    {
+                        <td class="text-center"><span class="badge text-bg-light rounded-pill fs-6">尚未</span></td>
+                    }
+                    else if (m.StatusName == "處理中")
+                    {
+                        <td class="text-center"><span class="badge text-bg-primary rounded-pill fs-6">處理中</span></td>
+                    }
+                    else if (m.StatusName == "完成")
+                    {
+                        <td class="text-center"><span class="badge text-bg-success rounded-pill fs-6">完成</span></td>
+                    }
+
+                    <td class="text-center"><a href="#" onclick="Detail(@m.QuID);" class="btn btn-secondary w-auto mr-1"><i class="fa fa-search" aria-hidden="true"></i></a> </td>
+                    <td class="text-center">
+                        <a href="#" onclick="Edit(@m.QuID);" class="btn btn-main w-auto mr-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="text-center">
+                        <a href="#" onclick="DeleteFun(@m.QuID);" class="btn btn-danger w-auto mr-1"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+
+                serialNumber++;
+            }
+
+        }
+        else
+        {
+            <tr>
+                <td colspan="9" style="text-align: center;"> 目前沒有任何資料 </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div class="span8 text-center mt-4">
+    <div id="contentPager">
+        @Html.PagedListPager(Model, page => Url.Action("QnaManageList", new { page = page }),
+       new PagedListRenderOptions { LinkToPreviousPageFormat = "上一頁", LinkToNextPageFormat = "下一頁", PageCountAndCurrentLocationFormat = "第{0}頁/共{1}頁，總筆數:" + @ViewBag.TotalCount, DisplayPageCountAndCurrentLocation = true })
+    </div>
+</div>
+
+
+
+<script>
+    function getAntiForgeryToken() {
+        return $('input[name="__RequestVerificationToken"]').val();
+    }
+    @*//新增送出
+    function CreateFun() {
+      /*  debugger;*/
+
+        var TypeName = $("#TypeName option:selected").text();
+        var Type = $('select[name="TypeName"]').val();
+        var Questioner = $('#Questioner').val();
+        //var TypeName = $('input[name="TypeName"]:selected').val();
+        var Email = $('#Email').val();
+        var Question = $('#Question').val();
+        var Response = $('#Response').val();
+        var IsFandA = $('input[name="IsFandA"]:checked').val();
+        var Status = $('input[name="Status"]:checked').val();
+        var Display = $('input[name="Display"]:checked').val();
+        var IsTop = $('input[name="IsTop"]:checked').val();
+
+        if (TypeName == "請選擇類別") {
+            Swal.fire({
+                title: "請選擇類別",
+                confirmButtonText: "確定"
+            });
+        } else if (Question == "") {
+            Swal.fire({
+                title: "請填寫問題",
+                confirmButtonText: "確定"
+            });
+        //} else if (Response == "") {
+        //    Swal.fire({
+        //        title: "請填寫回應",
+        //        confirmButtonText: "確定"
+        //    });
+
+
+        //} else if (Enable == undefined) {
+        //    Swal.fire({
+        //        title: "請選擇是否啟用",
+        //        confirmButtonText: "確定"
+        //    });
+
+
+        }
+
+        else {
+            var data = {
+                Type: Type,
+                Questioner: Questioner,
+                Email: Email,
+                Question: Question,
+                Response: Response,
+                IsFandA: IsFandA,
+                Status: Status,
+                Display: Display,
+                IsTop: IsTop
+            }
+            $.ajax({
+                data: data,
+                datatype: 'json',
+                type: 'post',
+                url: "@Url.Action("CreateQna", "Admin")",
+                success: function (da) {
+                    Swal.fire(da);
+                    if (da == "新增成功") {
+                        $('#CreateSMModal').modal('hide');
+                            GetData('@ViewBag.page');
+                        console.log(@ViewBag.page)
+                    }
+                },
+                error: function (data) {
+
+                }
+            });
+        }
+    }*@
+
+    //單筆刪除
+    function DeleteFun(QuID) {
+        Swal.fire({
+            title: '是否確定刪除?',
+            showCancelButton: true,
+            confirmButtonText: '確定',
+            cancelButtonText: '取消',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    data: {
+                        QuID: QuID,
+                        __RequestVerificationToken: getAntiForgeryToken() // 包含 CSRF 令牌
+                    },
+                    datatype: 'json',
+                    type: 'post',
+                    url: "@Url.Action("DeleteQna", "Admin")",
+                    success: function (da) {
+                        if (da == "刪除成功") {
+                            Swal.fire(da);
+                            GetData('@ViewBag.page');
+                        } else {
+                            Swal.fire(da);
+                        }
+                    }
+                });
+            }
+        })
+    }
+
+    //編輯送出
+    function EditFun(QuID) {
+        var Response = $('#Response').val();
+        var Status = $('input[name="Status"]:checked').val();
+        var IsSendlen = $('input[name="IsSend"]:checked').length;
+
+         if (Response == "") {
+            Swal.fire({
+                title: "請填寫回覆",
+                confirmButtonText: "確定"
+            });
+        }
+        else if (Status == undefined) {
+            Swal.fire({
+                title: "請選擇是否啟用",
+                confirmButtonText: "確定"
+            });
+        }
+        else {
+            var data = {
+                QuID: QuID,
+                Response: Response,
+                Status: Status,
+                IsSendlen: IsSendlen,
+                __RequestVerificationToken: getAntiForgeryToken() // 包含 CSRF 令牌
+                }
+            $.ajax({
+                data: data,
+                datatype: 'json',
+                type: 'post',
+                url: "@Url.Action("EditQna", "Admin")",
+                success: function (da) {
+                    Swal.fire(da);
+                    if (da == "編輯成功") {
+                        $('#EditModal').modal('hide');
+                        GetData('@ViewBag.page');
+                    }
+                }
+            });
+        }
+    }
+
+
+
+
+    $(function () {
+
+        //全部選取
+        $('#selectAllBtn').click(function (e) {
+            e.preventDefault();
+            $('.item-checkbox').prop('checked', true);
+        });
+
+        //取消選取
+        $('#deselectAllBtn').click(function (e) {
+            e.preventDefault();
+            $('.item-checkbox').prop('checked', false);
+        });
+
+        //選取刪除
+        $('#deleteSelectedBtn').click(function (e) {
+            e.preventDefault();
+            var selected = $('input[class="item-checkbox"]:checked');
+            var selectedQuIDs = selected.map(function () {
+                return this.value;
+            }).get();
+
+            if (selected.length === 0) {
+                Swal.fire({
+                    title: "請選擇要刪除的項目",
+                    confirmButtonText: "確定"
+                });
+                return;
+            }
+            Swal.fire({
+            title: '確定要刪除選取的項目嗎?',
+            showCancelButton: true,
+            confirmButtonText: '確定',
+            cancelButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        data: {
+                            //selectedIds: selectedIds, __RequestVerificationToken: getAntiForgeryToken() // 包含 CSRF 令牌
+                            selectedQuIDs: selectedQuIDs
+                        },
+                        datatype: 'json',
+                        type: 'post',
+                        url: "@Url.Action("DeleteQnaChecbox", "Site")",
+                        success: function (da) {
+                            if (da == "刪除成功") {
+                                Swal.fire(da);
+                                GetData('@ViewBag.page');
+
+                            } else {
+                                Swal.fire(da);
+                            }
+                        }
+                    });
+                }
+            })
+        });
+    });
+</script>

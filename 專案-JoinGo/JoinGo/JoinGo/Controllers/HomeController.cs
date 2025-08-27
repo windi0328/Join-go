@@ -319,7 +319,6 @@ namespace JoinGo.Controllers
 		public async Task<ActionResult> VerificationCodeAudio()
 		{
 			// 檢查 AuthorModel.Current 或 Code 是否為 null
-
 			if (AuthorModel.Current == null || AuthorModel.Current.Code == null)
 			{
 				logger.Error("AuthorModel.Current 或 AuthorModel.Current.Code 為 null");

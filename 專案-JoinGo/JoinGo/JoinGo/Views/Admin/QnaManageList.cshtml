@@ -1,0 +1,266 @@
+﻿@using JoinGo.Models.Author;
+@{
+    ViewBag.Title = "聯絡我們管理";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+@Html.AntiForgeryToken()
+<input type="hidden" id="page" value="@ViewBag.page" />
+
+<article class="main-content" id="content">
+    <section class="containerArea">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <nav aria-label="breadCrumbs">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="@(AuthorModel.Current.Role == "User" ? "/User/Index" : AuthorModel.Current.Role == "Admin" ? "/Admin/Index"  : "/Home/Index" )">首頁</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">聯絡我們管理</li>
+                        </ol>
+                    </nav>
+                    <div>
+                        <a href="#C" id="AC" name="C" title="中央內容區塊 Alt + C" accesskey="C" class="d-none d-lg-inline-block mb-2">:::</a>
+                    </div>
+                    <div class="container card">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="titleText">
+                                    <h2>聯絡我們管理</h2>
+                                </div>
+                                <!-- 資料篩選區塊 -->
+                                <div class="mt-4">
+                                    <div class="row align-items-center mt-4">
+                                        <div class="col-12 col-lg-3">
+                                            <label for="SearchStatus" class="form-label"><strong>狀態 :</strong></label>
+                                            <select name="SearchStatus" id="SearchStatus" class="form-select">
+                                                <option value="">請選擇</option>
+                                                <option value="1">尚未</option>
+                                                <option value="2">處理中</option>
+                                                <option value="3">完成</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-12 col-lg-6">
+                                            <label for="Search" class="form-label"><strong>關鍵字搜尋</strong></label>
+                                            <input type="text" id="Search" class="form-control"
+                                                   placeholder="可查詢發問者、發問者信箱、問題內容" />
+                                        </div>
+
+                                        <div class="col-12 col-lg-3 text-center mt-4">
+                                            <button type="submit" class="btn btn-main w-auto" id="searchButton">查詢</button>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="row justify-content-center mb-1">
+                            <div class="col-12">
+                                @* 後台管理不會有新增功能 *@
+                                @*<button type="button" class="btn btn-main w-auto mr-1 mb-2" onclick="Create()">新增</button>*@
+
+                                <!-- 列表 -->
+                                <div class="table-responsive-xl table-hover first-table text-center table-container" id="ListArea">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+</article>
+
+
+
+
+
+
+
+
+<!--新增 Modal -->
+<div class="modal fade" id="CreateModal" tabindex="-1" aria-labelledby="CreateModalTitle" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <!-- Modal 標頭 -->
+            <div class="modal-header titleText mx-2">
+                <h2>新增</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Modal 內容 -->
+            <div class="modal-body">
+                <div class="container">
+                    <div class="CreateDiv my-2">
+                        <!-- AJAX 內容會載入在這裡 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@*查看 Modal*@
+<div class="modal fade" id="DetailModal" tabindex="-1" aria-labelledby="DetailModalTitle" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <!-- Modal 標頭 -->
+            <div class="modal-header titleText mx-2">
+                <h2>查看</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Modal 內容 -->
+            <div class="modal-body">
+                <div class="container">
+                    <div class="DetailDiv my-2">
+                        <!-- AJAX 內容會載入在這裡 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--編輯 Modal -->
+<div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModalTitle" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <!-- Modal 標頭 -->
+            <div class="modal-header titleText mx-2">
+                <h2>回覆</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Modal 內容 -->
+            <div class="modal-body">
+                <div class="container">
+                    <div class="EditDiv my-2">
+                        <!-- AJAX 內容會載入在這裡 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@section Scripts {
+    <script>
+
+    //Partial View(列表)
+        function GetData(page) {
+            var Search = $("#Search").val();
+            var SearchStatus = $('#SearchStatus').val();
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("_ParQnaManageList", "Admin")",
+            data: {
+                Search: Search,
+                SearchStatus: SearchStatus,
+                page: page
+            },
+            success: function (response) {
+                window.location.hash = page;
+                $("#ListArea").html(response);
+                $('#ListArea .pagination li a').each(function (i, item) {
+                    var hyperLinkUrl = $(item).attr('href');
+
+                    if (typeof hyperLinkUrl !== 'undefined' && hyperLinkUrl !== false) {
+                        var pageNumber = $(item).attr('href');
+                        var page = $(item).attr('href')
+                            .replace('/Admin/QnaManageList?page=', '');
+                        pageNumber = pageNumber.split("&")[0];
+                        $(item).attr('href', '#');
+                        $(item).attr('href', pageNumber).click(function (event) {
+                            event.preventDefault();
+                            $(event.target).attr('href');
+                            GetData(page);
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+
+    //管理端不能建立
+    @*function Create() {
+          $.get('@Url.Action("_ParCreateQna", "Admin")',, function (data) {
+            $('.CreateDiv').html(data);
+
+            // Bootstrap 5 寫法
+            ar Modal = new bootstrap.Modal($('#CreateModal')[0]);
+            Modal.show();
+        });
+    }*@
+
+
+    //查看單筆Partial View
+    function Detail(QuID) {
+        $.get('@Url.Action("_ParDetailQna", "Admin")', { "QuID": QuID }, function (data) {
+            $('.DetailDiv').html(data);
+
+            // Bootstrap 5 寫法
+            var Modal = new bootstrap.Modal($('#DetailModal')[0]);
+            Modal.show();
+        });
+    }
+
+    //編輯單筆Partial View
+    function Edit(QuID) {
+        $.get('@Url.Action("_ParEditQnaManage", "Admin")', { "QuID": QuID }, function (data) {
+            $('.EditDiv').html(data);
+
+            // Bootstrap 5 寫法
+            var Modal = new bootstrap.Modal($('#EditModal')[0]);
+            Modal.show();
+        });
+    }
+
+    // 隱藏時清除modal的內容
+    $('#CreateModal, #DetailModal, #EditModal').on('hidden.bs.modal', function () {
+        $(this).find('.CreateDiv, .DetailDiv, .EditDiv').html('');
+    });
+
+
+    //關鍵字搜尋
+    $("#Search").on('change', function () {
+        GetData(1);
+    });
+    //狀態搜尋
+    $("#SearchStatus").on('change', function () {
+        GetData(1);
+    });
+    //查詢按鈕
+    $("#searchButton").on("click", function () {
+        GetData(1);
+    });
+
+
+    $(function () {
+        var page = $("#page").val();
+        GetData(page)
+    });
+    </script>
+
+}
+
+

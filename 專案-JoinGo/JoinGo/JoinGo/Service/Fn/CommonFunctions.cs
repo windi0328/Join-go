@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net.Mail;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace JoinGo.Service.Fn
@@ -64,6 +68,7 @@ namespace JoinGo.Service.Fn
         }
 
 
+    
 
     }
 }
