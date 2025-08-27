@@ -1,0 +1,107 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model PagedList.IPagedList<JoinGo.Models.ViewModels.QuestionVM>
+@{
+    ViewBag.Title = "常見問題";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+<style>
+    /* 展開時題目底色變淺藍，文字變藍色 */
+    .accordion-button:not(.collapsed) {
+        background-color: #e7f1ff !important;
+     /*   color: #0d6efd !important;*/
+    }
+    
+    /* 可選：加粗 Q 標籤 */
+    .accordion-button:not(.collapsed) .me-2 {
+        font-weight: bold;
+    }
+
+    /* 移除 accordion-button 點擊或 focus 的藍色外框 */
+    .accordion-button:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+</style>
+
+<main class="FAQ-Area my-4">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-3">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">首頁</a></li>
+                <li class="breadcrumb-item active" aria-current="page">常見問題</li>
+            </ol>
+        </nav>
+
+        <div class="card py-4">
+            <div class="container text-center py-2">
+                <!-- 主標題 -->
+                <h1 class="display-5 fw-bold mb-3" style="color: #0056B3">常見問題</h1>
+
+                <!-- 裝飾條 -->
+                <div class="mb-3 d-flex justify-content-center">
+                    <div style="width: 60px; height: 4px; background: #0056B3; border-radius: 2px;"></div>
+                </div>
+            </div>
+
+
+
+            <section class="container">
+                @if (Model.Count > 0)
+                {
+                    <div class="accordion" id="faqAccordion">
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            var q = Model[i];
+                            var collapseId = $"collapse-{i}";
+                            var headingId = $"heading-{i}";
+                            <div class="accordion-item mb-3 shadow-sm rounded">
+                                <h2 class="accordion-header" id="@headingId">
+                                    <button class="accordion-button collapsed bg-white text-black fw-semibold" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#@collapseId"
+                                            aria-expanded="false" aria-controls="@collapseId">
+                                        <span class="me-2">Q @(@i + 1)：</span>@q.Question1
+                                    </button>
+                                </h2>
+                                <div id="@collapseId" class="accordion-collapse collapse" aria-labelledby="@headingId" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body bg-white p-4 fs-6 text-dark border-top">
+                                        <span class="fw-bold text-success">A:</span> <br />
+                                        @Html.Raw(q.Response)
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-center text-muted fs-5">目前沒有任何資料。</p>
+                }
+
+
+                @if (Model.Count > 0)
+                {
+                    <div class="d-flex justify-content-center mt-2">
+                        <div id="contentPager">
+                            @Html.PagedListPager(Model, page => Url.Action("Faq", new { page = page }),
+                                new PagedListRenderOptions
+                                {
+                                    LinkToPreviousPageFormat = "上一頁",
+                                    LinkToNextPageFormat = "下一頁",
+                                    PageCountAndCurrentLocationFormat = "第{0}頁/共{1}頁，總筆數:" + @ViewBag.TotalCount,
+                                    DisplayPageCountAndCurrentLocation = true,
+                                    UlElementClasses = new[] { "pagination" },
+                                    LiElementClasses = new[] { "page-item" }
+                                })
+                        </div>
+                    </div>
+                }
+                <div class="text-center mt-4">
+                    <a href="/" class="btn btn-main-line btn-sm flex-md-fill">回到首頁</a>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+

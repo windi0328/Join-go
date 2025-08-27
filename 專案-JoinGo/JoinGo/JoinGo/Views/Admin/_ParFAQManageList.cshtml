@@ -6,19 +6,48 @@
     Layout = null;
 }
 
+
+<style>
+    /* 置頂 icon 樣式 */
+    .top-icon {
+      color: #e74c3c; /* 紅色 */
+      text-shadow: 0 0 8px rgba(231, 76, 60, 0.6); /* 發光 */
+      animation: bounce 1s infinite;
+      transition: transform 0.3s ease, color 0.3s ease;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+
+    /* 滑鼠移上去有旋轉 + 顏色變金色 */
+    .top-icon:hover {
+      color: #f39c12;
+      text-shadow: 0 0 12px rgba(243, 156, 18, 0.8);
+      transform: rotate(-15deg) scale(1.2);
+    }
+
+    /* 上下跳動動畫 */
+    @@keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-6px);
+      }
+      60% {
+        transform: translateY(-3px);
+      }
+    }
+</style>
 <input type="hidden" id="page" value="@ViewBag.page" />
 
 <table id="tabelhorizontal" class="table table-bordered mb-0" style="word-wrap:break-word;word-break:break-all;">
     <thead>
         <tr>
             <th scope="col" class="align-middle gray-dark" width="5%">序號</th>
-            <th scope="col" class="align-middle gray-dark" width="10%">發問者</th>
-            <th scope="col" class="align-middle gray-dark" width="25%">發問者Email</th>
-            <th scope="col" class="align-middle gray-dark" width="30%">問題</th>
-            <th scope="col" class="align-middle gray-dark" width="10%">發問日期</th>
-            <th scope="col" class="align-middle gray-dark" width="5%">狀態</th>
+            <th scope="col" class="align-middle gray-dark" width="40%">問題</th>
+            <th scope="col" class="align-middle gray-dark" width="40%">回覆</th>
             <th scope="col" class="align-middle gray-dark" width="5%">查看</th>
-            <th scope="col" class="align-middle gray-dark" width="5%">回覆</th>
+            <th scope="col" class="align-middle gray-dark" width="5%">編輯</th>
             <th scope="col" class="align-middle gray-dark" width="5%">刪除</th>
         </tr>
     </thead>
@@ -26,28 +55,20 @@
         @if (Model.Any())
         {
             int serialNumber = Model.PageNumber * Model.PageSize - Model.PageSize + 1;
-  
+
             foreach (var m in Model)
             {
                 <tr class="text-left">
                     <td class="font-weight-bold text-center">@serialNumber</td>
-                    <td class="font-weight-bold text-center">@m.Questioner</td>
-                    <td class="font-weight-bold text-center">@m.Email</td>
-                    <td class="font-weight-bold">@m.Question1</td>
-                    <td class="font-weight-bold text-center"> @(m.Created.HasValue ? m.Created.Value.ToString("yyyy-MM-dd HH:mm") : String.Empty)</td>
+                    <td class="font-weight-bold text-left">
+                        @if (m.IsTop == true)  // 如果這筆是置頂的資料
+                        {
+                            <i class="fa fa-arrow-up top-icon me-2" title="置頂"></i>
+                        }
+                        @m.Question1
+                    </td>
 
-                    @if (m.StatusName == "尚未")
-                    {
-                        <td class="text-center"><span class="badge text-bg-light rounded-pill fs-6">尚未</span></td>
-                    }
-                    else if (m.StatusName == "處理中")
-                    {
-                        <td class="text-center"><span class="badge text-bg-primary rounded-pill fs-6">處理中</span></td>
-                    }
-                    else if (m.StatusName == "完成")
-                    {
-                        <td class="text-center"><span class="badge text-bg-success rounded-pill fs-6">完成</span></td>
-                    }
+                    <td class="font-weight-bold text-left">@m.Response</td>
 
                     <td class="text-center"><a href="#" onclick="Detail(@m.QuID);" class="btn btn-secondary w-auto mr-1"><i class="fa fa-search" aria-hidden="true"></i></a> </td>
                     <td class="text-center">
@@ -74,7 +95,7 @@
 
 <div class="span8 text-center mt-4">
     <div id="contentPager">
-        @Html.PagedListPager(Model, page => Url.Action("QnaManageList", new { page = page }),
+        @Html.PagedListPager(Model, page => Url.Action("FAQList", new { page = page }),
        new PagedListRenderOptions { LinkToPreviousPageFormat = "上一頁", LinkToNextPageFormat = "下一頁", PageCountAndCurrentLocationFormat = "第{0}頁/共{1}頁，總筆數:" + @ViewBag.TotalCount, DisplayPageCountAndCurrentLocation = true })
     </div>
 </div>
@@ -85,71 +106,49 @@
     function getAntiForgeryToken() {
         return $('input[name="__RequestVerificationToken"]').val();
     }
-    @*//新增送出
+    //新增送出
     function CreateFun() {
-      /*  debugger;*/
 
-        var TypeName = $("#TypeName option:selected").text();
-        var Type = $('select[name="TypeName"]').val();
-        var Questioner = $('#Questioner').val();
-        //var TypeName = $('input[name="TypeName"]:selected').val();
-        var Email = $('#Email').val();
-        var Question = $('#Question').val();
-        var Response = $('#Response').val();
-        var IsFandA = $('input[name="IsFandA"]:checked').val();
-        var Status = $('input[name="Status"]:checked').val();
-        var Display = $('input[name="Display"]:checked').val();
+        var Question1 = $('#Question1').val().trim();;
+        var Response = $('#Response').val().trim();;
         var IsTop = $('input[name="IsTop"]:checked').val();
-
-        if (TypeName == "請選擇類別") {
-            Swal.fire({
-                title: "請選擇類別",
-                confirmButtonText: "確定"
-            });
-        } else if (Question == "") {
+        if (Question1 == "") {
             Swal.fire({
                 title: "請填寫問題",
                 confirmButtonText: "確定"
             });
-        //} else if (Response == "") {
-        //    Swal.fire({
-        //        title: "請填寫回應",
-        //        confirmButtonText: "確定"
-        //    });
-
-
-        //} else if (Enable == undefined) {
-        //    Swal.fire({
-        //        title: "請選擇是否啟用",
-        //        confirmButtonText: "確定"
-        //    });
-
-
         }
-
+        else if (Response == "") {
+            Swal.fire({
+                title: "請填寫回覆",
+                confirmButtonText: "確定"
+            });
+        }
+        else if (IsTop == undefined) {
+            Swal.fire({
+                title: "請選擇是否置頂",
+                confirmButtonText: "確定"
+            });
+        }
         else {
             var data = {
-                Type: Type,
-                Questioner: Questioner,
-                Email: Email,
-                Question: Question,
+                Question1: Question1,
                 Response: Response,
-                IsFandA: IsFandA,
-                Status: Status,
-                Display: Display,
-                IsTop: IsTop
+                IsTop: IsTop,
+                __RequestVerificationToken: getAntiForgeryToken() // 包含 CSRF 令牌
             }
             $.ajax({
                 data: data,
                 datatype: 'json',
                 type: 'post',
-                url: "@Url.Action("CreateQna", "Admin")",
+                url: "@Url.Action("CreateFAQ", "Admin")",
                 success: function (da) {
                     Swal.fire(da);
                     if (da == "新增成功") {
-                        $('#CreateSMModal').modal('hide');
-                            GetData('@ViewBag.page');
-                        console.log(@ViewBag.page)
+                        $('#CreateModal').modal('hide');
+                        GetData('@ViewBag.page');
+                    } else {
+                        Swal.fire(da);
                     }
                 },
                 error: function (data) {
@@ -157,7 +156,7 @@
                 }
             });
         }
-    }*@
+    }
 
     //單筆刪除
     function DeleteFun(QuID) {
@@ -175,7 +174,7 @@
                     },
                     datatype: 'json',
                     type: 'post',
-                    url: "@Url.Action("DeleteQna", "Admin")",
+                    url: "@Url.Action("DeleteFAQ", "Admin")",
                     success: function (da) {
                         if (da == "刪除成功") {
                             Swal.fire(da);
@@ -191,40 +190,48 @@
 
     //編輯送出
     function EditFun(QuID) {
+        var Question1 = $('#Question1').val();
         var Response = $('#Response').val();
-        var Status = $('input[name="Status"]:checked').val();
-        var IsSendlen = $('input[name="IsSend"]:checked').length;
+        var IsTop = $('input[name="IsTop"]:checked').val();;
 
-         if (Response == "") {
+        if (Question1 == "") {
+            Swal.fire({
+                title: "請填寫問題",
+                confirmButtonText: "確定"
+            });
+        }
+         else if (Response == "") {
             Swal.fire({
                 title: "請填寫回覆",
                 confirmButtonText: "確定"
             });
         }
-        else if (Status == undefined) {
+        else if (IsTop == undefined) {
             Swal.fire({
-                title: "請選擇是否啟用",
+                title: "請選擇是否置頂",
                 confirmButtonText: "確定"
             });
         }
         else {
             var data = {
                 QuID: QuID,
+                Question1: Question1,
                 Response: Response,
-                Status: Status,
-                IsSendlen: IsSendlen,
+                IsTop: IsTop,
                 __RequestVerificationToken: getAntiForgeryToken() // 包含 CSRF 令牌
                 }
             $.ajax({
                 data: data,
                 datatype: 'json',
                 type: 'post',
-                url: "@Url.Action("EditQna", "Admin")",
+                url: "@Url.Action("EditFAQ", "Admin")",
                 success: function (da) {
                     Swal.fire(da);
                     if (da == "編輯成功") {
                         $('#EditModal').modal('hide');
                         GetData('@ViewBag.page');
+                    } else {
+                        Swal.fire(da);
                     }
                 }
             });

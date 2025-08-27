@@ -16,9 +16,9 @@ namespace JoinGo.Service.Admin
 		private static CommonFunctions CommonFunctions = new CommonFunctions();
         private static HomeService HomeService = new HomeService();
 
-
-        //取得列表資料(聯絡我們管理)
-        public List<QuestionVM> GetQnaManagList(string search,int? SearchStatus)
+		#region 聯絡我們
+		//取得列表資料(聯絡我們管理)
+		public List<QuestionVM> GetQnaManagList(string search,int? SearchStatus)
         {
             using (JoinGoEntities db = new JoinGoEntities())
             {
@@ -276,8 +276,8 @@ namespace JoinGo.Service.Admin
                     Qt.Email = data.Email;
                     Qt.Question1 = data.Question1;
                     Qt.Status = 0;//尚未
+
                     Qt.Created = DateTime.Now;
-                    Qt.Updated = DateTime.Now;
                     if (ChkAuthor.CheckSession()) { Qt.Creator = AuthorModel.Current.ACID; }
                     Qt.CreatedIP = CommonFunctions.GetClientIpAddress();
 
@@ -294,6 +294,204 @@ namespace JoinGo.Service.Admin
 
             return result;
         }
+
+        #endregion
+
+
+
+        #region 常見問題
+        //取得列表資料(常見問題管理)
+        public List<QuestionVM> GetFAQManagList(string search)
+        {
+            using (JoinGoEntities db = new JoinGoEntities())
+            {
+                var query = db.Question.AsQueryable();
+                query = query.Where(mf => mf.Type == 1)//只取常見問題的資料
+                             .OrderByDescending(mf => mf.IsTop)   // true 在前面
+                             .ThenByDescending(mf => mf.Created); // 再依建立時間新到舊
+
+                // 搜尋條件：關鍵字
+                search = search?.Trim();
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.Where(mf =>
+                        mf.Question1.Contains(search) ||
+                        mf.Response.Contains(search));
+                }
+
+
+                //將資料存到ViewModel
+                var result = query.Select(mf => new QuestionVM
+                {
+                    QuID = mf.QuID,
+                    Question1 = mf.Question1,
+                    Response = mf.Response,
+                    IsTop = mf.IsTop
+                }).ToList();
+
+                return result;
+            }
+        }
+
+
+        //新增存檔動作(常見問題管理)
+        public string CreateFAQ(QuestionVM data)
+        {
+
+            string result = "";
+            try
+            {
+                using (JoinGoEntities db = new JoinGoEntities())
+                {
+                    Question Qt = new Question();
+                    Qt.Type = 1; //常見問題
+                    Qt.Question1 = data.Question1;
+                    Qt.Response = data.Response;
+                    Qt.IsTop = data.IsTop;
+                    Qt.Created = DateTime.Now;
+                    Qt.Creator = AuthorModel.Current.ACID; 
+                    Qt.CreatedIP = CommonFunctions.GetClientIpAddress();
+
+                    db.Question.Add(Qt);
+                    db.SaveChanges();
+                }
+                result = "新增成功";
+            }
+            catch (Exception ex)
+            {
+                logger.Debug("[AdminService]錯誤function：CreateFAQ 新增動作(常見問題管理),錯誤訊息：" + ex.InnerException + ex.ToString());
+                result = "系統繁忙中，請稍後再試";
+            }
+
+            return result;
+        }
+
+
+        //查看資料(常見問題管理)
+        public QuestionVM DetailFAQ(int QuID)
+        {
+            QuestionVM result = new QuestionVM();
+            try
+            {
+                using (JoinGoEntities db = new JoinGoEntities())
+                {
+                    Question data = db.Question.Where(a => a.QuID == QuID).FirstOrDefault();
+
+                    if (data != null)
+                    {
+                        result.Type = data.Type;
+                        result.Question1 = data.Question1;
+                        result.Response = data.Response;
+                        result.IsTop = data.IsTop;
+                        result.Created = data.Created;
+                        result.Updated = data.Updated;
+                        result.CreatedIP = data.CreatedIP;
+                        result.UpdatedIP = data.UpdatedIP;
+                        result.CreatorName = db.Account.FirstOrDefault(u => u.ACID == data.Creator)?.Name;
+                        result.UpdatorName = db.Account.FirstOrDefault(u => u.ACID == data.Updator)?.Name;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Debug("[AdminService]錯誤function：DetailFAQ 查看資料(常見問題管理),錯誤訊息：" + ex.InnerException + ex.ToString());
+            }
+            return result;
+        }
+
+
+        //編輯資料(常見問題管理)
+        public QuestionVM EditFAQ(int QuID)
+        {
+            QuestionVM result = new QuestionVM();
+            try
+            {
+                using (JoinGoEntities db = new JoinGoEntities())
+                {
+                    Question data = db.Question.Where(a => a.QuID == QuID).FirstOrDefault();
+
+                    if (data != null)
+                    {
+                        result.QuID = data.QuID;
+                        result.Type = data.Type;
+                        result.Question1 = data.Question1;
+                        result.Response = data.Response;
+                        result.IsTop = data.IsTop;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Debug("[AdminService]錯誤function：EditFAQ 獲取編輯資料(常見問題管理),錯誤訊息：" + ex.InnerException + ex.ToString());
+            }
+            return result;
+        }
+
+
+        //編輯存檔動作(常見問題管理)
+        public string EditFAQ(QuestionVM data)
+        {
+
+            string result = "";
+            try
+            {
+                using (JoinGoEntities db = new JoinGoEntities())
+                {
+                    Question oldData = db.Question.Where(a => a.QuID == data.QuID).FirstOrDefault();
+
+                    if (data != null)
+                    {
+                        oldData.Question1 = data.Question1;
+                        oldData.Response = data.Response;
+                        oldData.IsTop = data.IsTop;
+                        oldData.Updated = DateTime.Now;
+                        oldData.Updator = AuthorModel.Current.ACID;
+                        oldData.UpdatedIP = CommonFunctions.GetClientIpAddress();
+                        db.SaveChanges();
+
+                        result = "編輯成功";
+                    }
+                    else
+                    {
+                        result = "查無資料";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Debug("[AdminService]錯誤function：EditFAQ 編輯動作(常見問題管理),錯誤訊息：" + ex.InnerException + ex.ToString());
+                result = "系統繁忙中，請稍後再試";
+            }
+
+            return result;
+        }
+
+        //刪除單筆(常見問題管理)
+        public string DeleteFAQ(int QuID)
+        {
+            string result = "";
+            try
+            {
+                using (JoinGoEntities db = new JoinGoEntities())
+                {
+                    Question Qt = db.Question.Where(a => a.QuID == QuID).FirstOrDefault();
+                    db.Question.Remove(Qt);
+                    db.SaveChanges();
+                    result = "刪除成功";
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Debug("[AdminService]錯誤function：DeleteFAQ 刪除動作_單筆(常見問題管理),錯誤訊息：" + ex.InnerException + ex.ToString());
+                result = "系統繁忙中，請稍後再試";
+            }
+
+            return result;
+        }
+
+
+        #endregion
+
 
 
 

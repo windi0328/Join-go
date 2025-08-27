@@ -7,16 +7,12 @@
             <table id="tabelhorizontal" class="table table-bordered mb-0">
                 <thead>
                     <tr>
-                        <th scope="col" class="align-left gray-dark" width="35%">發問者</th>
-                        <td class="align-middle" width="65%">@Model.Questioner</td>
-                    </tr>
-                    <tr>
-                        <th scope="col" class="align-left gray-dark">E-Mail</th>
-                        <td class="align-middle">@Model.Email</td>
-                    </tr>
-                    <tr>
-                        <th scope="col" class="align-left gray-dark">問題</th>
-                        <td class="align-middle">
+                        <th scope="col" class="align-left gray-dark" width="35%">問題</th>
+                        <td class="align-middle" width="65%">
+                            @if (Model.IsTop == true)  // 如果這筆是置頂的資料
+                            {
+                                <i class="fa fa-arrow-up top-icon me-2" title="置頂"></i>
+                            }
                             @Model.Question1
                         </td>
                     </tr>
@@ -24,11 +20,6 @@
                         <th scope="col" class="align-left gray-dark">回應</th>
                         <td class="align-middle">@Model.Response</td>
                     </tr>
-                    <tr>
-                        <th scope="col" class="align-left gray-dark">狀態</th>
-                        <td class="align-middle">@Model.StatusName</td>
-                    </tr>
-
                     <tr>
                         <th scope="col" class="align-left gray-dark">建檔人員</th>
                         <td class="align-middle">@Model.CreatorName</td>

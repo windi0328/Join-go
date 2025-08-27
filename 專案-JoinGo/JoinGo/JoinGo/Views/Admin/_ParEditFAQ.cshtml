@@ -1,0 +1,39 @@
+﻿@model JoinGo.Models.ViewModels.QuestionVM
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="Question" class="input-title"><h3><span class="text-danger mx-2">*</span>問題</h3></label>
+                <div class="input--horizontal input-group-lg">
+                    @Html.TextAreaFor(n => n.Question1, new { id = "Question1", @class = "form-control", placeholder = "請填寫問題", rows = "5" })
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="Response" class="input-title"><h3><span class="text-danger mx-2">*</span>回覆</h3></label>
+                <div class="input--horizontal input-group-lg">
+                    @Html.TextAreaFor(n => n.Response, new { id = "Response", @class = "form-control", placeholder = "請填寫回覆", rows = "5" })
+                </div>
+            </div>
+           
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="IsTop_Yes" class="input-title"><h3><span class="text-danger mx-2">*</span>是否置頂</h3></label>
+                <div class="input--horizontal input-group-lg">
+                    <div class="form-group ms-5">
+                        <input id="IsTop_Yes" type="radio" name="IsTop" value="true" @(Model.IsTop != null && Model.IsTop == true ? "checked" : "") />
+                        <label for="IsTop_Yes">是</label>
+
+                        <input id="IsTop_No" type="radio" name="IsTop" value="false" class="ms-2" @(Model.IsTop != null && Model.IsTop == false ? "checked" : "") />
+                        <label for="IsTop_No">否</label>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- bnt -->
+    <div class="text-center submit-btn">
+        <button type="button" class="btn btn-main w-auto" onclick="EditFun(@Model.QuID);">儲存</button>
+        <button type="button" class="btn btn-main-line w-auto" data-bs-dismiss="modal" aria-label="Close">關閉</button>
+    </div>
+</div>
