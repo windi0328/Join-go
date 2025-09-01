@@ -1,4 +1,6 @@
-﻿using JoinGo.Models.Author;
+﻿using JoinGo.Models;
+using JoinGo.Models.Author;
+using JoinGo.Models.ViewModels;
 using JoinGo.Service.Act;
 using PagedList;
 using System;
@@ -41,6 +43,37 @@ namespace JoinGo.Controllers
             int pageSize = 10;
             return PartialView(result.ToPagedList(page, pageSize));
         }
+
+
+        //新增(活動管理)
+        public ActionResult CreateActivity()
+        {
+            if (!ChkAuthor.CheckSession()) { return RedirectToAction("LogOut", "Home"); }
+            using (JoinGoEntities db = new JoinGoEntities())
+            {
+
+                ViewBag.ActivityCategorySelect = new SelectList(ActService.CreateActivity(), "Value", "Text");
+            }
+            return View();
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateActivity(ActivityVM data)
+        {
+            if (!ChkAuthor.CheckSession()) { return RedirectToAction("LogOut", "Home"); }
+            string result = ActService.CreateActivity(data);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+    
+
+
+
+
+
+
+                
 
 
 

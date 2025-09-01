@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+
 
 
 namespace JoinGo.Service.Act
@@ -38,6 +40,28 @@ namespace JoinGo.Service.Act
                 return query;
             }
         }
+
+        public List<SelectListItem> CreateActivity()
+        {
+            using (JoinGoEntities db = new JoinGoEntities())
+            {
+                var categoryList = db.Category
+                .Where(c => c.Enable == true && c.ParentCatID == null) // 只撈大分類（ParentCatID 是 NULL）
+                .OrderBy(c => c.Serial) // 依照 Serial 排序
+                .Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.CaID.ToString()
+                })
+                    .ToList();
+
+                return categoryList;
+            }
+        }
+
+     
+        
+
 
         ////新增動作(教育資源連結)
         //public string CreateEduLink(EduLinkVM data)
