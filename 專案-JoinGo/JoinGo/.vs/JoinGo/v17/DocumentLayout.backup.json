@@ -3,15 +3,19 @@
   "WorkspaceRootPath": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|c:\\users\\\u8449\u79C9\u6D69\\desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-joingo\\joingo\\\u5C08\u6848-joingo\\joingo\\joingo\\controllers\\activitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|solutionrelative:joingo\\controllers\\activitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\joingo\\views\\activity\\createactivity.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|solutionrelative:joingo\\views\\activity\\createactivity.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\joingo\\service\\act\\actservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\joingo\\controllers\\activitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|solutionrelative:joingo\\controllers\\activitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|c:\\users\\\u8449\u79C9\u6D69\\desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-joingo\\joingo\\\u5C08\u6848-joingo\\joingo\\joingo\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|solutionrelative:joingo\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|c:\\users\\\u8449\u79C9\u6D69\\desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-joingo\\joingo\\\u5C08\u6848-joingo\\joingo\\joingo\\service\\act\\actservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|solutionrelative:joingo\\service\\act\\actservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -21,6 +25,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\joingo\\models\\viewmodels\\activityvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|solutionrelative:joingo\\models\\viewmodels\\activityvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\joingo\\views\\shared\\_layoutuser.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|solutionrelative:joingo\\views\\shared\\_layoutuser.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{18B84AC1-DD18-41A2-88B6-CC21A20D408D}|JoinGo\\JoinGo.csproj|C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\joingo\\views\\activity\\activitylist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -34,49 +42,74 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
+              "Title": "Web.config",
+              "DocumentMoniker": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Web.config",
+              "RelativeDocumentMoniker": "JoinGo\\Web.config",
+              "ToolTip": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Web.config",
+              "RelativeToolTip": "JoinGo\\Web.config",
+              "ViewState": "AgIAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-09-02T08:42:51.74Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "_LayoutUser.cshtml",
+              "DocumentMoniker": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Views\\Shared\\_LayoutUser.cshtml",
+              "RelativeDocumentMoniker": "JoinGo\\Views\\Shared\\_LayoutUser.cshtml",
+              "ToolTip": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Views\\Shared\\_LayoutUser.cshtml",
+              "RelativeToolTip": "JoinGo\\Views\\Shared\\_LayoutUser.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-02T07:07:55.544Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "ActivityVM.cs",
               "DocumentMoniker": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Models\\ViewModels\\ActivityVM.cs",
               "RelativeDocumentMoniker": "JoinGo\\Models\\ViewModels\\ActivityVM.cs",
               "ToolTip": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Models\\ViewModels\\ActivityVM.cs",
               "RelativeToolTip": "JoinGo\\Models\\ViewModels\\ActivityVM.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAADUAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-29T08:30:31.125Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "CreateActivity.cshtml",
               "DocumentMoniker": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Views\\Activity\\CreateActivity.cshtml",
               "RelativeDocumentMoniker": "JoinGo\\Views\\Activity\\CreateActivity.cshtml",
               "ToolTip": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Views\\Activity\\CreateActivity.cshtml",
               "RelativeToolTip": "JoinGo\\Views\\Activity\\CreateActivity.cshtml",
-              "ViewState": "AgIAAB8BAAAAAAAAAAAAAC8BAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAEsBAAAAAAAAAAAAAFoBAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-08-28T08:14:46.253Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "ActivityController.cs",
               "DocumentMoniker": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Controllers\\ActivityController.cs",
               "RelativeDocumentMoniker": "JoinGo\\Controllers\\ActivityController.cs",
               "ToolTip": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Controllers\\ActivityController.cs",
               "RelativeToolTip": "JoinGo\\Controllers\\ActivityController.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAQwEYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAjwEQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-26T15:22:15.177Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "_ParActivityList.cshtml",
               "DocumentMoniker": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Views\\Activity\\_ParActivityList.cshtml",
               "RelativeDocumentMoniker": "JoinGo\\Views\\Activity\\_ParActivityList.cshtml",
@@ -88,20 +121,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "ActService.cs",
               "DocumentMoniker": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Service\\Act\\ActService.cs",
               "RelativeDocumentMoniker": "JoinGo\\Service\\Act\\ActService.cs",
               "ToolTip": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Service\\Act\\ActService.cs",
               "RelativeToolTip": "JoinGo\\Service\\Act\\ActService.cs",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAwDsAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAwDEAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-27T04:57:49.807Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "ActivityList.cshtml",
               "DocumentMoniker": "C:\\Users\\\u8449\u79C9\u6D69\\Desktop\\\u8449\u79C9\u6D69\\\u5C08\u6848-JoinGo\\JoinGo\\\u5C08\u6848-JoinGo\\JoinGo\\JoinGo\\Views\\Activity\\ActivityList.cshtml",
               "RelativeDocumentMoniker": "JoinGo\\Views\\Activity\\ActivityList.cshtml",

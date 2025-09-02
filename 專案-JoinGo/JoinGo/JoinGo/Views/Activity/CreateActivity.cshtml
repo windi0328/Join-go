@@ -335,7 +335,7 @@
                 success: function (response) {
                     Swal.close();
                     $('#submitBtn').prop('disabled', false).removeClass('btn-secondary');
-                     if (response === "新增成功") {
+                    if (response === "新增成功" || response.success === true) {
                         Swal.fire({
                             icon: 'success',
                             title: '新增成功',

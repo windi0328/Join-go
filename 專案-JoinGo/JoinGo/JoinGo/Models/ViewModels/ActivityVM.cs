@@ -47,13 +47,14 @@ namespace JoinGo.Models.ViewModels
         public string CreatorName { get; set; }
         ///建立者姓名
 
-
+       
         public string CategoryName { get; set; }//類別名稱
 
        
-
         
-       
-       
+
+
+
+
     }
 }

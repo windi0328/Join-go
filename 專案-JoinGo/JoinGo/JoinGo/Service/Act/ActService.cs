@@ -41,7 +41,7 @@ namespace JoinGo.Service.Act
             }
         }
 
-        public List<SelectListItem> CreateActivity()
+        public List<SelectListItem> GetCategoryList()
         {
             using (JoinGoEntities db = new JoinGoEntities())
             {

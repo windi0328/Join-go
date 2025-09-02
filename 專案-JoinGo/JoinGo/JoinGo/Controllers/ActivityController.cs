@@ -5,6 +5,7 @@ using JoinGo.Service.Act;
 using PagedList;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -52,20 +53,50 @@ namespace JoinGo.Controllers
             using (JoinGoEntities db = new JoinGoEntities())
             {
 
-                ViewBag.ActivityCategorySelect = new SelectList(ActService.CreateActivity(), "Value", "Text");
+                ViewBag.ActivityCategorySelect = new SelectList(ActService.GetCategoryList(), "Value", "Text");
             }
             return View();
 
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateActivity(ActivityVM data)
+        public ActionResult CreateActivity(ActivityVM data, HttpPostedFileBase PicFile)
         {
-            if (!ChkAuthor.CheckSession()) { return RedirectToAction("LogOut", "Home"); }
+            if (!ModelState.IsValid)
+            {
+                return Json(new { success = false, message = "資料驗證失敗" });
+            }
 
-            string result = ActService.CreateActivity(data);
-            return Json(result, JsonRequestBehavior.AllowGet);
+            string fileName = null;
+            if (PicFile != null && PicFile.ContentLength > 0)
+            {
+                fileName = Path.GetFileName(PicFile.FileName);
+                string path = Path.Combine(Server.MapPath("~/Uploads/ActivityPics"), fileName);
+                PicFile.SaveAs(path);
+            }
+
+            using (JoinGoEntities db = new JoinGoEntities())
+            {
+                Activity activity = new Activity
+                {
+                    Name = data.Name,
+                    Category = data.Category,
+                    Location = data.Location,
+                    StartDate = data.StartDate,
+                    EndDate = data.EndDate,
+                    ApplyStartDate = data.ApplyStartDate,
+                    ApplyEndDate = data.ApplyEndDate,
+                    Contact = data.Contact,
+                    ContactPhone = data.ContactPhone,
+                    PicFile = fileName,
+                   
+                };
+
+                db.Activity.Add(activity);
+                db.SaveChanges();
+            }
+
+            return Json(new { success = true });
         }
     
 
@@ -74,7 +105,8 @@ namespace JoinGo.Controllers
 
 
 
-                
+
+
 
 
 
