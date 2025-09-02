@@ -1,0 +1,196 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model PagedList.IPagedList<JoinGo.Models.ViewModels.ActivityVM>
+
+@{
+    Layout = null;
+}
+
+
+<input type="hidden" id="page" value="@ViewBag.page" />
+
+
+
+<table id="tabelhorizontal" class="table table-hover table-bordered mb-0">
+    <thead>
+        <tr>
+            <th scope="col" class="align-middle gray-dark" width="5%">序號</th>
+             <th scope="col" class="align-middle gray-dark" width="10%">活動類別</th>
+            <th scope="col" class="align-middle gray-dark" width="10%">活動名稱</th>
+            <th scope="col" class="align-middle gray-dark" width="15%">活動時間</th>
+            <th scope="col" class="align-middle gray-dark" width="15%">活動報名期間</th>
+            <th scope="col" class="align-middle gray-dark" width="15%">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            int serialNumber = Model.PageNumber * Model.PageSize - Model.PageSize + 1;
+            foreach (var m in Model)
+            {
+                <tr style="vertical-align: central;">
+                    <td>@serialNumber</td>
+                    <td class="font-weight-bold"> @m.CategoryName</td>
+                    <td class="font-weight-bold text-left"> @m.Name </td>
+                    <td class="text-center">@(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "" )  ~   @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "" ) </td>
+                    <td class="text-center"> @(m.ApplyStartDate.HasValue ? m.ApplyStartDate.Value.ToString("yyyy/MM/dd") : "" )  ~   @(m.ApplyEndDate.HasValue ? m.ApplyEndDate.Value.ToString("yyyy/MM/dd") : "" )</td>
+                    <td>
+                        <a href="javascript:void(0);" onclick="Details(@m.ActID);" class="btn btn-secondary">查看</a>
+                        <a href="javascript:void(0);" onclick="Edit(@m.ActID);" class="btn btn-main">編輯</a>
+                        <a href="javascript:void(0);" onclick="DeleteFun(@m.ActID);" class="btn btn-danger">刪除</a>
+                    </td>
+                </tr>
+                serialNumber++;
+            }
+        }
+        else
+        {
+            <tr><td colspan="7" class="text-center">目前沒有任何資料</td></tr>
+        }
+    </tbody>
+</table>
+
+
+
+<div class="span8 text-center mt-4">
+    <div id="contentPager">
+        @Html.PagedListPager(Model, page => Url.Action("ActivityList", new { page = page }),
+       new PagedListRenderOptions { LinkToPreviousPageFormat = "上一頁", LinkToNextPageFormat = "下一頁", PageCountAndCurrentLocationFormat = "第{0}頁/共{1}頁，總筆數:" + @ViewBag.TotalCount, DisplayPageCountAndCurrentLocation = true })
+    </div>
+</div>
+
+<script>
+    function focusAndScrollTo(selector, message) {
+        Swal.fire({
+            title: message,
+            confirmButtonText: "確定"
+        }).then(() => {
+            const $target = $(selector);
+            const $modalBody = $('.modal-body');
+            const offsetTop = $target.offset().top - $modalBody.offset().top + $modalBody.scrollTop();
+
+            $.when($modalBody.animate({ scrollTop: offsetTop - 50 }, 300)).done(() => {
+                $target.trigger('focus');
+            });
+        });
+    }
+
+
+       //教育資源連結(新增動作送出)
+    function CreateFun() {
+        var Title = $('#Title').val();
+        var Link = $('#Link').val();
+        var PicAlt = $('#PicAlt').val();
+        var Serial = $('#Serial').val();
+        var Enable = $('input[name="Enable"]:checked').val();
+        var page = $("#page").val();
+        var fileInput = $('#Pic1')[0]; //相簿封面
+
+
+        if (Title == "") {
+            focusAndScrollTo('#Title', '請填寫標題');
+            return;
+        }
+        else if (Link == "") {
+            focusAndScrollTo('#Link', '請填寫網址');
+            return;
+        }
+        else if (fileInput.files.length == 0) {
+            focusAndScrollTo('#Pic1', '請上傳圖片');
+            return;
+        }
+        else if (PicAlt == "") {
+            focusAndScrollTo('#PicAlt', '請填寫圖片說明');
+            return;
+        }
+        else if (Serial == "") {
+            focusAndScrollTo('#Serial', '請填寫排序');
+            return;
+        }
+        else if (Enable == undefined) {
+            focusAndScrollTo('#Enable_Yes', '請選擇是否上架');
+            return;
+        }
+
+        $('#submitBtn').prop('disabled', true).addClass('btn-secondary');
+        // 顯示處理中提示
+        Swal.fire({
+            title: '處理中，請稍候...',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading(); // 顯示 loading 動畫
+            }
+        });
+
+
+        //formData
+        var formData = new FormData();
+        formData.append('Title', Title);
+        formData.append('Link', Link);
+        formData.append('Pic1', fileInput.files[0]);
+        formData.append('PicAlt', PicAlt);
+        formData.append('Serial', Serial);
+        formData.append('Enable', Enable);
+
+        // 防止跨站請求偽造攻擊（CSRF）
+        formData.append('__RequestVerificationToken', getAntiForgeryToken());
+
+
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Action("CreateEduLink", "Manage")",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                Swal.close();
+                $('#submitBtn').prop('disabled', false).removeClass('btn-secondary');
+                Swal.fire(response);
+                if (response == "新增成功") {
+                    $('#CreateModal').modal('hide');
+                    GetData(page);
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.close();
+                $('#submitBtn').prop('disabled', false).removeClass('btn-secondary');
+                console.log("錯誤狀態:", status);
+                console.log("錯誤訊息:", error);
+                console.log("伺服器回應:", xhr.responseText);
+                Swal.fire("發生錯誤：" + xhr.responseText);
+            }
+        });
+    }
+
+
+    function DeleteFun(ELID) {
+            var page = $("#Page").val();
+            Swal.fire({
+                title: '是否確定刪除?',
+                showCancelButton: true,
+                confirmButtonText: '確定',
+                cancelButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        data: {
+                            ELID: ELID, __RequestVerificationToken: getAntiForgeryToken() // 包含 CSRF 令牌
+                        },
+                        datatype: 'json',
+                        type: 'post',
+                        url: "@Url.Action("DeleteEduLink", "Manage")",
+                        success: function (da) {
+                            if (da == "刪除成功") {
+                                Swal.fire(da);
+                                GetData(page);
+                            } else {
+                                Swal.fire(da);
+                            }
+                        }
+                    });
+                }
+            })
+        }
+
+</script>
