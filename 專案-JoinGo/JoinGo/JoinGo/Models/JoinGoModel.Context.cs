@@ -29,5 +29,8 @@ namespace JoinGo.Models
         public virtual DbSet<LoginLog> LoginLog { get; set; }
         public virtual DbSet<MenuFunction> MenuFunction { get; set; }
         public virtual DbSet<Option> Option { get; set; }
+        public virtual DbSet<Activity> Activity { get; set; }
+        public virtual DbSet<Category> Category { get; set; }
+        public virtual DbSet<Question> Question { get; set; }
     }
 }

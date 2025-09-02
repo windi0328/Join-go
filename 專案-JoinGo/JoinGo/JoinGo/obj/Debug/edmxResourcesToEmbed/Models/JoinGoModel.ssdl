@@ -13,7 +13,7 @@
     <Property Name="Origin" Type="nvarchar" MaxLength="50" />
     <Property Name="ProviderKey" Type="nvarchar" MaxLength="100" />
     <Property Name="Role" Type="nvarchar" MaxLength="50" Nullable="false" />
-    <Property Name="AvatarUrl" Type="nvarchar" MaxLength="500" />
+    <Property Name="AvatarUrl" Type="nvarchar(max)" />
     <Property Name="Phone" Type="nvarchar" MaxLength="50" />
     <Property Name="Gender" Type="char" MaxLength="1" />
     <Property Name="Birthday" Type="date" />
@@ -34,6 +34,55 @@
     <Property Name="UpdatedIP" Type="nvarchar" MaxLength="100" />
     <Property Name="PasswordResetToken" Type="nvarchar" MaxLength="200" />
     <Property Name="PasswordResetExpiry" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Activity">
+    <Key>
+      <PropertyRef Name="ActID" />
+    </Key>
+    <Property Name="ActID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="200" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="StartDate" Type="datetime" />
+    <Property Name="EndDate" Type="datetime" />
+    <Property Name="ApplyStartDate" Type="datetime" />
+    <Property Name="ApplyEndDate" Type="datetime" />
+    <Property Name="Category" Type="int" />
+    <Property Name="Location" Type="nvarchar" MaxLength="200" />
+    <Property Name="Pay" Type="int" />
+    <Property Name="MaxParticipants" Type="int" />
+    <Property Name="WaitLimit" Type="int" />
+    <Property Name="CurrentCount" Type="int" />
+    <Property Name="PicFile" Type="nvarchar" MaxLength="200" />
+    <Property Name="Files" Type="nvarchar(max)" />
+    <Property Name="Contact" Type="nvarchar" MaxLength="50" />
+    <Property Name="ContactPhone" Type="nvarchar" MaxLength="20" />
+    <Property Name="Status" Type="int" />
+    <Property Name="AllowCancel" Type="bit" />
+    <Property Name="CancelDeadlineDays" Type="int" />
+    <Property Name="ViewCount" Type="int" />
+    <Property Name="LikeCount" Type="int" />
+    <Property Name="Creator" Type="int" />
+    <Property Name="Created" Type="datetime" />
+    <Property Name="CreatedIP" Type="nvarchar" MaxLength="100" />
+    <Property Name="Updator" Type="int" />
+    <Property Name="Updated" Type="datetime" />
+    <Property Name="UpdatedIP" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="CaID" />
+    </Key>
+    <Property Name="CaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ParentCatID" Type="int" />
+    <Property Name="Name" Type="nvarchar" MaxLength="100" />
+    <Property Name="Serial" Type="int" />
+    <Property Name="Enable" Type="bit" />
+    <Property Name="Creator" Type="int" />
+    <Property Name="Created" Type="datetime" />
+    <Property Name="CreatedIP" Type="nvarchar" MaxLength="100" />
+    <Property Name="Updator" Type="int" />
+    <Property Name="Updated" Type="datetime" />
+    <Property Name="UpdatedIP" Type="nvarchar" MaxLength="100" />
   </EntityType>
   <EntityType Name="LoginLog">
     <Key>
@@ -82,6 +131,37 @@
     <Property Name="Created" Type="datetime" Nullable="false" />
     <Property Name="Updated" Type="datetime" />
   </EntityType>
+  <EntityType Name="Question">
+    <Key>
+      <PropertyRef Name="QuID" />
+    </Key>
+    <Property Name="QuID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="Questioner" Type="nvarchar" MaxLength="100" />
+    <Property Name="Email" Type="nvarchar" MaxLength="100" />
+    <Property Name="Question1" Type="nvarchar(max)" />
+    <Property Name="Response" Type="nvarchar(max)" />
+    <Property Name="Status" Type="int" />
+    <Property Name="IsTop" Type="bit" />
+    <Property Name="Creator" Type="int" />
+    <Property Name="Created" Type="datetime" />
+    <Property Name="CreatedIP" Type="nvarchar" MaxLength="100" />
+    <Property Name="Updator" Type="int" />
+    <Property Name="Updated" Type="datetime" />
+    <Property Name="UpdatedIP" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <Association Name="FK_Activity_Category">
+    <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+    <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="CaID" />
+      </Principal>
+      <Dependent Role="Activity">
+        <PropertyRef Name="Category" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_LoginLog_Account">
     <End Role="Account" Type="Self.Account" Multiplicity="1" />
     <End Role="LoginLog" Type="Self.LoginLog" Multiplicity="*" />
@@ -96,9 +176,16 @@
   </Association>
   <EntityContainer Name="JoinGoModelStoreContainer">
     <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Activity" EntityType="Self.Activity" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="LoginLog" EntityType="Self.LoginLog" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="MenuFunction" EntityType="Self.MenuFunction" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Option" EntityType="Self.Option" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Activity_Category" Association="Self.FK_Activity_Category">
+      <End Role="Category" EntitySet="Category" />
+      <End Role="Activity" EntitySet="Activity" />
+    </AssociationSet>
     <AssociationSet Name="FK_LoginLog_Account" Association="Self.FK_LoginLog_Account">
       <End Role="Account" EntitySet="Account" />
       <End Role="LoginLog" EntitySet="LoginLog" />

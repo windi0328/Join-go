@@ -1,0 +1,247 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model PagedList.IPagedList<JoinGo.Models.ViewModels.QuestionVM>
+
+@{
+    Layout = null;
+}
+
+
+<style>
+    /* 置頂 icon 樣式 */
+    .top-icon {
+      color: #e74c3c; /* 紅色 */
+      text-shadow: 0 0 8px rgba(231, 76, 60, 0.6); /* 發光 */
+      animation: bounce 1s infinite;
+      transition: transform 0.3s ease, color 0.3s ease;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+
+    /* 滑鼠移上去有旋轉 + 顏色變金色 */
+    .top-icon:hover {
+      color: #f39c12;
+      text-shadow: 0 0 12px rgba(243, 156, 18, 0.8);
+      transform: rotate(-15deg) scale(1.2);
+    }
+
+    /* 上下跳動動畫 */
+    @@keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-6px);
+      }
+      60% {
+        transform: translateY(-3px);
+      }
+    }
+</style>
+<input type="hidden" id="page" value="@ViewBag.page" />
+
+<table id="tabelhorizontal" class="table table-bordered mb-0" style="word-wrap:break-word;word-break:break-all;">
+    <thead>
+        <tr>
+            <th scope="col" class="align-middle gray-dark" width="5%">序號</th>
+            <th scope="col" class="align-middle gray-dark" width="40%">問題</th>
+            <th scope="col" class="align-middle gray-dark" width="40%">回覆</th>
+            <th scope="col" class="align-middle gray-dark" width="5%">查看</th>
+            <th scope="col" class="align-middle gray-dark" width="5%">編輯</th>
+            <th scope="col" class="align-middle gray-dark" width="5%">刪除</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            int serialNumber = Model.PageNumber * Model.PageSize - Model.PageSize + 1;
+
+            foreach (var m in Model)
+            {
+                <tr class="text-left">
+                    <td class="font-weight-bold text-center">@serialNumber</td>
+                    <td class="font-weight-bold text-left">
+                        @if (m.IsTop == true)  // 如果這筆是置頂的資料
+                        {
+                            <i class="fa fa-arrow-up top-icon me-2" title="置頂"></i>
+                        }
+                        @m.Question1
+                    </td>
+
+                    <td class="font-weight-bold text-left">@m.Response</td>
+
+                    <td class="text-center"><a href="#" onclick="Detail(@m.QuID);" class="btn btn-secondary w-auto mr-1"><i class="fa fa-search" aria-hidden="true"></i></a> </td>
+                    <td class="text-center">
+                        <a href="#" onclick="Edit(@m.QuID);" class="btn btn-main w-auto mr-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="text-center">
+                        <a href="#" onclick="DeleteFun(@m.QuID);" class="btn btn-danger w-auto mr-1"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+
+                serialNumber++;
+            }
+
+        }
+        else
+        {
+            <tr>
+                <td colspan="9" style="text-align: center;"> 目前沒有任何資料 </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div class="span8 text-center mt-4">
+    <div id="contentPager">
+        @Html.PagedListPager(Model, page => Url.Action("FAQList", new { page = page }),
+       new PagedListRenderOptions { LinkToPreviousPageFormat = "上一頁", LinkToNextPageFormat = "下一頁", PageCountAndCurrentLocationFormat = "第{0}頁/共{1}頁，總筆數:" + @ViewBag.TotalCount, DisplayPageCountAndCurrentLocation = true })
+    </div>
+</div>
+
+
+
+<script>
+    function getAntiForgeryToken() {
+        return $('input[name="__RequestVerificationToken"]').val();
+    }
+    //新增送出
+    function CreateFun() {
+
+        var Question1 = $('#Question1').val().trim();;
+        var Response = $('#Response').val().trim();;
+        var IsTop = $('input[name="IsTop"]:checked').val();
+        if (Question1 == "") {
+            Swal.fire({
+                title: "請填寫問題",
+                confirmButtonText: "確定"
+            });
+        }
+        else if (Response == "") {
+            Swal.fire({
+                title: "請填寫回覆",
+                confirmButtonText: "確定"
+            });
+        }
+        else if (IsTop == undefined) {
+            Swal.fire({
+                title: "請選擇是否置頂",
+                confirmButtonText: "確定"
+            });
+        }
+        else {
+            var data = {
+                Question1: Question1,
+                Response: Response,
+                IsTop: IsTop,
+                __RequestVerificationToken: getAntiForgeryToken() // 包含 CSRF 令牌
+            }
+            $.ajax({
+                data: data,
+                datatype: 'json',
+                type: 'post',
+                url: "@Url.Action("CreateFAQ", "Admin")",
+                success: function (da) {
+                    Swal.fire(da);
+                    if (da == "新增成功") {
+                        $('#CreateModal').modal('hide');
+                        GetData('@ViewBag.page');
+                    } else {
+                        Swal.fire(da);
+                    }
+                },
+                error: function (data) {
+
+                }
+            });
+        }
+    }
+
+    //單筆刪除
+    function DeleteFun(QuID) {
+        Swal.fire({
+            title: '是否確定刪除?',
+            showCancelButton: true,
+            confirmButtonText: '確定',
+            cancelButtonText: '取消',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    data: {
+                        QuID: QuID,
+                        __RequestVerificationToken: getAntiForgeryToken() // 包含 CSRF 令牌
+                    },
+                    datatype: 'json',
+                    type: 'post',
+                    url: "@Url.Action("DeleteFAQ", "Admin")",
+                    success: function (da) {
+                        if (da == "刪除成功") {
+                            Swal.fire(da);
+                            GetData('@ViewBag.page');
+                        } else {
+                            Swal.fire(da);
+                        }
+                    }
+                });
+            }
+        })
+    }
+
+    //編輯送出
+    function EditFun(QuID) {
+        var Question1 = $('#Question1').val();
+        var Response = $('#Response').val();
+        var IsTop = $('input[name="IsTop"]:checked').val();;
+
+        if (Question1 == "") {
+            Swal.fire({
+                title: "請填寫問題",
+                confirmButtonText: "確定"
+            });
+        }
+         else if (Response == "") {
+            Swal.fire({
+                title: "請填寫回覆",
+                confirmButtonText: "確定"
+            });
+        }
+        else if (IsTop == undefined) {
+            Swal.fire({
+                title: "請選擇是否置頂",
+                confirmButtonText: "確定"
+            });
+        }
+        else {
+            var data = {
+                QuID: QuID,
+                Question1: Question1,
+                Response: Response,
+                IsTop: IsTop,
+                __RequestVerificationToken: getAntiForgeryToken() // 包含 CSRF 令牌
+                }
+            $.ajax({
+                data: data,
+                datatype: 'json',
+                type: 'post',
+                url: "@Url.Action("EditFAQ", "Admin")",
+                success: function (da) {
+                    Swal.fire(da);
+                    if (da == "編輯成功") {
+                        $('#EditModal').modal('hide');
+                        GetData('@ViewBag.page');
+                    } else {
+                        Swal.fire(da);
+                    }
+                }
+            });
+        }
+    }
+
+
+
+
+    $(function () {
+
+    });
+</script>

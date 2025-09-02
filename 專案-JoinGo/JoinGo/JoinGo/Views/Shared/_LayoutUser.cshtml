@@ -13,8 +13,12 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="">
     <meta property="og:image" content="">
+<<<<<<< HEAD
     <link rel="shortcut icon" href="favicon.ico">
     @*<link rel="icon" href="~/image/logo.ico" type="image/x-icon" />*@
+=======
+    <link rel="shortcut icon" href="/image/favicon.ico">
+>>>>>>> 0a1e66cbc5999496f03061783d1c53a01492dd32
     <link href="~/Scripts/ckeditor5-builder-43.3.1/ckeditor5/ckeditor5.css" rel="stylesheet" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -168,7 +172,7 @@
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-white text-decoration-none">關於我們</a></li>
                         <li><a href="#" class="text-white text-decoration-none">服務項目</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">常見問題</a></li>
+                        <li><a href="@Url.Action("FAQ","Admin")" class="text-white text-decoration-none">常見問題</a></li>
                         <li><a href="@Url.Action("ContactUs","Admin")" class="text-white text-decoration-none">聯絡我們</a></li>
                     </ul>
                 </div>

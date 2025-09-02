@@ -63,6 +63,7 @@ namespace JoinGo.Controllers
         public ActionResult CreateActivity(ActivityVM data)
         {
             if (!ChkAuthor.CheckSession()) { return RedirectToAction("LogOut", "Home"); }
+
             string result = ActService.CreateActivity(data);
             return Json(result, JsonRequestBehavior.AllowGet);
         }

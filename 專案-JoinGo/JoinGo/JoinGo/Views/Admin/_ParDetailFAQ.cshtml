@@ -1,0 +1,54 @@
+﻿@model JoinGo.Models.ViewModels.QuestionVM
+
+
+<div class="row justify-content-center mb-1">
+    <div class="col-12">
+        <div class="table-responsive-xl table-hover first-table text-left my-4">
+            <table id="tabelhorizontal" class="table table-bordered mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-left gray-dark" width="35%">問題</th>
+                        <td class="align-middle" width="65%">
+                            @if (Model.IsTop == true)  // 如果這筆是置頂的資料
+                            {
+                                <i class="fa fa-arrow-up top-icon me-2" title="置頂"></i>
+                            }
+                            @Model.Question1
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="col" class="align-left gray-dark">回應</th>
+                        <td class="align-middle">@Model.Response</td>
+                    </tr>
+                    <tr>
+                        <th scope="col" class="align-left gray-dark">建檔人員</th>
+                        <td class="align-middle">@Model.CreatorName</td>
+                    </tr>
+                    <tr>
+                        <th scope="col" class="align-left gray-dark">建檔時間</th>
+                        <td class="align-middle">@Model.Created</td>
+                    </tr>
+                    <tr>
+                        <th scope="col" class="align-left gray-dark">建檔IP</th>
+                        <td class="align-middle">@Model.CreatedIP</td>
+                    </tr>
+                    <tr>
+                        <th scope="col" class="align-left gray-dark">更新人員</th>
+                        <td class="align-middle">@Model.UpdatorName</td>
+                    </tr>
+
+                    <tr>
+                        <th scope="col" class="align-left gray-dark">更新時間</th>
+                        <td class="align-middle">@Model.Updated</td>
+                    </tr>
+
+                    <tr>
+                        <th scope="col" class="align-left gray-dark">更新IP</th>
+                        <td class="align-middle">@Model.UpdatedIP</td>
+                    </tr>
+
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>

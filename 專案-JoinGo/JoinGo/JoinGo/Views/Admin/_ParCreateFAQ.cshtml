@@ -1,0 +1,39 @@
+﻿
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="Question" class="input-title"><h3><span class="text-danger mx-2">*</span>問題</h3></label>
+                <div class="input--horizontal input-group-lg">
+                    <textarea id="Question1" name="Question1" class="form-control" rows="5" placeholder="請填寫問題"> </textarea>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="Response" class="input-title"><h3><span class="text-danger mx-2">*</span>回覆</h3></label>
+                <div class="input--horizontal input-group-lg">
+                    <textarea id="Response" name="Response" class="form-control" rows="5" placeholder="請填寫回覆"> </textarea>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="IsTop_Yes" class="input-title"><h3><span class="text-danger mx-2">*</span>是否置頂</h3></label>
+                <div class="input--horizontal input-group-lg">
+                    <div class="form-group ms-5">
+                        <input id="IsTop_Yes" type="radio" name="IsTop" value="true" />
+                        <label for="IsTop_Yes">是</label>
+
+                        <input id="IsTop_No" type="radio" name="IsTop" value="false" class="ms-2" checked/>
+                        <label for="IsTop_No">否</label>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- bnt -->
+    <div class="text-center submit-btn">
+        <button type="button" class="btn btn-main w-auto" onclick="CreateFun();">儲存</button>
+        <button type="button" class="btn btn-main-line w-auto" data-bs-dismiss="modal" aria-label="Close">關閉</button>
+    </div>
+</div>

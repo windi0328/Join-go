@@ -139,7 +139,111 @@ namespace JoinGo.Controllers
 		#endregion
 
 
+		#region 常見問題管理
 
+		//取得列表資料(常見問題管理)
+		public ActionResult FAQList(int page = 1)
+		{
+			if (!ChkAuthor.CheckSession() && AuthorModel.Current.Role == "Admin") { return RedirectToAction("LogOut", "Home"); }
+			ViewBag.page = page;
+			return View();
+		}
+
+
+		// 取得列表資料(常見問題管理)(PartialView)
+		public ActionResult _ParFAQManageList(string search, int page = 1)
+		{
+			if (!ChkAuthor.CheckSession() && AuthorModel.Current.Role == "Admin") { return RedirectToAction("LogOut", "Home"); }
+
+			var result = AdminService.GetFAQManagList(search);
+			ViewBag.TotalCount = result.Count();
+			ViewBag.page = page;
+			int pageSize = 10;
+			return PartialView(result.ToPagedList(page, pageSize));
+
+		}
+
+
+		//新增資料(常見問題管理)(PartialView)
+		public ActionResult _ParCreateFAQ(int page = 1)
+		{
+			if (!ChkAuthor.CheckSession() && AuthorModel.Current.Role == "Admin") { return RedirectToAction("LogOut", "Home"); }
+			ViewBag.page = page;
+			return PartialView();
+		}
+
+
+
+		//新增存檔動作(常見問題管理)
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult CreateFAQ(QuestionVM data)
+		{
+			string result = AdminService.CreateFAQ(data);
+			return Json(result, JsonRequestBehavior.AllowGet);
+		}
+
+
+
+
+
+		//查看資料(常見問題管理)(PartialView)
+		public ActionResult _ParDetailFAQ(int QuID)
+		{
+			if (!ChkAuthor.CheckSession() && AuthorModel.Current.Role == "Admin") { return RedirectToAction("LogOut", "Home"); }
+
+			QuestionVM result = AdminService.DetailFAQ(QuID);
+			return PartialView(result);
+		}
+
+
+
+
+		//編輯資料(常見問題管理)(PartialView)
+		public ActionResult _ParEditFAQ(int QuID)
+		{
+			if (!ChkAuthor.CheckSession() && AuthorModel.Current.Role == "Admin") { return RedirectToAction("LogOut", "Home"); }
+
+			QuestionVM result = AdminService.EditFAQ(QuID);
+			return PartialView(result);
+
+		}
+
+
+		//編輯存檔動作(常見問題管理)
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult EditFAQ(QuestionVM data)
+		{
+			if (!ChkAuthor.CheckSession() && AuthorModel.Current.Role == "Admin") { return RedirectToAction("LogOut", "Home"); }
+			string result = AdminService.EditFAQ(data);
+			return Json(result, JsonRequestBehavior.AllowGet);
+		}
+
+
+		//刪除資料動作(聯絡我們管理)
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult DeleteFAQ(int QuID)
+		{
+			if (!ChkAuthor.CheckSession() && AuthorModel.Current.Role == "Admin") { return RedirectToAction("LogOut", "Home"); }
+			string result = AdminService.DeleteFAQ(QuID);
+			return Json(result, JsonRequestBehavior.AllowGet);
+		}
+
+
+
+		//常見問題(不用登入)
+		public ActionResult FAQ(string search, int page = 1)
+		{
+			var result = AdminService.GetFAQManagList(search);
+			ViewBag.TotalCount = result.Count();
+			ViewBag.page = page;
+			int pageSize = 10;
+			return View(result.ToPagedList(page, pageSize));
+		}
+
+		#endregion
 
 	}
 }

@@ -291,14 +291,14 @@
             var formData = new FormData();
             formData.append('Category', Category);
             formData.append('Name', Name);
-            formData.append('Location', location);
+            formData.append('Location', Location);
             formData.append('StartDate', StartDate);
             formData.append('EndDate', EndDate);
             formData.append('ApplyStartDate', ApplyStartDate);
             formData.append('ApplyEndDate', ApplyEndDate);
             formData.append('Contact', Contact);
             formData.append('ContactPhone', ContactPhone);
-            formData.append('PicFile', PicFile);
+           
            
 
 
@@ -314,34 +314,14 @@
 
             //ckeditor
             const editor1 = window.ckeditorInstances["editor1"];
-            /*const editor2 = window.ckeditorInstances["editor2"];*/
-            //const editor3 = window.ckeditorInstances["editor3"];
-            //const editor4 = window.ckeditorInstances["editor4"];
+          
             if (editor1) {
                 const editorData1 = editor1.getData();
                 $('#CKContent1').val(editorData1);
                 formData.append('Description', editorData1);
             }
 
-            //if (editor2) {
-            //    const editorData2 = editor2.getData();
-            //    $('#CKContent2').val(editorData2);
-            //    formData.append('StudentActivities', editorData2);
-            //}
-
-            //if (editor3) {
-            //    const editorData3 = editor3.getData();
-            //    $('#CKContent3').val(editorData3);
-            //    formData.append('Environment', editorData3);
-            //}
-
-            //if (editor4) {
-            //    const editorData4 = editor4.getData();
-            //    $('#CKContent4').val(editorData4);
-            //    formData.append('Memo', editorData4);
-            //}
-
-
+           
 
             // 防止跨站請求偽造攻擊（CSRF）
             formData.append('__RequestVerificationToken', getAntiForgeryToken());
