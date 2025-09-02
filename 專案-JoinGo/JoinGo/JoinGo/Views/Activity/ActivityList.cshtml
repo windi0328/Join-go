@@ -47,7 +47,9 @@
 
                         <div class="row justify-content-center mb-1">
                             <div class="col-12">
-                                <button type="button" class="btn btn-main w-auto text-left mb-2" onclick="Create(); return false;" aria-label="新增"><i class="fa fa-plus me-1" aria-hidden="true"></i>新增</button>
+                                <a href="@Url.Action("CreateActivity", "Activity",new{page = TempData["page"]})" class="btn btn-main w-auto text-left" aria-label="新增">
+                                    <i class="fa fa-plus me-1" aria-hidden="true"></i>新增
+                                </a>
                                 <!-- 列表 -->
                                 <div class="table-responsive-xl table-hover first-table text-center my-4 table-container" id="ListArea">
 
@@ -154,7 +156,7 @@
                         var hyperLinkUrl = $(item).attr('href');
                         if (typeof hyperLinkUrl !== 'undefined' && hyperLinkUrl !== false) {
                             var pageNumber = $(item).attr('href');
-                            var page = $(item).attr('href').replace('/Activity/ActList?page=', '');
+                            var page = $(item).attr('href').replace('/Activity/ActivityList?page=', '');
                             pageNumber = pageNumber.split("&")[0]
                             $(item).attr('href', '#');
                             $(item).attr('href', pageNumber).click(function (event) {
@@ -179,11 +181,11 @@
 
 
 
+  
 
-
-        //教育資源連結(Create)------------------------------------------------------------------------------------------------
+        //活動管理連結(Create)------------------------------------------------------------------------------------------------
         function Create() {
-            $.get('@Url.Action("_ParCreateEduLink", "Manage")', function (data) {
+            $.get('@Url.Action("CreateActivity", "Activity")', function (data) {
                 $('.CreateDiv').html(data);
                 $('.ModalLabel').text("新增");
                 $('#CreateModal').modal({
