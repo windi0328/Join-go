@@ -294,7 +294,8 @@
 
             $('#ClassProp').val(selected);
   
-            var Category = $('#Category').val();
+            var Category = $('#MainCategory').val();
+            var SubCategory = $('#SubCategory').val();
             var Name = $('#Name').val();
             var Location = $('#Location').val();
             var StartDate = $('#StartDate').val();
@@ -305,9 +306,10 @@
             var ContactPhone = $('#ContactPhone').val();
             var PicFile = $('#PicFile').val();
 
-
+            
             const fields = [
-                { selector: '#Category', value: Category, message: '請選擇活動類型' },
+                { selector: '#MainCategory', value: Category, message: '請選擇活動類型' },
+                { selector: '#SubCategory', value: SubCategory, message: '請選擇活動子類型' },
                 { selector: '#Name', value: Name, message: '請填寫活動名稱' },
                 { selector: '#Location', value: Location, message: '請填寫活動地點' },
                 { selector: '#StartDate', value: StartDate, message: '請填寫活動開始時間' },
@@ -351,6 +353,7 @@
             var formData = new FormData();
            
             formData.append('Category', Category);
+            formData.append('SubCategory', SubCategory);//需要加開欄位存資料也要寫才可以~By錚錚
             formData.append('Name', Name);
             formData.append('Location', Location);
             formData.append('StartDate', StartDate);
