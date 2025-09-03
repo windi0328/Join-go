@@ -36,122 +36,141 @@
                                 </div>
                             </div>
 
-                            
+
                             <div class="row justify-content-center mb-1">
                                 <div class="col-12">
-                                 
+
                                     <div class="table-responsive-xl my-4 table-container" id="ListArea">
 
 
                                         <div class="row">
+
                                             <!-- 活動類型 -->
-                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 mb-3">
+                                            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 mb-3">
                                                 <label for="Category" class="Category">
                                                     <h3><span class="text-danger mx-2">*</span>活動類型</h3>
                                                 </label>
-                                                @Html.DropDownListFor(model => model.Category, (SelectList)ViewBag.ActivityCategorySelect, "請選擇活動類型", new { @class = "form-select", aria_label = "請選擇活動類型" })
+                                                @Html.DropDownListFor(model => model.Category, (SelectList)ViewBag.ActivityCategorySelect, "請選擇活動類型", new
+                                                {
+                                                    @class = "form-select",
+                                                    @id = "MainCategory",@*//確保 ID 可被 JS 抓到//*@aria_label = "請選擇活動類型"
+})
                                             </div>
-
-                                            <!-- 活動標題 -->
-                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 mb-3">
-                                                <label for="Name" class="input-Name">
-                                                    <h3><span class="text-danger mx-2">*</span>活動名稱</h3>
-                                                </label>
-                                                <div class="input--horizontal input-group-lg">
-                                                    <input type="text" class="form-control form-control-sm" id="Name" name="Name" maxlength="200" placeholder="請填寫活動名稱" aria-label="請填寫活動名稱">
+                                            <div class="row">
+                                                <!-- 活動子分類 -->
+                                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2">
+                                                    <label for="SubCategory" class="input-title">
+                                                        <span class="text-danger mx-2">*</span>活動子類別：
+                                                    </label>
+                                                    <div class="d-xl-flex mb-3">
+                                                        <select id="SubCategory" name="Category" class="form-control custom-select m-1">
+                                                            <option value="">請先選擇活動子類別</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div class="row">
-                                            <!-- 地址 -->
-                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-3">
-                                                <label for="Location" class="input-title">
-                                                    <h3><span class="text-danger mx-2">*</span>活動地點</h3>
-                                                </label>
-                                                <div class="input--horizontal input-group-lg">
-                                                    <input type="text" class="form-control" id="Location" name="Location" maxlength="300" placeholder="活動地點" aria-label="活動地點">
+
+                                                <!-- 活動標題 -->
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 mb-3">
+                                                    <label for="Name" class="input-Name">
+                                                        <h3><span class="text-danger mx-2">*</span>活動名稱</h3>
+                                                    </label>
+                                                    <div class="input--horizontal input-group-lg">
+                                                        <input type="text" class="form-control form-control-sm" id="Name" name="Name" maxlength="200" placeholder="請填寫活動名稱" aria-label="請填寫活動名稱">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div class="row">
+                                            <div class="row">
+                                                <!-- 地址 -->
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-3">
+                                                    <label for="Location" class="input-title">
+                                                        <h3><span class="text-danger mx-2">*</span>活動地點</h3>
+                                                    </label>
+                                                    <div class="input--horizontal input-group-lg">
+                                                        <input type="text" class="form-control" id="Location" name="Location" maxlength="300" placeholder="活動地點" aria-label="活動地點">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <label for="StartDate" class="input-title"><h3><span class="text-danger mx-2">*</span>活動開始時間</h3></label>
+                                                    <div class="input--horizontal input-group-lg">
+                                                        <input type="date" class="form-control" id="StartDate" name="StartDate" placeholder="請選擇開始時間">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <label for="EndDate" class="input-title"><h3><span class="text-danger mx-2">*</span>活動結束時間</h3></label>
+                                                    <div class="input--horizontal input-group-lg">
+                                                        <input type="date" class="form-control" id="EndDate" name="EndDate" placeholder="請選擇結束時間">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div class="row">
+
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <label for="ApplyStartDate" class="input-title"><h3><span class="text-danger mx-2">*</span>活動報名開始時間</h3></label>
+                                                    <div class="input--horizontal input-group-lg">
+                                                        <input type="date" class="form-control" id="ApplyStartDate" name="ApplyStartDate" placeholder="請選擇報名開始時間">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <label for="ApplyEndDate" class="input-title"><h3><span class="text-danger mx-2">*</span>活動報名結束時間</h3></label>
+                                                    <div class="input--horizontal input-group-lg">
+                                                        <input type="date" class="form-control" id="ApplyEndDate" name="ApplyEndDate" placeholder="請選擇報名結束時間">
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                                <label for="StartDate" class="input-title"><h3><span class="text-danger mx-2">*</span>活動開始時間</h3></label>
+                                                <label for="Contact" class="input-title"><h3><span class="text-danger mx-2">*</span>聯絡窗口</h3></label>
                                                 <div class="input--horizontal input-group-lg">
-                                                    <input type="date" class="form-control" id="StartDate" name="StartDate" placeholder="請選擇開始時間">
+                                                    <input type="text" class="form-control" id="Contact" name="Contact" maxlength="30" placeholder="請填寫聯絡窗口" aria-label="請填寫聯絡窗口">
                                                 </div>
                                             </div>
+
+
 
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                                <label for="EndDate" class="input-title"><h3><span class="text-danger mx-2">*</span>活動結束時間</h3></label>
+                                                <label for="ContactPhone" class="input-title"><h3><span class="text-danger mx-2">*</span>窗口連絡電話</h3></label>
                                                 <div class="input--horizontal input-group-lg">
-                                                    <input type="date" class="form-control" id="EndDate" name="EndDate" placeholder="請選擇結束時間">
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-
-
-                                        <div class="row">
-
-                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                                <label for="ApplyStartDate" class="input-title"><h3><span class="text-danger mx-2">*</span>活動報名開始時間</h3></label>
-                                                <div class="input--horizontal input-group-lg">
-                                                    <input type="date" class="form-control" id="ApplyStartDate" name="ApplyStartDate" placeholder="請選擇報名開始時間">
+                                                    <input type="text" class="form-control" id="ContactPhone" name="ContactPhone" maxlength="30" placeholder="請填寫窗口連絡電話" aria-label="請填寫窗口連絡電話">
+                                                    <small class="form-text text-muted">輸入電話格式範例如：02-22345678</small>
                                                 </div>
                                             </div>
 
-                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                                <label for="ApplyEndDate" class="input-title"><h3><span class="text-danger mx-2">*</span>活動報名結束時間</h3></label>
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <label for="PicFile" class="input-title"><h3><span class="text-danger mx-2">*</span>封面照片</h3></label>
                                                 <div class="input--horizontal input-group-lg">
-                                                    <input type="date" class="form-control" id="ApplyEndDate" name="ApplyEndDate" placeholder="請選擇報名結束時間">
+                                                    <input type="file" id="PicFile" name="PicFile" class="form-control" accept="image/*">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <label for="Description" class="input-title"><h3><span class="text-danger mx-2">*</span>活動詳細說明</h3></label>
+                                                <div class="input--horizontal input-group-lg">
+                                                    <div class="editor-container__editor"><div class="editor1"></div></div>
+                                                    <input type="hidden" id="CKContent1" name="Content1" />
                                                 </div>
                                             </div>
                                         </div>
+                                </div>
 
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                            <label for="Contact" class="input-title"><h3>聯絡窗口</h3></label>
-                                            <div class="input--horizontal input-group-lg">
-                                                <input type="text" class="form-control" id="Contact" name="Contact" maxlength="30" placeholder="請填寫聯絡窗口" aria-label="請填寫聯絡窗口">
-                                            </div>
-                                        </div>
-
-
-
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                            <label for="ContactPhone" class="input-title"><h3>窗口連絡電話</h3></label>
-                                            <div class="input--horizontal input-group-lg">
-                                                <input type="text" class="form-control" id="ContactPhone" name="ContactPhone" maxlength="30" placeholder="請填寫窗口連絡電話" aria-label="請填寫窗口連絡電話">
-                                                <small class="form-text text-muted">輸入電話格式範例如：02-22345678</small>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                            <label for="PicFile" class="input-title"><h3>封面照片</h3></label>
-                                            <div class="input--horizontal input-group-lg">
-                                                <input type="file" id="PicFile" name="PicFile" class="form-control" accept="image/*">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                            <label for="Description" class="input-title"><h3>活動詳細說明</h3></label>
-                                            <div class="input--horizontal input-group-lg">
-                                                <div class="editor-container__editor"><div class="editor1"></div></div>
-                                                <input type="hidden" id="CKContent1" name="Content1" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </div>
-                                        
-                                   <div class="text-center submit-btn">
-                                             <button type="button" class="btn btn-main w-auto" onclick="CreateFun();" aria-label="儲存" id="submitBtn">儲存</button>
-                                                <button type="button" class="btn btn-secondary backList" aria-label="返回" onclick="window.history.back()">返回</button>
-                                     </div>
-                                  </div>
-                             </div>
+                                <div class="text-center submit-btn">
+                                    <button type="button" class="btn btn-main w-auto" onclick="CreateFun();" aria-label="儲存" id="submitBtn">儲存</button>
+                                    <button type="button" class="btn btn-secondary backList" aria-label="返回" onclick="window.history.back()">返回</button>
+                                </div>
+                            </div>
+                        </div>
                         }
                     </div>
         </article>
@@ -219,8 +238,51 @@
             });
 
         });
+     // 取得子分類
+            function GetSubCategory() {
+                // ✅ 先宣告 parentId
+                var parentId = $("#MainCategory").val();
+                var $subCategory = $("#SubCategory");
 
+                if (!parentId) {
+                    $subCategory.empty().append('<option value="">請先選擇活動類型</option>');
+                    return;
+                }
 
+                $.ajax({
+                    url: '@Url.Action("GetSubCategories", "Activity")',
+                    type: 'GET',
+                    data: { ParentCatID: parentId }, // ← 這裡可以用 parentId
+                    dataType: 'json',
+                    success: function(data) {
+                        $subCategory.empty();
+                        if (data.items && data.items.length > 0) {
+                            $subCategory.append('<option value="">請選擇子類別</option>');
+                            $.each(data.items, function(i, item) {
+                                $subCategory.append($('<option>').val(item.Value).html(item.Text));
+                            });
+
+                            // 自動選第一個
+                            var first = $subCategory.find('option').not('[value=""]').first();
+                            if (first.length) first.prop('selected', true);
+                        } else {
+                            $subCategory.append('<option value="">查無子類別</option>');
+                        }
+                    },
+                    error: function() {
+                        $subCategory.empty().append('<option value="">載入失敗</option>');
+                    }
+                });
+            }
+        // 大分類改變時觸發
+        $("#MainCategory").on('change', function () {
+            GetSubCategory();
+        });
+
+        // 頁面載入時也呼叫一次（可選，看你要不要預設載入）
+        $(function () {
+            GetSubCategory();
+        });
          //活動(新增動作送出)
         function CreateFun() {
 
@@ -231,8 +293,7 @@
                 }).get().join(',');
 
             $('#ClassProp').val(selected);
-
-
+  
             var Category = $('#Category').val();
             var Name = $('#Name').val();
             var Location = $('#Location').val();
@@ -243,9 +304,8 @@
             var Contact = $('#Contact').val();
             var ContactPhone = $('#ContactPhone').val();
             var PicFile = $('#PicFile').val();
-           
 
-            
+
             const fields = [
                 { selector: '#Category', value: Category, message: '請選擇活動類型' },
                 { selector: '#Name', value: Name, message: '請填寫活動名稱' },
@@ -257,6 +317,7 @@
                 { selector: '#Contact', value: Contact, message: '請填寫聯絡窗口' },
                 { selector: '#ContactPhone', value: ContactPhone, message: '請填寫窗口連絡電話' },
                 { selector: '#PicFile', value: PicFile, message: '請上傳封面照片' }
+
             ];
 
             for (let field of fields) {
@@ -287,8 +348,8 @@
                 }
             });
 
-
             var formData = new FormData();
+           
             formData.append('Category', Category);
             formData.append('Name', Name);
             formData.append('Location', Location);
@@ -298,9 +359,6 @@
             formData.append('ApplyEndDate', ApplyEndDate);
             formData.append('Contact', Contact);
             formData.append('ContactPhone', ContactPhone);
-           
-           
-
 
 
             //學校圖片上傳
@@ -311,17 +369,15 @@
                 formData.append("PicFile", file);
             }
 
-
             //ckeditor
             const editor1 = window.ckeditorInstances["editor1"];
-          
+
             if (editor1) {
                 const editorData1 = editor1.getData();
+
                 $('#CKContent1').val(editorData1);
                 formData.append('Description', editorData1);
             }
-
-           
 
             // 防止跨站請求偽造攻擊（CSRF）
             formData.append('__RequestVerificationToken', getAntiForgeryToken());
@@ -335,7 +391,7 @@
                 success: function (response) {
                     Swal.close();
                     $('#submitBtn').prop('disabled', false).removeClass('btn-secondary');
-                    if (response === "新增成功" || response.success === true) {
+                    if(response.message === "新增成功" && response.success === true) {
                         Swal.fire({
                             icon: 'success',
                             title: '新增成功',
@@ -359,6 +415,6 @@
                 }
             });
         }
-     
+
     </script>
 }

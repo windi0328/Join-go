@@ -41,26 +41,63 @@ namespace JoinGo.Service.Act
             }
         }
 
+        //public List<SelectListItem> GetCategoryList()
+        //{
+        //    using (JoinGoEntities db = new JoinGoEntities())
+        //    {
+        //        var categoryList = db.Category
+        //        .Where(c => c.Enable == true && c.ParentCatID == null) // 只撈大分類（ParentCatID 是 NULL）
+        //        .OrderBy(c => c.Serial) // 依照 Serial 排序
+        //        .Select(c => new SelectListItem
+        //        {
+        //            Text = c.Name,
+        //            Value = c.CaID.ToString()
+        //        })
+        //            .ToList();
+
+        //        return categoryList;
+        //    }
+        //}
+
+
+
         public List<SelectListItem> GetCategoryList()
         {
             using (JoinGoEntities db = new JoinGoEntities())
             {
                 var categoryList = db.Category
-                .Where(c => c.Enable == true && c.ParentCatID == null) // 只撈大分類（ParentCatID 是 NULL）
-                .OrderBy(c => c.Serial) // 依照 Serial 排序
-                .Select(c => new SelectListItem
-                {
-                    Text = c.Name,
-                    Value = c.CaID.ToString()
-                })
+                    .Where(c => c.Enable == true && c.ParentCatID == null) // 大分類
+                    .OrderBy(c => c.Serial)
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.CaID.ToString()
+                    })
                     .ToList();
 
                 return categoryList;
             }
         }
 
-     
-        
+        public List<SelectListItem> GetSubCategoryList(int parentId)
+        {
+            using (var db = new JoinGoEntities())
+            {
+                var subCategoryList = db.Category
+                    .Where(c => c.Enable == true && c.ParentCatID.HasValue && c.ParentCatID.Value == parentId)
+                    .OrderBy(c => c.Serial)
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.CaID.ToString()
+                    })
+                    .ToList();
+
+                return subCategoryList;
+            }
+        }
+
+
 
 
         ////新增動作(教育資源連結)

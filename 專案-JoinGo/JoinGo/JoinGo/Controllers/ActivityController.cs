@@ -58,6 +58,22 @@ namespace JoinGo.Controllers
             return View();
 
         }
+
+        public JsonResult GetSubCategories(int ParentCatID)
+        {
+            try
+            {
+                var subCategories = ActService.GetSubCategoryList(ParentCatID);
+                return Json(new { items = subCategories }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                // 方便除錯，回傳錯誤訊息
+                return Json(new { items = new List<object>(), error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateActivity(ActivityVM data, HttpPostedFileBase PicFile)
@@ -89,14 +105,14 @@ namespace JoinGo.Controllers
                     Contact = data.Contact,
                     ContactPhone = data.ContactPhone,
                     PicFile = fileName,
-                   
+                    Description= data.Description
                 };
 
                 db.Activity.Add(activity);
                 db.SaveChanges();
             }
 
-            return Json(new { success = true });
+            return Json(new { success = true, message = "新增成功" });
         }
     
 
