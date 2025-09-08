@@ -50,9 +50,12 @@ namespace JoinGo.Models.ViewModels
        
         public string CategoryName { get; set; }//類別名稱
 
-       
-        
 
+        public Nullable<int> SubCategory { get; set; } // 子類別ID
+        public string SubCategoryName { get; set; }    // 子類別名稱（方便顯示）
+
+        
+     
 
 
 
