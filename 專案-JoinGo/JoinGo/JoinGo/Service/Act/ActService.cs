@@ -1,4 +1,5 @@
-﻿using JoinGo.Models;
+﻿using Antlr.Runtime.Misc;
+using JoinGo.Models;
 using JoinGo.Models.Author;
 using JoinGo.Models.ViewModels;
 using JoinGo.Service.Fn;
@@ -8,13 +9,14 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using NLog;
 
 
 namespace JoinGo.Service.Act
 {
     public class ActService
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         #region 活動管理
 
@@ -34,32 +36,14 @@ namespace JoinGo.Service.Act
                     EndDate = mf.EndDate,
                     ApplyStartDate = mf.ApplyStartDate,
                     ApplyEndDate = mf.ApplyEndDate,
-                    CategoryName = mf.Category1.Name
+                    CategoryName = mf.Category1?.Name
                 }).ToList();
 
                 return query;
             }
         }
 
-        //public List<SelectListItem> GetCategoryList()
-        //{
-        //    using (JoinGoEntities db = new JoinGoEntities())
-        //    {
-        //        var categoryList = db.Category
-        //        .Where(c => c.Enable == true && c.ParentCatID == null) // 只撈大分類（ParentCatID 是 NULL）
-        //        .OrderBy(c => c.Serial) // 依照 Serial 排序
-        //        .Select(c => new SelectListItem
-        //        {
-        //            Text = c.Name,
-        //            Value = c.CaID.ToString()
-        //        })
-        //            .ToList();
-
-        //        return categoryList;
-        //    }
-        //}
-
-
+      
 
         public List<SelectListItem> GetCategoryList()
         {
@@ -100,116 +84,46 @@ namespace JoinGo.Service.Act
 
 
 
-        ////新增動作(教育資源連結)
-        //public string CreateEduLink(EduLinkVM data)
-        //{
-        //    string result = "";
-        //    try
-        //    {
-        //        using (SeNtpcEntities db = new SeNtpcEntities())
-        //        {
-        //            EduLink type = new EduLink();
-        //            type.Title = data.Title;
-        //            type.Link = data.Link;
-        //            type.PicAlt = data.PicAlt;
-        //            type.Serial = data.Serial;
-        //            type.Enable = data.Enable;
-
-        //            type.Creator = AuthorModel.Current.ACID;
-        //            type.Created = DateTime.Now;
-        //            type.CreatorIP = CommonFunctions.GetClientIpAddress();
+        //查看活動資料
+        public ActivityVM DetailsActivity(int ActID)
+        {
+            ActivityVM result = new ActivityVM();
+            try
+            {
+                using (JoinGoEntities db = new JoinGoEntities())
+                {
+                    var data = db.Activity.Where(mf => mf.ActID == ActID).FirstOrDefault();
 
 
-
-        //            string[] allowedPhotoExtensions = {
-        //                    ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".svg"
-        //                };
-        //            string[] allowedPhotoMimeTypes = {
-        //                    "image/jpeg",
-        //                    "image/png",
-        //                    "image/gif",
-        //                    "image/bmp",
-        //                    "image/tiff",
-        //                    "image/svg+xml"
-        //                };
-
-        //            if (data.Pic1 != null) //圖片上傳
-        //            {
-        //                // 在這裡加上檔案格式(白名單)
-        //                var extension = Path.GetExtension(data.Pic1.FileName).ToLower();
-        //                if (!allowedPhotoExtensions.Contains(extension))
-        //                {
-        //                    return "圖片: 不允許的檔案類型";
-        //                }
-        //                if (!allowedPhotoMimeTypes.Contains(data.Pic1.ContentType))
-        //                {
-        //                    return "圖片: 不合法的檔案格式";
-        //                }
-
-        //                var fileName = Path.GetFileNameWithoutExtension(data.Pic1.FileName) + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + Path.GetExtension(data.Pic1.FileName); //加時間戳避免重複)
-        //                string uploadPath = System.Configuration.ConfigurationManager.AppSettings["EduLinkPic"];
-        //                var StorePath = System.Web.HttpContext.Current.Server.MapPath($"{uploadPath}");
-        //                if (!Directory.Exists(StorePath)) //確認路徑,如果沒有就建立資料夾路徑
-        //                {
-        //                    Directory.CreateDirectory(StorePath);
-        //                }
-        //                var path = Path.Combine(StorePath, fileName);
-        //                data.Pic1.SaveAs(path);
-
-        //                type.PicName = fileName;
-        //                //type.PicSize = data.Pic1.ContentLength.ToString();
-        //            }
-
-        //            db.EduLink.Add(type);
-        //            db.SaveChanges();
-        //        }
-        //        result = "新增成功";
-        //        CommonFunctions.SymLog(AuthorModel.Current.ACID, AuthorModel.Current.UserID, AuthorModel.Current.LoginName, "教育資源連結", "新增成功:" + data.Title);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.Debug("[ManageService]錯誤function：CreateEduLink 新增動作(教育資源連結),錯誤訊息：" + ex.InnerException + ex.ToString());
-        //        result = "系統繁忙中，請稍後再試";
-        //        CommonFunctions.SymLog(AuthorModel.Current.ACID, AuthorModel.Current.UserID, AuthorModel.Current.LoginName, "教育資源連結", "新增失敗:" + data.Title + "_" + ex.InnerException + ex.ToString());
-        //    }
-
-        //    return result;
-        //}
-
-
-        ////查看資料(教育資源連結)
-        //public EduLinkVM DetailsEduLink(int ELID)
-        //{
-        //    EduLinkVM result = new EduLinkVM();
-        //    try
-        //    {
-        //        using (SeNtpcEntities db = new SeNtpcEntities())
-        //        {
-        //            var data = db.EduLink.Where(a => a.ELID == ELID).FirstOrDefault();
-
-
-        //            if (data != null)
-        //            {
-        //                result.ELID = data.ELID;
-        //                result.Title = data.Title;
-        //                result.Link = data.Link;
-        //                result.PicName = data.PicName;
-        //                result.PicAlt = data.PicAlt;
-        //                result.Enable = data.Enable;
-        //                result.Serial = data.Serial;
-        //                result.Created = data.Created;
-        //                result.Updated = data.Updated;
-        //                result.CreatorName = db.Account.FirstOrDefault(u => u.ACID == data.Creator)?.Name;
-        //                result.UpdatorName = db.Account.FirstOrDefault(u => u.ACID == data.Updator)?.Name;
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.Debug("[ManageService]錯誤function：DetailsEduLink 查看資料(教育資源連結),錯誤訊息：" + ex.InnerException + ex.ToString());
-        //    }
-        //    return result;
-        //}
+                    if (data != null)
+                    {
+                        result.ActID = data.ActID;
+                        result.Name = data.Name;
+                        result.Description = data.Description;
+                        result.StartDate = data.StartDate;
+                        result.EndDate = data.EndDate;
+                        result.ApplyStartDate = data.ApplyStartDate;
+                        result.ApplyEndDate = data.ApplyEndDate;
+                        result.Category = data.Category;
+                        result.SubCategory = data.SubCategory;
+                        result.Location = data.Location;
+                        result.Pay = data.Pay;
+                        result.MaxParticipants = data.MaxParticipants;
+                        result.WaitLimit = data.WaitLimit;
+                        result.CurrentCount = data.CurrentCount;
+                        result.PicFile = data.PicFile;
+                        result.CategoryName = data.Category1.Name;
+                        result.CreatorName = db.Activity.FirstOrDefault(u => u.ActID == data.Creator)?.Name;
+                        result.UpdatorName = db.Activity.FirstOrDefault(u => u.ActID == data.Updator)?.Name;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Debug("[ActService]錯誤function：DetailsActivity 查看資料,錯誤訊息：" + ex.InnerException + ex.ToString());
+            }
+            return result;
+        }
 
 
 
@@ -219,164 +133,96 @@ namespace JoinGo.Service.Act
 
 
 
-        ////編輯資料(教育資源連結)
-        //public EduLinkVM EditEduLink(int ELID)
-        //{
-        //    EduLinkVM result = new EduLinkVM();
-        //    try
-        //    {
-        //        using (SeNtpcEntities db = new SeNtpcEntities())
-        //        {
-        //            var data = db.EduLink.Where(a => a.ELID == ELID).FirstOrDefault();
+        ////編輯資料(活動管理)
+        // 取得單一活動資料 (for 編輯頁面載入)
+        public ActivityVM GetActivityById(int actId)
+        {
+            using (var db = new JoinGoEntities())
+            {
+                var activity = db.Activity
+                    .Where(mf => mf.ActID == actId)
+                    .Select(mf => new ActivityVM
+                    {
+                        ActID = mf.ActID,
+                        Name = mf.Name,
+                        Description = mf.Description,
+                        StartDate = mf.StartDate,
+                        EndDate = mf.EndDate,
+                        ApplyStartDate = mf.ApplyStartDate,
+                        ApplyEndDate = mf.ApplyEndDate,
+                        Category = mf.Category, // 假設有 Category Id
+                        SubCategory = mf.SubCategory, // 假設有 SubCategory Id
+                        Location = mf.Location,
+                        Pay = mf.Pay,
+                        MaxParticipants = mf.MaxParticipants,
+                        WaitLimit = mf.WaitLimit,
+                        CurrentCount = mf.CurrentCount,
+                        PicFile = mf.PicFile,
+                      CategoryName = mf.Category1.Name
+                    })
+                    .FirstOrDefault();
 
+                return activity;
+            }
+        }
 
-        //            if (data != null)
-        //            {
-        //                result.ELID = data.ELID;
-        //                result.Title = data.Title;
-        //                result.Link = data.Link;
-        //                result.PicName = data.PicName;
-        //                result.PicAlt = data.PicAlt;
-        //                result.Enable = data.Enable;
-        //                result.Serial = data.Serial;
-        //                result.Created = data.Created;
-        //                result.Updated = data.Updated;
-        //                result.CreatorName = db.Account.FirstOrDefault(u => u.ACID == data.Creator)?.Name;
-        //                result.UpdatorName = db.Account.FirstOrDefault(u => u.ACID == data.Updator)?.Name;
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.Debug("[ManageService]錯誤function：EditEduLink 編輯資料(教育資源連結),錯誤訊息：" + ex.InnerException + ex.ToString());
-        //    }
-        //    return result;
-        //}
+        // 更新活動 (for 編輯存檔)
+        public bool UpdateActivity(ActivityVM model)
+        {
+            using (var db = new JoinGoEntities())
+            {
+                var activity = db.Activity.FirstOrDefault(mf => mf.ActID == model.ActID);
+                if (activity == null) return false;
 
+                activity.Name = model.Name;
+                activity.Description = model.Description;
+                activity.StartDate = model.StartDate;
+                activity.EndDate = model.EndDate;
+                activity.ApplyStartDate = model.ApplyStartDate;
+                activity.ApplyEndDate = model.ApplyEndDate;
+                activity.Category = model.Category;
+                activity.SubCategory = model.SubCategory;
+                activity.Location = model.Location;
+                activity.Pay = model.Pay;
+                activity.MaxParticipants = model.MaxParticipants;
+                activity.WaitLimit = model.WaitLimit;
+                activity.CurrentCount = model.CurrentCount;
+                activity.PicFile = model.PicFile;
 
-
-
-
-
-
-        ////編輯動作(教育資源連結)
-        //public string EditEduLink(EduLinkVM data)
-        //{
-        //    string result = "";
-        //    try
-        //    {
-        //        using (SeNtpcEntities db = new SeNtpcEntities())
-        //        {
-        //            var oldData = db.EduLink
-        //                            .Where(t => t.ELID == data.ELID)
-        //                            .FirstOrDefault();
-        //            if (oldData != null)
-        //            {
-        //                oldData.Title = data.Title;
-        //                oldData.Link = data.Link;
-        //                oldData.PicAlt = data.PicAlt;
-        //                oldData.Serial = data.Serial;
-        //                oldData.Enable = data.Enable;
-
-        //                oldData.Updator = AuthorModel.Current.ACID;
-        //                oldData.Updated = DateTime.Now;
-        //                oldData.UpdatorIP = CommonFunctions.GetClientIpAddress();
-
-
-
-        //                string[] allowedPhotoExtensions = {
-        //                    ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".svg"
-        //                };
-        //                string[] allowedPhotoMimeTypes = {
-        //                    "image/jpeg",
-        //                    "image/png",
-        //                    "image/gif",
-        //                    "image/bmp",
-        //                    "image/tiff",
-        //                    "image/svg+xml"
-        //                };
-
-
-        //                if (data.Pic1 != null && data.Pic1.ContentLength > 0) //相簿封面上傳
-        //                {
-        //                    // 在這裡加上檔案格式(白名單)
-        //                    var extension = Path.GetExtension(data.Pic1.FileName).ToLower();
-        //                    if (!allowedPhotoExtensions.Contains(extension))
-        //                    {
-        //                        return "圖片: 不允許的檔案類型";
-        //                    }
-        //                    if (!allowedPhotoMimeTypes.Contains(data.Pic1.ContentType))
-        //                    {
-        //                        return "圖片: 不合法的檔案格式";
-        //                    }
-
-        //                    var fileName = Path.GetFileNameWithoutExtension(data.Pic1.FileName) + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + Path.GetExtension(data.Pic1.FileName); //加時間戳避免重複)
-        //                    string uploadPath = System.Configuration.ConfigurationManager.AppSettings["EduLink"];
-        //                    var StorePath = System.Web.HttpContext.Current.Server.MapPath($"{uploadPath}");
-        //                    if (!Directory.Exists(StorePath)) //確認路徑,如果沒有就建立資料夾路徑
-        //                    {
-        //                        Directory.CreateDirectory(StorePath);
-        //                    }
-        //                    var path = Path.Combine(StorePath, fileName);
-        //                    data.Pic1.SaveAs(path);
-
-        //                    oldData.PicName = fileName;
-        //                    //oldData.PicSize = data.Pic1.ContentLength.ToString();
-        //                }
-
-
-        //                db.SaveChanges();
-
-        //                result = "編輯成功";
-        //                CommonFunctions.SymLog(AuthorModel.Current.ACID, AuthorModel.Current.UserID, AuthorModel.Current.LoginName, "教育資源連結", "編輯成功:" + data.Title);
-        //            }
-        //            else
-        //            {
-        //                result = "查無資料";
-        //                CommonFunctions.SymLog(AuthorModel.Current.ACID, AuthorModel.Current.UserID, AuthorModel.Current.LoginName, "教育資源連結", "編輯失敗:" + data.Title + "_查無資料");
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.Debug("[ManageService]錯誤function：EditEduLink 編輯動作(教育資源連結),錯誤訊息：" + ex.InnerException + ex.ToString());
-        //        result = "系統繁忙中，請稍後再試";
-        //        CommonFunctions.SymLog(AuthorModel.Current.ACID, AuthorModel.Current.UserID, AuthorModel.Current.LoginName, "教育資源連結", "編輯失敗:" + data.Title + "_" + ex.InnerException + ex.ToString());
-        //    }
-
-        //    return result;
-        //}
+                db.SaveChanges();
+                return true;
+            }
+        }
 
 
 
 
 
 
+        //刪除單筆(服務業務)
+        public string DeleteActivity(int ActID)
+        {
+            string result = "";
+            using (JoinGoEntities db = new JoinGoEntities())
+            {
+                var ty = db.Activity.Where(a => a.ActID == ActID).FirstOrDefault();
+                try
+                {
+                    db.Activity.Remove(ty);
+                    db.SaveChanges();
+                    result = "刪除成功";
+                   // CommonFunctions.SymLog(AuthorModel.Current.ACID, AuthorModel.Current.UserID, AuthorModel.Current.LoginName, "教育資源連結", "刪除成功:" + ty.Title);
 
-        ////刪除單筆(服務業務)
-        //public string DeleteEduLink(int ELID)
-        //{
-        //    string result = "";
-        //    using (SeNtpcEntities db = new SeNtpcEntities())
-        //    {
-        //        var ty = db.EduLink.Where(a => a.ELID == ELID).FirstOrDefault();
-        //        try
-        //        {
-        //            db.EduLink.Remove(ty);
-        //            db.SaveChanges();
-        //            result = "刪除成功";
-        //            CommonFunctions.SymLog(AuthorModel.Current.ACID, AuthorModel.Current.UserID, AuthorModel.Current.LoginName, "教育資源連結", "刪除成功:" + ty.Title);
-
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            logger.Debug("[ManageService]錯誤function：DeleteEduLink 刪除動作_單筆(教育資源連結),錯誤訊息：" + ex.InnerException + ex.ToString());
-        //            result = "系統繁忙中，請稍後再試";
-        //            CommonFunctions.SymLog(AuthorModel.Current.ACID, AuthorModel.Current.UserID, AuthorModel.Current.LoginName, "教育資源連結", "刪除失敗:" + ty.Title + "_" + ex.InnerException + ex.ToString());
-        //        }
-        //    }
-        //    return result;
-        //}
+                }
+                catch (Exception ex)
+                {
+                    logger.Debug("[ManageService]錯誤function：DeleteEduLink 刪除動作_單筆(教育資源連結),錯誤訊息：" + ex.InnerException + ex.ToString());
+                    result = "系統繁忙中，請稍後再試";
+                    //CommonFunctions.SymLog(AuthorModel.Current.ACID, AuthorModel.Current.UserID, AuthorModel.Current.LoginName, "教育資源連結", "刪除失敗:" + ty.Title + "_" + ex.InnerException + ex.ToString());
+                }
+            }
+            return result;
+        }
 
 
 

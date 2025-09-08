@@ -36,7 +36,9 @@
                     <td class="text-center"> @(m.ApplyStartDate.HasValue ? m.ApplyStartDate.Value.ToString("yyyy/MM/dd") : "" )  ~   @(m.ApplyEndDate.HasValue ? m.ApplyEndDate.Value.ToString("yyyy/MM/dd") : "" )</td>
                     <td>
                         <a href="javascript:void(0);" onclick="Details(@m.ActID);" class="btn btn-secondary">查看</a>
-                        <a href="javascript:void(0);" onclick="Edit(@m.ActID);" class="btn btn-main">編輯</a>
+
+                        <a href="@Url.Action("EditActivity", "Activity",new{ActID = m.ActID, page = @ViewBag.page, SearchArea = @ViewBag.SearchArea, SearchNineArea = @ViewBag.SearchNineArea, SearchSchoolType = @ViewBag.SearchSchoolType, SearchClassProp = @ViewBag.SearchClassProp, Search = @ViewBag.Search})"onclick="Edit(@m.ActID);" class="btn btn-main">編輯</a>
+
                         <a href="javascript:void(0);" onclick="DeleteFun(@m.ActID);" class="btn btn-danger">刪除</a>
                     </td>
                 </tr>
@@ -76,95 +78,9 @@
     }
 
 
-       @*//教育資源連結(新增動作送出)
-    function CreateFun() {
-        var Title = $('#Title').val();
-        var Link = $('#Link').val();
-        var PicAlt = $('#PicAlt').val();
-        var Serial = $('#Serial').val();
-        var Enable = $('input[name="Enable"]:checked').val();
-        var page = $("#page").val();
-        var fileInput = $('#Pic1')[0]; //相簿封面
 
 
-        if (Title == "") {
-            focusAndScrollTo('#Title', '請填寫標題');
-            return;
-        }
-        else if (Link == "") {
-            focusAndScrollTo('#Link', '請填寫網址');
-            return;
-        }
-        else if (fileInput.files.length == 0) {
-            focusAndScrollTo('#Pic1', '請上傳圖片');
-            return;
-        }
-        else if (PicAlt == "") {
-            focusAndScrollTo('#PicAlt', '請填寫圖片說明');
-            return;
-        }
-        else if (Serial == "") {
-            focusAndScrollTo('#Serial', '請填寫排序');
-            return;
-        }
-        else if (Enable == undefined) {
-            focusAndScrollTo('#Enable_Yes', '請選擇是否上架');
-            return;
-        }
-
-        $('#submitBtn').prop('disabled', true).addClass('btn-secondary');
-        // 顯示處理中提示
-        Swal.fire({
-            title: '處理中，請稍候...',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            didOpen: () => {
-                Swal.showLoading(); // 顯示 loading 動畫
-            }
-        });
-
-
-        //formData
-        var formData = new FormData();
-        formData.append('Title', Title);
-        formData.append('Link', Link);
-        formData.append('Pic1', fileInput.files[0]);
-        formData.append('PicAlt', PicAlt);
-        formData.append('Serial', Serial);
-        formData.append('Enable', Enable);
-
-        // 防止跨站請求偽造攻擊（CSRF）
-        formData.append('__RequestVerificationToken', getAntiForgeryToken());
-
-
-        $.ajax({
-            type: 'POST',
-            url: "@Url.Action("CreateEduLink", "Manage")",
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                Swal.close();
-                $('#submitBtn').prop('disabled', false).removeClass('btn-secondary');
-                Swal.fire(response);
-                if (response == "新增成功") {
-                    $('#CreateModal').modal('hide');
-                    GetData(page);
-                }
-            },
-            error: function (xhr, status, error) {
-                Swal.close();
-                $('#submitBtn').prop('disabled', false).removeClass('btn-secondary');
-                console.log("錯誤狀態:", status);
-                console.log("錯誤訊息:", error);
-                console.log("伺服器回應:", xhr.responseText);
-                Swal.fire("發生錯誤：" + xhr.responseText);
-            }
-        });
-    }*@
-
-
-    function DeleteFun(ELID) {
+    function DeleteFun(ActID) {
             var page = $("#Page").val();
             Swal.fire({
                 title: '是否確定刪除?',
@@ -175,11 +91,11 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         data: {
-                            ELID: ELID, __RequestVerificationToken: getAntiForgeryToken() // 包含 CSRF 令牌
+                            ActID: ActID, __RequestVerificationToken: getAntiForgeryToken() // 包含 CSRF 令牌
                         },
                         datatype: 'json',
                         type: 'post',
-                        url: "@Url.Action("DeleteEduLink", "Manage")",
+                        url: "@Url.Action("DeleteActivity", "Activity")",
                         success: function (da) {
                             if (da == "刪除成功") {
                                 Swal.fire(da);

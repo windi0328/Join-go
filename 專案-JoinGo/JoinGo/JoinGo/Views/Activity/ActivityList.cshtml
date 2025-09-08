@@ -127,6 +127,8 @@
 
 
 @section Scripts {
+    <script type="module" src="~/Scripts/ckeditor5-builder-43.3.1/ckeditor5/ckeditor5.js"></script>
+    <script type="module" src="~/Scripts/ckeditor5-builder-43.3.1/main.js"></script>
     <script>
         //token
         function getAntiForgeryToken() {
@@ -181,7 +183,7 @@
 
 
 
-  
+
 
         //活動管理連結(Create)------------------------------------------------------------------------------------------------
         function Create() {
@@ -199,11 +201,8 @@
 
 
 
-
-
-
-        function Details(ELID) {
-            $.get('@Url.Action("_ParDetailsEduLink", "Manage")', { "ELID": ELID }, function (data) {
+        function Details(ActID) {
+            $.get('@Url.Action("DetailsActivity","Activity")', { "ActID": ActID }, function (data) {
                 $('.DetailsDiv').html(data);
                 $('.ModalLabel').text("查看");
                 $('#DetailsModal').modal({
@@ -212,29 +211,6 @@
                 }).modal('show');
             })
         }
-
-
-
-        function Edit(ELID) {
-            $.get('@Url.Action("_ParEditEduLink", "Manage")', { "ELID": ELID }, function (data) {
-                $('.EditDiv').html(data);
-                $('.ModalLabel').text("編輯");
-                $('#EditModal').modal({
-                    keyboard: false,
-                    backdrop: 'static'
-                }).modal('show');
-            })
-        }
-
-
-
-
-
-
-
-
-
-
 
 
 

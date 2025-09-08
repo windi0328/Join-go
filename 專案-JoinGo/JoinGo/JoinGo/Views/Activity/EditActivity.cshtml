@@ -1,6 +1,6 @@
 ﻿@model JoinGo.Models.ViewModels.ActivityVM
 @{
-    ViewBag.Title = "新增活動";
+    ViewBag.Title = "編輯活動";
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
 }
 
@@ -12,9 +12,10 @@
             <a accesskey="C" href="#start-C" id="start-C" role="button" class="text-start" title="中間內容呈現區">:::</a>
             <div class="row d-flex justify-content-center">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    @using (Html.BeginForm("CreateActivity", "Activity", FormMethod.Post, new { @enctype = "multipart/form-data", id = "Form", @data_toggle = "validator", style = "width:100%;" }))
+                    @using (Html.BeginForm("EditActivity", "Activity", FormMethod.Post, new { @enctype = "multipart/form-data", id = "Form", @data_toggle = "validator", style = "width:100%;" }))
                     {
                         @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.ActID)
                         <nav aria-label="breadCrumbs">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
@@ -23,14 +24,14 @@
                                 <li class="breadcrumb-item">
                                     <a href="@Url.Action("ActivityList", "Activity")">活動管理</a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page">新增活動</li>
+                                <li class="breadcrumb-item active" aria-current="page">編輯活動</li>
                             </ol>
                         </nav>
                         <div class="container card">
                             <div class="row">
                                 <div class="col-12">
                                     <div class="titleText d-flex align-items-center">
-                                        <h1>新增活動</h1>
+                                        <h1>編輯活動</h1>
                                         <p class="text-left mx-2 mb-0" style="color: #db1226; font-size: .8rem;">* 符號表示必填欄位</p>
                                     </div>
                                 </div>
@@ -53,8 +54,8 @@
                                                 @Html.DropDownListFor(model => model.Category, (SelectList)ViewBag.ActivityCategorySelect, "請選擇活動類型", new
                                                 {
                                                     @class = "form-select",
-                                                    @id = "MainCategory",@*//確保 ID 可被 JS 抓到//*@aria_label = "請選擇活動類型"
-})
+                                                    @id = "MainCategory",@*//確保 ID 可被 JS 抓*@aria_label = "請選擇活動類型"
+                                                })
                                             </div>
                                             <div class="row">
                                                 <!-- 活動子分類 -->
@@ -77,7 +78,7 @@
                                                     <h3><span class="text-danger mx-2">*</span>活動名稱</h3>
                                                 </label>
                                                 <div class="input--horizontal input-group-lg">
-                                                    <input type="text" class="form-control form-control-sm" id="Name" name="Name" maxlength="200" placeholder="請填寫活動名稱" aria-label="請填寫活動名稱">
+                                                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control form-control-sm", maxlength = "200", placeholder = "請填寫活動名稱", aria_label = "請填寫活動名稱" })
                                                 </div>
                                             </div>
                                         </div>
@@ -89,7 +90,8 @@
                                                     <h3><span class="text-danger mx-2">*</span>活動地點</h3>
                                                 </label>
                                                 <div class="input--horizontal input-group-lg">
-                                                    <input type="text" class="form-control" id="Location" name="Location" maxlength="300" placeholder="活動地點" aria-label="活動地點">
+                                                    @Html.TextBoxFor(m => m.Location, new { @class = "form-control", maxlength = "300", placeholder = "活動地點", aria_label = "活動地點" })
+
                                                 </div>
                                             </div>
                                         </div>
@@ -99,14 +101,16 @@
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                                 <label for="StartDate" class="input-title"><h3><span class="text-danger mx-2">*</span>活動開始時間</h3></label>
                                                 <div class="input--horizontal input-group-lg">
-                                                    <input type="date" class="form-control" id="StartDate" name="StartDate" placeholder="請選擇開始時間">
+                                                    @Html.TextBoxFor(m => m.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", placeholder = "請選擇開始時間" })
+
                                                 </div>
                                             </div>
 
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                                 <label for="EndDate" class="input-title"><h3><span class="text-danger mx-2">*</span>活動結束時間</h3></label>
                                                 <div class="input--horizontal input-group-lg">
-                                                    <input type="date" class="form-control" id="EndDate" name="EndDate" placeholder="請選擇結束時間">
+                                                    @Html.TextBoxFor(m => m.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", placeholder = "請選擇結束時間" })
+
                                                 </div>
                                             </div>
                                         </div>
@@ -119,14 +123,14 @@
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                                 <label for="ApplyStartDate" class="input-title"><h3><span class="text-danger mx-2">*</span>活動報名開始時間</h3></label>
                                                 <div class="input--horizontal input-group-lg">
-                                                    <input type="date" class="form-control" id="ApplyStartDate" name="ApplyStartDate" placeholder="請選擇報名開始時間">
+                                                    @Html.TextBoxFor(m => m.ApplyStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", placeholder = "請選擇開始時間" })
                                                 </div>
                                             </div>
 
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                                 <label for="ApplyEndDate" class="input-title"><h3><span class="text-danger mx-2">*</span>活動報名結束時間</h3></label>
                                                 <div class="input--horizontal input-group-lg">
-                                                    <input type="date" class="form-control" id="ApplyEndDate" name="ApplyEndDate" placeholder="請選擇報名結束時間">
+                                                    @Html.TextBoxFor(m => m.ApplyEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", placeholder = "請選擇結束時間" })
                                                 </div>
                                             </div>
                                         </div>
@@ -134,7 +138,7 @@
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                             <label for="Contact" class="input-title"><h3><span class="text-danger mx-2">*</span>聯絡窗口</h3></label>
                                             <div class="input--horizontal input-group-lg">
-                                                <input type="text" class="form-control" id="Contact" name="Contact" maxlength="30" placeholder="請填寫聯絡窗口" aria-label="請填寫聯絡窗口">
+                                                @Html.TextBoxFor(m => m.Contact, new { @class = "form-control", maxlength = "300", placeholder = "聯絡窗口", aria_label = "聯絡窗口" })
                                             </div>
                                         </div>
 
@@ -143,23 +147,39 @@
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                             <label for="ContactPhone" class="input-title"><h3><span class="text-danger mx-2">*</span>窗口連絡電話</h3></label>
                                             <div class="input--horizontal input-group-lg">
-                                                <input type="text" class="form-control" id="ContactPhone" name="ContactPhone" maxlength="30" placeholder="請填寫窗口連絡電話" aria-label="請填寫窗口連絡電話">
+                                                @Html.TextBoxFor(m => m.ContactPhone, new { @class = "form-control", maxlength = "300", placeholder = "窗口連絡電話", aria_label = "窗口連絡電話" })
                                                 <small class="form-text text-muted">輸入電話格式範例如：02-22345678</small>
                                             </div>
                                         </div>
 
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                            <label for="PicFile" class="input-title"><h3><span class="text-danger mx-2">*</span>封面照片</h3></label>
-                                            <div class="input--horizontal input-group-lg">
-                                                <input type="file" id="PicFile" name="PicFile" class="form-control" accept="image/*">
-                                            </div>
+
+                                        <div class="form-group">
+                                            <label for="PicFile" class="control-label">封面照片</label>
+
+                                            @* 顯示舊照片縮圖 *@
+                                            @if (!string.IsNullOrEmpty(Model.PicFile))
+                                            {
+                                                <div class="mb-2">
+                                                    <img src="@Url.Content("~/Uploads/ActivityPics/" + Model.PicFile)"
+                                                         alt="封面照片"
+                                                         style="max-height:150px; border:1px solid #ccc; border-radius:4px;" />
+                                                </div>
+                                            }
+
+                                            @* 上傳新照片 (取代 TextBoxFor) *@
+                                            <input type="file" name="PicFile" id="PicFile"
+                                                   class="form-control" accept="image/*" />
+
+                                            @* 如果要保留舊值，可以放隱藏欄位 *@
+                                            @Html.HiddenFor(m => m.PicFile)
                                         </div>
 
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <label for="Description" class="input-title"><h3><span class="text-danger mx-2">*</span>活動詳細說明</h3></label>
-                                            <div class="input--horizontal input-group-lg">
-                                                <div class="editor-container__editor"><div class="editor1"></div></div>
-                                                <input type="hidden" id="CKContent1" name="Content1" />
+                                            <div class="form-group">
+                                                <label for="Description" class="control-label"></label>
+                                                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", @id = "Description", rows = "8" })
+                                            
                                             </div>
                                         </div>
                                     </div>
@@ -175,8 +195,6 @@
                 </div>
     </article>
 </section>
-}
-
 
 @section Scripts {
     <!-- CKEditor -->
@@ -190,56 +208,11 @@
         }
 
         $(document).ready(function () {
-            // 初始化 CKEditor
+            // 初始化 CKEditor（假設編輯頁只有一個 editor）
             initializeCKEditor('editor1', '');
-            // initializeCKEditor('editor2', '');
-            // initializeCKEditor('editor3', '');
-            // initializeCKEditor('editor4', '');
 
-            // 檢查上傳圖片類型
-            $('#PicFile').on('change', function () {
-                const file = this.files[0];
-                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-                if (file && allowedTypes.indexOf(file.type) === -1) {
-                    Swal.fire({
-                        title: "請上傳有效的圖片檔案 (JPEG, PNG, GIF, webp)。",
-                        confirmButtonText: "確定",
-                        didOpen: () => {
-                            $(this).val(''); // 清除檔案選擇
-                        }
-                    });
-                    return;
-                }
-            });
-
-            // 檢查檔案大小 (單檔 5MB)
-            $('input[type="file"]').on('change', function () {
-                const files = this.files;
-                const maxSize = 5 * 1024 * 1024;
-                let errorMessages = [];
-                let hasError = false;
-
-                if (files) {
-                    for (let i = 0; i < files.length; i++) {
-                        if (files[i].size > maxSize) {
-                            errorMessages.push("檔案: " + files[i].name + "，大小超過限制 (5MB)。");
-                            hasError = true;
-                        }
-                    }
-
-                    if (hasError) {
-                        Swal.fire({
-                            title: "檔案大小超過限制",
-                            html: errorMessages.join("<br>"),
-                            confirmButtonText: "確定"
-                        });
-                        $(this).val('');
-                    }
-                }
-            });
-
-            // 子分類取得
-            function GetSubCategory() {
+            // 子分類載入
+            function GetSubCategory(selectedVal) {
                 const parentId = $("#MainCategory").val();
                 const $subCategory = $("#SubCategory");
 
@@ -253,44 +226,38 @@
                     type: 'GET',
                     data: { ParentCatID: parentId },
                     dataType: 'json',
-                    success: function(data) {
+                    success: function (data) {
                         $subCategory.empty();
                         if (data.items && data.items.length > 0) {
                             $subCategory.append('<option value="">請選擇子類別</option>');
-                            $.each(data.items, function(i, item) {
+                            $.each(data.items, function (i, item) {
                                 $subCategory.append($('<option>').val(item.Value).html(item.Text));
                             });
-                            // 自動選第一個
-                            const first = $subCategory.find('option').not('[value=""]').first();
-                            if (first.length) first.prop('selected', true);
+                            if (selectedVal) {
+                                $subCategory.val(selectedVal); // ✅ 編輯時選中原本的子分類
+                            }
                         } else {
                             $subCategory.append('<option value="">查無子類別</option>');
                         }
                     },
-                    error: function() {
+                    error: function () {
                         $subCategory.empty().append('<option value="">載入失敗</option>');
                     }
                 });
             }
 
-            // 大分類改變時觸發
+            // 大分類變更時觸發
             $("#MainCategory").on('change', function () {
                 GetSubCategory();
             });
 
-            // 頁面載入時呼叫一次
-            $(function () {
-                GetSubCategory();
-            });
+            // 頁面載入時帶入子分類（編輯用）
+            const oldSubCategory = $("#SubCategory").data("selected"); // 在 Razor 填 value
+            GetSubCategory(oldSubCategory);
 
-            // 活動新增送出
-            function CreateFun() {
-                // 塞值屬性
-                const selected = $('input[name="ClassPropCheckbox"]:checked')
-                    .map(function () { return this.value; }).get().join(',');
-                $('#ClassProp').val(selected);
-
-                // 取得欄位值
+            // ✅ 編輯送出
+            function EditFun() {
+                const ActID = $('#ActID').val();
                 const Category = $('#MainCategory').val();
                 const SubCategory = $('#SubCategory').val();
                 const Name = $('#Name').val();
@@ -314,8 +281,7 @@
                     { selector: '#ApplyStartDate', value: ApplyStartDate, message: '請填寫報名開始時間' },
                     { selector: '#ApplyEndDate', value: ApplyEndDate, message: '請填寫報名結束時間' },
                     { selector: '#Contact', value: Contact, message: '請填寫聯絡窗口' },
-                    { selector: '#ContactPhone', value: ContactPhone, message: '請填寫窗口連絡電話' },
-                    { selector: '#PicFile', value: PicFile, message: '請上傳封面照片' }
+                    { selector: '#ContactPhone', value: ContactPhone, message: '請填寫窗口連絡電話' }
                 ];
 
                 for (let field of fields) {
@@ -330,7 +296,7 @@
                     }
                 }
 
-                // 禁用送出按鈕並顯示處理中
+                // 禁用送出按鈕 + Loading
                 $('#submitBtn').prop('disabled', true).addClass('btn-secondary');
                 Swal.fire({
                     title: '處理中，請稍候...',
@@ -341,6 +307,7 @@
 
                 // 準備 FormData
                 const formData = new FormData();
+                formData.append('ActID', ActID); // ✅ 編輯必須帶 ID
                 formData.append('Category', Category);
                 formData.append('SubCategory', SubCategory);
                 formData.append('Name', Name);
@@ -352,7 +319,7 @@
                 formData.append('Contact', Contact);
                 formData.append('ContactPhone', ContactPhone);
 
-                // 活動封面圖片上傳
+                // 如果重新上傳新圖片才帶入
                 const fileInput = $("input[name='PicFile']")[0];
                 const file = fileInput?.files?.[0];
                 if (file) {
@@ -365,25 +332,26 @@
                     const editorData1 = editor1.getData();
                     $('#CKContent1').val(editorData1);
                     formData.append('Description', editorData1);
+
                 }
 
                 // CSRF Token
                 formData.append('__RequestVerificationToken', getAntiForgeryToken());
 
-                // 送出 AJAX
+                // AJAX 更新
                 $.ajax({
                     type: 'POST',
-                    url: "@Url.Action("CreateActivity","Activity")",
+                    url: "@Url.Action("EditActivity","Activity")",
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function (response) {
                         Swal.close();
                         $('#submitBtn').prop('disabled', false).removeClass('btn-secondary');
-                        if(response.message === "新增成功" && response.success === true) {
+                        if(response.message === "修改成功" && response.success === true) {
                             Swal.fire({
                                 icon: 'success',
-                                title: '新增成功',
+                                title: '修改成功',
                                 allowOutsideClick: false,
                                 allowEscapeKey: false,
                                 confirmButtonText: 'OK'
@@ -405,10 +373,8 @@
                 });
             }
 
-            // 可在按鈕上綁定 CreateFun
-            $('#submitBtn').on('click', CreateFun);
+            // 綁定送出事件
+            $('#submitBtn').on('click', EditFun);
         });
-    </script>
-       }
+        </script>
     }
-}
