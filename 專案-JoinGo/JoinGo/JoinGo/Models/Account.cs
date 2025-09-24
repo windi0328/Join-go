@@ -18,6 +18,7 @@ namespace JoinGo.Models
         public Account()
         {
             this.LoginLog = new HashSet<LoginLog>();
+            this.Apply = new HashSet<Apply>();
         }
     
         public int ACID { get; set; }
@@ -53,5 +54,7 @@ namespace JoinGo.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LoginLog> LoginLog { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Apply> Apply { get; set; }
     }
 }

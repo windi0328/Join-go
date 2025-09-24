@@ -1,0 +1,125 @@
+﻿@model JoinGo.Models.ViewModels.ApplyVM
+@{
+    ViewBag.Title = "編輯報名";
+    Layout = "~/Views/Shared/_LayoutBack.cshtml";
+}
+<style>
+    .edit-form {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #f9f9f9;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    /* 標題文字 */
+    .form-header {
+        font-size: 20px;
+        font-weight: 700;
+        color: #000; /* 黑色字 */
+        margin-bottom: 15px;
+    }
+
+    .form-label {
+        font-size: 15px;
+        color: #444;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .btn {
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    #msgBox {
+        border-radius: 8px;
+        padding: 12px 15px;
+        font-weight: bold;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>
+
+<div id="msgBoxContainer" class="position-relative mt-3" style="max-width:600px; margin:auto;">
+    <!-- 標題文字 -->
+    <h2 class="form-header">編輯報名資訊</h2>
+
+    <!-- 訊息框 -->
+    <div id="msgBox" class="alert" style="display:none;"></div>
+</div>
+
+<form id="editForm" method="post" class="edit-form shadow-sm p-4 rounded bg-light">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.AID)
+    @Html.HiddenFor(m => m.ActID)
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(m => m.Name, new { @class = "form-label fw-bold" })
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(m => m.Email, new { @class = "form-label fw-bold" })
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(m => m.Phone, new { @class = "form-label fw-bold" })
+        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary px-4">儲存修改</button>
+        <a href="@Url.Action("MyApplyList", "User")" class="btn btn-secondary px-4">返回</a>
+    </div>
+</form>
+
+
+@section scripts {
+    <script>
+    $("#editForm").submit(function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: '@Url.Action("EditApply", "User")',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (res) {
+                if (res.success) {
+                    $("#msgBox")
+                        .removeClass("alert-danger")
+                        .addClass("alert-success")
+                        .text(res.message)
+                        .fadeIn()
+                        .delay(1500)
+                        .fadeOut(function () {
+                            window.location.href = '@Url.Action("MyApplyList", "User")';
+                        });
+                } else {
+                    $("#msgBox")
+                        .removeClass("alert-success")
+                        .addClass("alert-danger")
+                        .text(res.message)
+                        .fadeIn();
+                }
+            }
+        });
+    });
+    </script>
+}

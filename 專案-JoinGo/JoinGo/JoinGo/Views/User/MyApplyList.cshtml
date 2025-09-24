@@ -1,0 +1,178 @@
+﻿@model List<JoinGo.Models.ViewModels.ApplyListVM>
+@{
+    ViewBag.Title = "我的報名";
+    Layout = "~/Views/Shared/_LayoutBack.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    /* 整體表格風格 */
+    .my-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #fff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        /* 表頭 */
+        .my-table th {
+            background-color: #8B4513;
+            color: white;
+            font-weight: bold;
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        /* 表身 */
+        .my-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* 列交替顏色 */
+        .my-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* 滑鼠懸停效果 */
+        .my-table tr:hover {
+            background-color: #e6f7ff;
+            transition: 0.3s;
+        }
+
+    /* 按鈕樣式 */
+    .btn-detail, .btn-edit, .btn-cancel {
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+        margin-right: 5px;
+    }
+
+    .btn-detail {
+        background-color: #1E90FF;
+    }
+
+        .btn-detail:hover {
+            background-color: #0d6efd;
+        }
+
+    .btn-edit {
+        background-color: #88AA00;
+    }
+
+        .btn-edit:hover {
+            background-color: #0056b3;
+        }
+
+    .btn-cancel {
+        background-color: #dc3545;
+    }
+
+        .btn-cancel:hover {
+            background-color: #a71d2a;
+        }
+
+    /* 已取消列的樣式 */
+    .cancelled-row {
+        border: 2px solid red;
+        background-color: #fff5f5 !important;
+    }
+
+    /* 表格標題 */
+    .table-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .container {
+        margin-bottom: 80px;
+    }
+    .btn-edit.disabled, .btn-cancel.disabled {
+        background-color: #ccc !important;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="table-title">我的報名紀錄</h2>
+    <table class="my-table">
+        <thead>
+            <tr>
+                <th>活動名稱</th>
+                <th>報名時間</th>
+                <th>活動開始時間</th>
+                <th>狀態</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var rowClass = item.Status == 2 ? "cancelled-row" : "";
+                bool isStarted = item.StartDate.HasValue && item.StartDate.Value <= DateTime.Now;
+
+                <tr class="@rowClass">
+                    <td>@item.ActTitle</td>
+                    <td>@item.RegistrationDate</td>
+                    <td>@(item.StartDate.HasValue ? item.StartDate.Value.ToString("yyyy-MM-dd HH:mm") : "-")</td>
+                    <td>@(item.Status == 1 ? "已報名" : "已取消")</td>
+                    <td>
+                        <a href="@Url.Action("MyApplyDetails", "User", new { id = item.AID })" class="btn-detail">查看詳細</a>
+                        <a href="@Url.Action("MyEditApply", "User", new { id = item.AID })" class="btn-edit @(isStarted ? "disabled" : "")">編輯</a>
+                        <button type="button" class="btn-cancel btn-cancel-apply @(isStarted ? "disabled" : "")" data-id="@item.AID">取消</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    // 綁定取消事件
+    document.querySelectorAll(".btn-cancel-apply").forEach(btn => {
+        if (btn.classList.contains("disabled")) return;
+
+        btn.addEventListener("click", function () {
+            let id = this.getAttribute("data-id");
+
+            Swal.fire({
+                title: "確定要取消嗎？",
+                text: "取消後仍會保留紀錄。",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "是的，取消！",
+                cancelButtonText: "再想想"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/User/MyCancelApply/${id}`, { method: "POST" })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire("已取消！", data.message, "success").then(() => location.reload());
+                            } else {
+                                Swal.fire("錯誤", data.message, "error");
+                            }
+                        });
+                }
+            });
+        });
+    });
+
+</script>

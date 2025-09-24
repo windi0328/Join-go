@@ -1,0 +1,136 @@
+﻿@using JoinGo.Models.Author;
+
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <title>@ViewBag.Title | JoinGo</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="shortcut icon" href="/image/favicon.ico">
+    <link href="~/Scripts/ckeditor5-builder-43.3.1/ckeditor5/ckeditor5.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("Styles", false)
+
+    <style>
+        body {
+            min-height: 100vh;
+        }
+
+        .back-btn {
+            border: none;
+            background: none;
+            font-size: 1.2rem;
+            color: #333;
+            cursor: pointer;
+        }
+
+            .back-btn:hover {
+                color: #007bff;
+            }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
+        <!-- LOGO -->
+        <a class="d-block text-start me-3" href="@(AuthorModel.Current.Role == "User" ? "/User/Index" : AuthorModel.Current.Role == "Admin" ? "/Admin/Index"  : "/Home/Index" )">
+            <picture>
+                <source media="(min-width: 1200px)" srcset="~/image/logo.svg" alt="JoinGo">
+                <img src="~/image/logo.svg" style="height:40px;" alt="JoinGo">
+            </picture>
+        </a>
+
+        <!-- 保留：參加活動 / 辦活動 -->
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="joinEventDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    參加活動
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="joinEventDropdown">
+                    <li><a class="dropdown-item" href="@Url.Action("Index","User")">活動列表</a></li>
+                    <li><a class="dropdown-item" href="@Url.Action("MyApplyList","User")">我的報名</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="createEventDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    辦活動
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="createEventDropdown">
+                    <li><a class="dropdown-item" href="@Url.Action("ActivityList","Activity")">活動管理</a></li>
+                
+                </ul>
+            </li>
+        </ul>
+
+        <!-- 新增：返回上一頁 -->
+        <button class="btn btn-outline-secondary me-3" onclick="history.back()">
+            <i class="fa fa-arrow-left"></i> 返回上一頁
+        </button>
+
+        <!-- 頭像選單 -->
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <a class="dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="@(AuthorModel.Current.AvatarPhoto != null ? Url.Content("~/image/Files/AvatarPhoto/" + AuthorModel.Current.AvatarPhoto) : "/image/default-avatar.jpg")" class="rounded-circle me-2" style="height:40px;width:40px">
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" href="@Url.Action("Personal","User")"><i class="fa fa-user"></i> 個人資料</a></li>
+                    <li><a class="dropdown-item" href="@Url.Action("Account","User")"><i class="fa fa-cog"></i> 帳號管理</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="@Url.Action("LogOut","Home")"><i class="fa fa-sign-out"></i> 登出</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+ 
+
+    <hr class="m-0">
+    <article class="main-content">
+        @RenderBody()
+    </article>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container text-md-left">
+            <div class="row">
+                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-4">
+                    <h2 class="logo-text mb-4">
+                        <span class="logo-join">Join</span>
+                        <span class="logo-go">Go</span>
+                    </h2>
+                    <p>
+                        我們是一個專為活動主辦方與參與者設計的 活動報名平台，致力於讓報名流程變得簡單、有系統、好管理。
+                        無論是線上講座、實體市集、工作坊、演唱會，從活動建立、票券管理到參與者通知，我們都替你搞定！。
+                    </p>
+                </div>
+                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mb-4">
+                    <h5 class="text-uppercase fw-bold mb-4">快速連結</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">關於我們</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">服務項目</a></li>
+                        <li><a href="@Url.Action("FAQ","Admin")" class="text-white text-decoration-none">常見問題</a></li>
+                        <li><a href="@Url.Action("ContactUs","Admin")" class="text-white text-decoration-none">聯絡我們</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-md-0 mb-4">
+                    <h5 class="text-uppercase fw-bold mb-4">聯絡資訊</h5>
+                    <p><i class="fa fa-home fa-fw me-2"></i> 台北市某某區某某路123號</p>
+                    <p><i class="fa fa-envelope fa-fw me-2"></i> contact@example.com</p>
+                    <p><i class="fa fa-phone fa-fw me-2"></i> 02-1234-5678</p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(255, 255, 255, 0.05);">
+            © 2025 JoinGo. 保留所有權利。
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/script")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+

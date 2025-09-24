@@ -1,7 +1,7 @@
 ﻿@model JoinGo.Models.ViewModels.ActivityVM
 @{
     ViewBag.Title = "編輯活動";
-    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+    Layout = "~/Views/Shared/_LayoutBack.cshtml";
 }
 
 
@@ -178,8 +178,10 @@
                                             <label for="Description" class="input-title"><h3><span class="text-danger mx-2">*</span>活動詳細說明</h3></label>
                                             <div class="form-group">
                                                 <label for="Description" class="control-label"></label>
-                                                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", @id = "Description", rows = "8" })
-                                            
+                                                <div class="editor-container__editor"><div class="editor1"></div></div>
+                                                <input type="hidden" id="CKContent1" name="Content1" value="@Model.Description"/>
+                                                @*@Html.TextAreaFor(m => m.Description, new { @class = "form-control", @id = "Description", rows = "8" })*@
+
                                             </div>
                                         </div>
                                     </div>
@@ -209,7 +211,7 @@
 
         $(document).ready(function () {
             // 初始化 CKEditor（假設編輯頁只有一個 editor）
-            initializeCKEditor('editor1', '');
+            initializeCKEditor('editor1', $("#CKContent1").val());
 
             // 子分類載入
             function GetSubCategory(selectedVal) {
@@ -252,8 +254,8 @@
             });
 
             // 頁面載入時帶入子分類（編輯用）
-            const oldSubCategory = $("#SubCategory").data("selected"); // 在 Razor 填 value
-            GetSubCategory(oldSubCategory);
+      /*      const oldSubCategory = $("#SubCategory").data("selected"); // 在 Razor 填 value*/
+            GetSubCategory('@Model.SubCategory');
 
             // ✅ 編輯送出
             function EditFun() {

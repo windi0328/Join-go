@@ -14,6 +14,12 @@ namespace JoinGo.Models
     
     public partial class Activity
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Activity()
+        {
+            this.Apply = new HashSet<Apply>();
+        }
+    
         public int ActID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -42,7 +48,11 @@ namespace JoinGo.Models
         public Nullable<int> Updator { get; set; }
         public Nullable<System.DateTime> Updated { get; set; }
         public string UpdatedIP { get; set; }
+        public Nullable<int> SubCategory { get; set; }
     
         public virtual Category Category1 { get; set; }
+        public virtual Category Category11 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Apply> Apply { get; set; }
     }
 }

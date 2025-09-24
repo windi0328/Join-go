@@ -108,7 +108,10 @@ namespace JoinGo.Controllers
                     ContactPhone = data.ContactPhone,
                     PicFile = fileName,
                     Description = data.Description,
-                    SubCategory = data.SubCategory
+                    SubCategory = data.SubCategory,
+                    Creator = AuthorModel.Current.ACID,
+                    Created = DateTime.Now
+
                 };
 
                 db.Activity.Add(activity);
@@ -186,6 +189,8 @@ namespace JoinGo.Controllers
                 activity.Contact = data.Contact;
                 activity.ContactPhone = data.ContactPhone;
                 activity.Description = data.Description;
+                activity.Updator = AuthorModel.Current.ACID;
+                activity.Updated = DateTime.Now;
 
                 // 圖片處理 (有上傳新檔案才更新)
                 if (PicFile != null && PicFile.ContentLength > 0)
@@ -241,7 +246,8 @@ namespace JoinGo.Controllers
                     Creator = activity.Creator,    // 建檔人員 ID
                     Updator = activity.Updator,    // 更新人員 ID
                     Updated = activity.Updated,
-                    UpdatedIP = activity.UpdatedIP
+                    UpdatedIP = activity.UpdatedIP,
+
                 };
 
                 // 類別中文
@@ -262,7 +268,7 @@ namespace JoinGo.Controllers
                                            .Select(u => u.Name)
                                            .FirstOrDefault();
 
-                return View(vm);
+                return PartialView(vm);
             }
         }
 

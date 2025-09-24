@@ -18,6 +18,7 @@ namespace JoinGo.Models
         public Category()
         {
             this.Activity = new HashSet<Activity>();
+            this.Activity1 = new HashSet<Activity>();
         }
     
         public int CaID { get; set; }
@@ -34,5 +35,7 @@ namespace JoinGo.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Activity> Activity { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Activity> Activity1 { get; set; }
     }
 }

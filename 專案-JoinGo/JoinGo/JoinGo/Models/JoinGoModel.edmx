@@ -72,6 +72,27 @@
           <Property Name="Updator" Type="int" />
           <Property Name="Updated" Type="datetime" />
           <Property Name="UpdatedIP" Type="nvarchar" MaxLength="100" />
+          <Property Name="SubCategory" Type="int" />
+        </EntityType>
+        <EntityType Name="Apply">
+          <Key>
+            <PropertyRef Name="AID" />
+          </Key>
+          <Property Name="AID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ActID" Type="int" Nullable="false" />
+          <Property Name="ACID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Email" Type="nvarchar" MaxLength="150" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+          <Property Name="RegistrationDate" Type="datetime" />
+          <Property Name="Status" Type="int" />
+          <Property Name="Creator" Type="int" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="CreatedIP" Type="nvarchar" MaxLength="100" />
+          <Property Name="Updator" Type="int" />
+          <Property Name="Updated" Type="datetime" />
+          <Property Name="UpdatedIP" Type="nvarchar" MaxLength="100" />
+          <Property Name="CanceledDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -155,15 +176,27 @@
           <Property Name="Updated" Type="datetime" />
           <Property Name="UpdatedIP" Type="nvarchar" MaxLength="100" />
         </EntityType>
-        <Association Name="FK_Activity_Category">
-          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
-          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+        <Association Name="FK_Apply_Account">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Apply" Type="Self.Apply" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Category">
-              <PropertyRef Name="CaID" />
+            <Principal Role="Account">
+              <PropertyRef Name="ACID" />
             </Principal>
-            <Dependent Role="Activity">
-              <PropertyRef Name="Category" />
+            <Dependent Role="Apply">
+              <PropertyRef Name="ACID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Apply_Activity">
+          <End Role="Activity" Type="Self.Activity" Multiplicity="1" />
+          <End Role="Apply" Type="Self.Apply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Activity">
+              <PropertyRef Name="ActID" />
+            </Principal>
+            <Dependent Role="Apply">
+              <PropertyRef Name="ActID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -179,21 +212,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_subCategory_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CaID" />
+            </Principal>
+            <Dependent Role="Activity">
+              <PropertyRef Name="SubCategory" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="JoinGoModelStoreContainer">
           <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Activity" EntityType="Self.Activity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Apply" EntityType="Self.Apply" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoginLog" EntityType="Self.LoginLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MenuFunction" EntityType="Self.MenuFunction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Option" EntityType="Self.Option" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_Activity_Category" Association="Self.FK_Activity_Category">
-            <End Role="Category" EntitySet="Category" />
+          <AssociationSet Name="FK_Apply_Account" Association="Self.FK_Apply_Account">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="Apply" EntitySet="Apply" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Apply_Activity" Association="Self.FK_Apply_Activity">
             <End Role="Activity" EntitySet="Activity" />
+            <End Role="Apply" EntitySet="Apply" />
           </AssociationSet>
           <AssociationSet Name="FK_LoginLog_Account" Association="Self.FK_LoginLog_Account">
             <End Role="Account" EntitySet="Account" />
             <End Role="LoginLog" EntitySet="LoginLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_subCategory_Category" Association="Self.FK_subCategory_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Activity" EntitySet="Activity" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -216,6 +270,19 @@
             <End Role="Activity" EntitySet="Activity" />
           </AssociationSet>
           <EntitySet Name="Question" EntityType="JoinGoModel.Question" />
+          <AssociationSet Name="FK_subCategory_Category" Association="JoinGoModel.FK_subCategory_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Activity" EntitySet="Activity" />
+          </AssociationSet>
+          <EntitySet Name="Apply" EntityType="JoinGoModel.Apply" />
+          <AssociationSet Name="FK_Apply_Account" Association="JoinGoModel.FK_Apply_Account">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="Apply" EntitySet="Apply" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Apply_Activity" Association="JoinGoModel.FK_Apply_Activity">
+            <End Role="Activity" EntitySet="Activity" />
+            <End Role="Apply" EntitySet="Apply" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Account">
           <Key>
@@ -252,6 +319,7 @@
           <Property Name="PasswordResetToken" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="PasswordResetExpiry" Type="DateTime" Precision="3" />
           <NavigationProperty Name="LoginLog" Relationship="JoinGoModel.FK_LoginLog_Account" FromRole="Account" ToRole="LoginLog" />
+          <NavigationProperty Name="Apply" Relationship="JoinGoModel.FK_Apply_Account" FromRole="Account" ToRole="Apply" />
         </EntityType>
         <EntityType Name="LoginLog">
           <Key>
@@ -346,6 +414,9 @@
           <Property Name="Updated" Type="DateTime" Precision="3" />
           <Property Name="UpdatedIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Category1" Relationship="JoinGoModel.FK_Activity_Category" FromRole="Activity" ToRole="Category" />
+          <Property Name="SubCategory" Type="Int32" />
+          <NavigationProperty Name="Category11" Relationship="JoinGoModel.FK_subCategory_Category" FromRole="Activity" ToRole="Category" />
+          <NavigationProperty Name="Apply" Relationship="JoinGoModel.FK_Apply_Activity" FromRole="Activity" ToRole="Apply" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -363,6 +434,7 @@
           <Property Name="Updated" Type="DateTime" Precision="3" />
           <Property Name="UpdatedIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Activity" Relationship="JoinGoModel.FK_Activity_Category" FromRole="Category" ToRole="Activity" />
+          <NavigationProperty Name="Activity1" Relationship="JoinGoModel.FK_subCategory_Category" FromRole="Category" ToRole="Activity" />
         </EntityType>
         <Association Name="FK_Activity_Category">
           <End Type="JoinGoModel.Category" Role="Category" Multiplicity="0..1" />
@@ -395,6 +467,64 @@
           <Property Name="Updated" Type="DateTime" Precision="3" />
           <Property Name="UpdatedIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
+        <Association Name="FK_subCategory_Category">
+          <End Type="JoinGoModel.Category" Role="Category" Multiplicity="0..1" />
+          <End Type="JoinGoModel.Activity" Role="Activity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CaID" />
+            </Principal>
+            <Dependent Role="Activity">
+              <PropertyRef Name="SubCategory" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Apply">
+          <Key>
+            <PropertyRef Name="AID" />
+          </Key>
+          <Property Name="AID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ActID" Type="Int32" Nullable="false" />
+          <Property Name="ACID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RegistrationDate" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="Creator" Type="Int32" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="CreatedIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Updator" Type="Int32" />
+          <Property Name="Updated" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedIP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Account" Relationship="JoinGoModel.FK_Apply_Account" FromRole="Apply" ToRole="Account" />
+          <NavigationProperty Name="Activity" Relationship="JoinGoModel.FK_Apply_Activity" FromRole="Apply" ToRole="Activity" />
+          <Property Name="CanceledDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <Association Name="FK_Apply_Account">
+          <End Type="JoinGoModel.Account" Role="Account" Multiplicity="1" />
+          <End Type="JoinGoModel.Apply" Role="Apply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="ACID" />
+            </Principal>
+            <Dependent Role="Apply">
+              <PropertyRef Name="ACID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Apply_Activity">
+          <End Type="JoinGoModel.Activity" Role="Activity" Multiplicity="1" />
+          <End Type="JoinGoModel.Apply" Role="Apply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Activity">
+              <PropertyRef Name="ActID" />
+            </Principal>
+            <Dependent Role="Apply">
+              <PropertyRef Name="ActID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -490,6 +620,7 @@
           <EntitySetMapping Name="Activity">
             <EntityTypeMapping TypeName="JoinGoModel.Activity">
               <MappingFragment StoreEntitySet="Activity">
+                <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
                 <ScalarProperty Name="UpdatedIP" ColumnName="UpdatedIP" />
                 <ScalarProperty Name="Updated" ColumnName="Updated" />
                 <ScalarProperty Name="Updator" ColumnName="Updator" />
@@ -555,6 +686,27 @@
                 <ScalarProperty Name="Questioner" ColumnName="Questioner" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="QuID" ColumnName="QuID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Apply">
+            <EntityTypeMapping TypeName="JoinGoModel.Apply">
+              <MappingFragment StoreEntitySet="Apply">
+                <ScalarProperty Name="CanceledDate" ColumnName="CanceledDate" />
+                <ScalarProperty Name="UpdatedIP" ColumnName="UpdatedIP" />
+                <ScalarProperty Name="Updated" ColumnName="Updated" />
+                <ScalarProperty Name="Updator" ColumnName="Updator" />
+                <ScalarProperty Name="CreatedIP" ColumnName="CreatedIP" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Creator" ColumnName="Creator" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="RegistrationDate" ColumnName="RegistrationDate" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ACID" ColumnName="ACID" />
+                <ScalarProperty Name="ActID" ColumnName="ActID" />
+                <ScalarProperty Name="AID" ColumnName="AID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

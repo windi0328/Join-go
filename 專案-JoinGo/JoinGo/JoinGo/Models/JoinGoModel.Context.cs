@@ -32,5 +32,6 @@ namespace JoinGo.Models
         public virtual DbSet<Activity> Activity { get; set; }
         public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<Question> Question { get; set; }
+        public virtual DbSet<Apply> Apply { get; set; }
     }
 }

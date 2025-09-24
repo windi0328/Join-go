@@ -178,5 +178,39 @@ namespace JoinGo.Service.User
             }
             return result;
         }
+
+
+
+        #region 首頁活動
+        //取得資料(首頁活動)
+        public ActCardVM GetActCard()
+        {
+            using (JoinGoEntities db = new JoinGoEntities())
+            {
+
+                var ActList1 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now).OrderByDescending(o=>o.ApplyStartDate).Take(9); //精選
+                var ActList2 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==1).OrderByDescending(o => o.ApplyStartDate).Take(9); //學習成長
+                var ActList3 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==2).OrderByDescending(o => o.ApplyStartDate).Take(9); //藝文休閒
+                var ActList4 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==3).OrderByDescending(o => o.ApplyStartDate).Take(9); //生活體驗
+                var ActList5 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==4).OrderByDescending(o => o.ApplyStartDate).Take(9); //健康樂活
+                var ActList6 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==5).OrderByDescending(o => o.ApplyStartDate).Take(9); //生活關懷
+
+
+                var query = new ActCardVM
+                {
+                    ActList1 = ActList1.ToList(),
+                    ActList2 = ActList2.ToList(),
+                    ActList3 = ActList3.ToList(),
+                    ActList4 = ActList4.ToList(),
+                    ActList5 = ActList5.ToList(),
+                    ActList6 = ActList6.ToList(),
+                };
+                return query;
+            }
+        }
+        #endregion
+
+
+
     }
 }

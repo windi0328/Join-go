@@ -159,6 +159,7 @@ namespace JoinGo.Service.Act
                         CurrentCount = mf.CurrentCount,
                         PicFile = mf.PicFile,
                       CategoryName = mf.Category1.Name
+
                     })
                     .FirstOrDefault();
 
@@ -188,6 +189,8 @@ namespace JoinGo.Service.Act
                 activity.WaitLimit = model.WaitLimit;
                 activity.CurrentCount = model.CurrentCount;
                 activity.PicFile = model.PicFile;
+                activity.Updator = AuthorModel.Current.ACID;
+                activity.Updated = DateTime.Now;
 
                 db.SaveChanges();
                 return true;

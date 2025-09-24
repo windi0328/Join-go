@@ -1,0 +1,30 @@
+﻿@model List<JoinGo.Models.Activity>
+
+@foreach (var m in Model)
+{
+  
+    <div class="col">
+        <a href="@Url.Action("DetailsAct", "User", new {ActID = m.ActID })">
+            <div class="card h-100 shadow-sm">
+                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)" class="card-img-top" alt="@m.Name">
+                <div class="card-body">
+                    <p class="text-secondary fa mb-1">@(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "" ) ~ @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "" )</p>
+                    <h5 class="card-title">@m.Name</h5>
+                    <hr />
+                    <div class="card-text description-clamp">@Html.Raw(m.Description)</div>
+                </div>
+            </div>
+        </a>
+    </div>
+}
+
+<style>
+    .description-clamp {
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* 限制兩行 */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+</style>
