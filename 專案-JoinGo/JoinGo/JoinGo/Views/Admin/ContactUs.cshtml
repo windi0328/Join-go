@@ -1,7 +1,18 @@
-﻿@{
+﻿@using JoinGo.Models.Author;
+@{
     ViewBag.Title = "聯絡我們";
+}
+
+@if (!ChkAuthor.CheckSession())
+{
     Layout = "~/Views/Shared/_LayoutHome.cshtml";
 }
+else
+{
+    Layout = "~/Views/Shared/_LayoutBack.cshtml";
+}
+
+
 <style>
     .contact-card {
         border-radius: 15px;

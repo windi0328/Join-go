@@ -7,6 +7,8 @@ using JoinGo.Models;
 using JoinGo.Models.Author;
 using JoinGo.Models.ViewModels;
 using JoinGo.Service.Fn;
+using System.Data.Entity;  
+
 
 namespace JoinGo.Service.User
 {
@@ -130,7 +132,6 @@ namespace JoinGo.Service.User
 
                         result.Result = true;
                         result.Message = "編輯成功";
-                        //CommonFunctions.SymLog(AuthorModel.Current.ACID, AuthorModel.Current.UserID, AuthorModel.Current.LoginName, "學校資訊", "編輯成功:" + data.SchoolName);
                     }
                     else
                     {
@@ -144,7 +145,6 @@ namespace JoinGo.Service.User
                 logger.Debug("[ManageService]錯誤function：EditSchool 編輯動作(學校資訊),錯誤訊息：" + ex.InnerException + ex.ToString());
                 result.Result = false;
                 result.Message = "系統繁忙中，請稍後再試";
-                //CommonFunctions.SymLog(AuthorModel.Current.ACID, AuthorModel.Current.UserID, AuthorModel.Current.LoginName, "學校資訊", "編輯失敗:" + data.SchoolName + "_" + ex.InnerException + ex.ToString());
             }
 
             return result;
@@ -185,32 +185,192 @@ namespace JoinGo.Service.User
         //取得資料(首頁活動)
         public ActCardVM GetActCard()
         {
-            using (JoinGoEntities db = new JoinGoEntities())
+            try
             {
-
-                var ActList1 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now).OrderByDescending(o=>o.ApplyStartDate).Take(9); //精選
-                var ActList2 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==1).OrderByDescending(o => o.ApplyStartDate).Take(9); //學習成長
-                var ActList3 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==2).OrderByDescending(o => o.ApplyStartDate).Take(9); //藝文休閒
-                var ActList4 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==3).OrderByDescending(o => o.ApplyStartDate).Take(9); //生活體驗
-                var ActList5 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==4).OrderByDescending(o => o.ApplyStartDate).Take(9); //健康樂活
-                var ActList6 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==5).OrderByDescending(o => o.ApplyStartDate).Take(9); //生活關懷
-
-
-                var query = new ActCardVM
+                using (JoinGoEntities db = new JoinGoEntities())
                 {
-                    ActList1 = ActList1.ToList(),
-                    ActList2 = ActList2.ToList(),
-                    ActList3 = ActList3.ToList(),
-                    ActList4 = ActList4.ToList(),
-                    ActList5 = ActList5.ToList(),
-                    ActList6 = ActList6.ToList(),
-                };
-                return query;
+                    var today = DateTime.Today;
+                    int? currentUserId = null;
+
+                    if (ChkAuthor.CheckSession())
+                    {
+                        currentUserId = AuthorModel.Current.ACID;
+                    }
+
+
+                    // 精選 (前 10 筆)
+                    var ActList1Full = db.Activity
+                                    .Where(a => DbFunctions.TruncateTime(a.ApplyStartDate) <= today &&
+                        DbFunctions.TruncateTime(a.ApplyEndDate) >= today)
+                                    .OrderByDescending(a => a.ApplyStartDate)
+                                    .Take(10)
+                                    .Select(a => new ActCardVM
+                                    {
+                                        ActID = a.ActID,
+                                        Name = a.Name,
+                                        ViewCount = a.ViewCount,
+                                        LikeCount = a.LikeCount,
+                                        IsLiked = currentUserId != null && a.ActivityLike.Any(l => l.ACID == currentUserId && l.IsLiked),
+                                        PicFile = a.PicFile,
+                                        Category1Name = a.Category1.Name,
+                                        Category11Name = a.Category11.Name
+                                    })
+                                    .ToList();
+
+
+                    // 各分類前 10 筆
+                    var ActList2Full = db.Activity
+                                         .Where(a => DbFunctions.TruncateTime(a.ApplyStartDate) <= today &&
+                        DbFunctions.TruncateTime(a.ApplyEndDate) >= today && a.Category == 1)
+                                         .OrderByDescending(a => a.ApplyStartDate)
+                                         .Take(10)
+                                         .Select(a => new ActCardVM
+                                         {
+                                             ActID = a.ActID,
+                                             Name = a.Name,
+                                             ViewCount = a.ViewCount,
+                                             LikeCount = a.LikeCount,
+                                             IsLiked = currentUserId != null && a.ActivityLike.Any(l => l.ACID == currentUserId && l.IsLiked),
+                                             PicFile = a.PicFile,
+                                             Category1Name = a.Category1.Name,
+                                             Category11Name = a.Category11.Name
+                                         })
+                                         .ToList();
+
+                    var ActList3Full = db.Activity
+                                           .Where(a => DbFunctions.TruncateTime(a.ApplyStartDate) <= today &&
+                        DbFunctions.TruncateTime(a.ApplyEndDate) >= today && a.Category == 2)
+                                           .OrderByDescending(a => a.ApplyStartDate)
+                                           .Take(10)
+                                           .Select(a => new ActCardVM
+                                           {
+                                               ActID = a.ActID,
+                                               Name = a.Name,
+                                               ViewCount = a.ViewCount,
+                                               LikeCount = a.LikeCount,
+                                               IsLiked = currentUserId != null && a.ActivityLike.Any(l => l.ACID == currentUserId && l.IsLiked),
+                                               PicFile = a.PicFile,
+                                               Category1Name = a.Category1.Name,
+                                               Category11Name = a.Category11.Name
+                                           })
+                                           .ToList();
+                    var ActList4Full = db.Activity
+                                  .Where(a => DbFunctions.TruncateTime(a.ApplyStartDate) <= today &&
+                        DbFunctions.TruncateTime(a.ApplyEndDate) >= today && a.Category == 3)
+                                  .OrderByDescending(a => a.ApplyStartDate)
+                                  .Take(10)
+                                  .Select(a => new ActCardVM
+                                  {
+                                      ActID = a.ActID,
+                                      Name = a.Name,
+                                      ViewCount = a.ViewCount,
+                                      LikeCount = a.LikeCount,
+                                      IsLiked = currentUserId != null && a.ActivityLike.Any(l => l.ACID == currentUserId && l.IsLiked),
+                                      PicFile = a.PicFile,
+                                      Category1Name = a.Category1.Name,
+                                      Category11Name = a.Category11.Name
+                                  })
+                                  .ToList();
+
+                    var ActList5Full = db.Activity
+                                   .Where(a => DbFunctions.TruncateTime(a.ApplyStartDate) <= today &&
+                        DbFunctions.TruncateTime(a.ApplyEndDate) >= today && a.Category == 4)
+                                   .OrderByDescending(a => a.ApplyStartDate)
+                                   .Take(10)
+                                   .Select(a => new ActCardVM
+                                   {
+                                       ActID = a.ActID,
+                                       Name = a.Name,
+                                       ViewCount = a.ViewCount,
+                                       LikeCount = a.LikeCount,
+                                       IsLiked = currentUserId != null && a.ActivityLike.Any(l => l.ACID == currentUserId && l.IsLiked),
+                                       PicFile = a.PicFile,
+                                       Category1Name = a.Category1.Name,
+                                       Category11Name = a.Category11.Name
+                                   })
+                                   .ToList();
+
+
+                    var ActList6Full = db.Activity
+                                   .Where(a => DbFunctions.TruncateTime(a.ApplyStartDate) <= today &&
+                        DbFunctions.TruncateTime(a.ApplyEndDate) >= today && a.Category == 5)
+                                   .OrderByDescending(a => a.ApplyStartDate)
+                                   .Take(10)
+                                   .Select(a => new ActCardVM
+                                   {
+                                       ActID = a.ActID,
+                                       Name = a.Name,
+                                       ViewCount = a.ViewCount,
+                                       LikeCount = a.LikeCount,
+                                       IsLiked = currentUserId != null && a.ActivityLike.Any(l => l.ACID == currentUserId && l.IsLiked),
+                                       PicFile = a.PicFile,
+                                       Category1Name = a.Category1.Name,
+                                       Category11Name = a.Category11.Name
+                                   })
+                                   .ToList();
+                    // 組裝 ActCardVM
+                    var query = new ActCardVM
+                    {
+                        ActList1 = ActList1Full.Take(9).ToList(),
+                        ActList2 = ActList2Full.Take(9).ToList(),
+                        ActList3 = ActList3Full.Take(9).ToList(),
+                        ActList4 = ActList4Full.Take(9).ToList(),
+                        ActList5 = ActList5Full.Take(9).ToList(),
+                        ActList6 = ActList6Full.Take(9).ToList(),
+
+                        IsMore1 = ActList1Full.Count > 9,
+                        IsMore2 = ActList2Full.Count > 9,
+                        IsMore3 = ActList3Full.Count > 9,
+                        IsMore4 = ActList4Full.Count > 9,
+                        IsMore5 = ActList5Full.Count > 9,
+                        IsMore6 = ActList6Full.Count > 9
+                    };
+
+
+                    return query;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Debug("[UserService]錯誤function：GetActCard 取得首頁活動資料,錯誤訊息：" + ex.InnerException + ex.ToString());
+                return null;
             }
         }
-        #endregion
+
+            //public ActCardVM GetActCard()
+            //{
+            //    using (JoinGoEntities db = new JoinGoEntities())
+            //    {
+
+            //        var ActList1 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now).OrderByDescending(o=>o.ApplyStartDate).Take(9); //精選
+            //        var ActList2 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==1).OrderByDescending(o => o.ApplyStartDate).Take(9); //學習成長
+            //        var ActList3 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==2).OrderByDescending(o => o.ApplyStartDate).Take(9); //藝文休閒
+            //        var ActList4 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==3).OrderByDescending(o => o.ApplyStartDate).Take(9); //生活體驗
+            //        var ActList5 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==4).OrderByDescending(o => o.ApplyStartDate).Take(9); //健康樂活
+            //        var ActList6 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==5).OrderByDescending(o => o.ApplyStartDate).Take(9); //生活關懷
+
+            //        var query = new ActCardVM
+            //        {
+            //            ActList1 = ActList1.ToList(),
+            //            ActList2 = ActList2.ToList(),
+            //            ActList3 = ActList3.ToList(),
+            //            ActList4 = ActList4.ToList(),
+            //            ActList5 = ActList5.ToList(),
+            //            ActList6 = ActList6.ToList(),
+            //            //為了判斷是否需要出現更多活動按鈕
+            //            IsMore1 = ActList1.Count() > 9,
+            //            IsMore2 = ActList2.Count() > 9,
+            //            IsMore3 = ActList3.Count() > 9,
+            //            IsMore4 = ActList4.Count() > 9,
+            //            IsMore5 = ActList5.Count() > 9,
+            //            IsMore6 = ActList6.Count() > 9,
+            //        };
+            //        return query;
+            //    }
+            //}
+            #endregion
 
 
 
-    }
+        }
 }

@@ -33,16 +33,16 @@
             background-color: #f8f9fa;
         }
 
-            .sidebar a {
-                padding: 10px 20px;
-                display: block;
-                color: #333;
-                text-decoration: none;
-            }
+        .sidebar a {
+            padding: 10px 20px;
+            display: block;
+            color: #333;
+            text-decoration: none;
+        }
 
-                .sidebar a:hover {
-                    background-color: #e2e6ea;
-                }
+        .sidebar a:hover {
+            background-color: #e2e6ea;
+        }
     </style>
 </head>
 <body>
@@ -50,7 +50,7 @@
         <div class="w-100 d-flex flex-column">
             <!-- LOGO -->
             <nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
-                <a class="d-block text-start" href="@(AuthorModel.Current.Role == "User" ? "/User/Index" : AuthorModel.Current.Role == "Admin" ? "/Admin/Index"  : "/Home/Index" )" >
+                <a class="d-block text-start" href="@(AuthorModel.Current.Role == "User" ? "/User/Index" : AuthorModel.Current.Role == "Admin" ? "/User/Index"  : "/Home/Index" )" >
                     <picture>
                         <source media="(min-width: 1200px)" srcset="~/image/logo.svg" alt="JoinGo">
                         <img src="~/image/logo.svg" style="width: 80%;" alt="JoinGo">

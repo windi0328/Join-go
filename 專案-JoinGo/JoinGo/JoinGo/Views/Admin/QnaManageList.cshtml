@@ -1,7 +1,7 @@
 ﻿@using JoinGo.Models.Author;
 @{
     ViewBag.Title = "聯絡我們管理";
-    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+    Layout = "~/Views/Shared/_LayoutBack.cshtml";
 }
 
 @Html.AntiForgeryToken()
@@ -15,7 +15,7 @@
                     <nav aria-label="breadCrumbs">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href="@(AuthorModel.Current.Role == "User" ? "/User/Index" : AuthorModel.Current.Role == "Admin" ? "/Admin/Index"  : "/Home/Index" )">首頁</a>
+                                <a href="@(AuthorModel.Current.Role == "User" ? "/User/Index" : AuthorModel.Current.Role == "Admin" ? "/User/Index"  : "/Home/Index" )">首頁</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">聯絡我們管理</li>
                         </ol>

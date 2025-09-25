@@ -1,154 +1,162 @@
 ﻿@model JoinGo.Models.Activity
+@using JoinGo.Models.Author;
 @{
     ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
 }
 
+  @if (ChkAuthor.CheckSession())
+  {
+      Layout = "~/Views/Shared/_LayoutUser.cshtml"; //已登入
+  }
+  else {
+      Layout = "~/Views/Shared/_LayoutHome.cshtml"; //未登入
+  }
+
+
 <style>
-/* 字體設定 */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
-}
+        /* 字體設定 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
 
-/* 大標題 */
-.fw-bold {
-    font-size: 3.5rem;
-    font-weight: 800;
-    color: #2C3E50;
-}
+        /* 大標題 */
+        /*.fw-bold {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: #2C3E50;
+    }*/
 
-.fs-bold {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #34495E;
-}
+        .fs-bold {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #34495E;
+        }
 
-.fx-bold {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #34495E;
-}
+        .fx-bold {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #34495E;
+        }
 
-/* Banner */
-.banner {
-    background: linear-gradient(135deg, #74ABE2, #5563DE);
-    color: #fff;
-    padding: 60px 30px;
-    border-radius: 1rem;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
+        /* Banner */
+        .banner {
+            background: linear-gradient(135deg, #74ABE2, #5563DE);
+            color: #fff;
+            padding: 60px 30px;
+            border-radius: 1rem;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
 
-/* Banner小圖示 */
-.banner i {
-    margin-right: 8px;
-}
+            /* Banner小圖示 */
+            .banner i {
+                margin-right: 8px;
+            }
 
-/* 分區背景 */
-.section-light {
-    background-color: #f9f9f9;
-    padding: 50px 0;
-    border-radius: 1rem;
-}
+        /* 分區背景 */
+        .section-light {
+            background-color: #f9f9f9;
+            padding: 50px 0;
+            border-radius: 1rem;
+        }
 
-.section-white {
-    background-color: #fff;
-    padding: 50px 0;
-}
+        .section-white {
+            background-color: #fff;
+            padding: 50px 0;
+        }
 
-/* 主圖 */
-.activity-img {
-    border-radius: 1rem;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-    transition: transform 0.3s, box-shadow 0.3s, opacity 1s;
-    opacity: 0;
-}
+        /* 主圖 */
+        .activity-img {
+            border-radius: 1rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s, opacity 1s;
+            opacity: 0;
+        }
 
-.activity-img.show {
-    opacity: 1;
-}
+            .activity-img.show {
+                opacity: 1;
+            }
 
-/* 活動介紹卡片淡入 */
-.activity-description {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.8s ease;
-}
+        /* 活動介紹卡片淡入 */
+        .activity-description {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
 
-.activity-description.show {
-    opacity: 1;
-    transform: translateY(0);
-}
+            .activity-description.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
 
-/* 右側票券卡片 */
-.ticket-card {
-    border-radius: 1rem;
-    padding: 2rem 1.5rem;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    background-color: #fff;
-    transition: transform 0.3s, box-shadow 0.3s;
-    opacity: 0;
-}
+        /* 右側票券卡片 */
+        .ticket-card {
+            border-radius: 1rem;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background-color: #fff;
+            transition: transform 0.3s, box-shadow 0.3s;
+            opacity: 0;
+        }
 
-.ticket-card.show {
-    opacity: 1;
-    transform: translateY(0);
-}
+            .ticket-card.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
 
-.ticket-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-}
+            .ticket-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            }
 
-/* 票券按鈕 */
-.ticket-card a.btn {
-    background: linear-gradient(135deg, #74ABE2, #5563DE);
-    border: none;
-    font-weight: 600;
-    padding: 14px 0;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
+            /* 票券按鈕 */
+            .ticket-card a.btn {
+                background: linear-gradient(135deg, #74ABE2, #5563DE);
+                border: none;
+                font-weight: 600;
+                padding: 14px 0;
+                transition: all 0.3s ease;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
 
-.ticket-card a.btn:hover {
-    background: linear-gradient(135deg, #5563DE, #74ABE2);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
+                .ticket-card a.btn:hover {
+                    background: linear-gradient(135deg, #5563DE, #74ABE2);
+                    transform: translateY(-3px);
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                }
 
-/* 漸層分隔線 */
-.divider {
-    height: 3px;
-    width: 80px;
-    background: linear-gradient(90deg, #74ABE2, #5563DE);
-    border-radius: 10px;
-    margin: 30px 0;
-}
+        /* 漸層分隔線 */
+        .divider {
+            height: 3px;
+            width: 80px;
+            background: linear-gradient(90deg, #74ABE2, #5563DE);
+            border-radius: 10px;
+            margin: 30px 0;
+        }
 
-/* 活動文字 */
-.activity-description p {
-    line-height: 1.8;
-    font-size: 1.05rem;
-    color: #555;
-}
-
-
+        /* 活動文字 */
+        .activity-description p {
+            line-height: 1.8;
+            font-size: 1.05rem;
+            color: #555;
+        }
 </style>
 
 <div class="container mt-5">
 
-    <!-- Banner -->
-    <div class="banner mb-5">
-        <h1 class="fw-bold">@Model.Name</h1>
+    <!-- 活動名稱、開始時間、地點 -->
+    <div class="banner mb-4">
+        <h1 class="fw-bold" style="font-size:2rem;">@Model.Name</h1>
         <div class="mt-3 fs-5">
             <i class="fa fa-calendar"></i> @Model.StartDate ~ @Model.EndDate <br />
             <i class="fa fa-map-marker"></i> @Model.Location
         </div>
     </div>
 
-    <!-- 活動內容 -->
-    <div class="section-light mb-5 rounded-4">
+    <!-- 活動報名時間 -->
+    <div class="section-light mb-2 rounded-4">
         <div class="row g-5 align-items-center">
             <div class="col-lg-8">
                 <!-- 主圖 -->
@@ -160,7 +168,7 @@ body {
                     <ul class="list-unstyled mb-4">
                         <li><strong>報名時間：</strong>@Model.ApplyStartDate~ @Model.ApplyEndDate</li>
                         @*<li><strong>一般票：</strong>NT$500</li>
-                        <li><strong>學生票：</strong>NT$300</li>*@
+                            <li><strong>學生票：</strong>NT$300</li>*@
                     </ul>
                     <a href="@Url.Action("Register", "User", new { ActID = Model.ActID })" class="btn w-100 rounded-pill">立即報名</a>
                 </div>
@@ -169,7 +177,7 @@ body {
     </div>
 
     <!-- 活動介紹 -->
-    <div class="section-white rounded-4 p-5">
+    <div class="section-white rounded-4 p-5 mb-5">
         <h4 class="fs-bold text-center">活動介紹</h4>
         <div class="divider mx-auto"></div>
         <div class="activity-description mt-4">
@@ -193,7 +201,7 @@ body {
             }
         }
 
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             showOnScroll(img);
             showOnScroll(desc);
             showOnScroll(ticket);

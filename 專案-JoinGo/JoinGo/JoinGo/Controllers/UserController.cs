@@ -23,13 +23,14 @@ namespace JoinGo.Controllers
     {
         private static UserService UserService = new UserService();
         private static CommonFunctions CommonFunctions = new CommonFunctions();
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         // GET: User
 
 
         public ActionResult Index()
         {
-            if (!ChkAuthor.CheckSession() && AuthorModel.Current.Role == "User") { return RedirectToAction("LogOut", "Home"); }
+            if (!ChkAuthor.CheckSession() && (AuthorModel.Current.Role == "User" || AuthorModel.Current.Role == "Admin")) { return RedirectToAction("LogOut", "Home"); }
             ActCardVM result = UserService.GetActCard();
             return View(result);
         }
@@ -38,7 +39,7 @@ namespace JoinGo.Controllers
         //個人檔案
         public ActionResult Personal()
         {
-            if (!ChkAuthor.CheckSession() && AuthorModel.Current.Role == "User") { return RedirectToAction("LogOut", "Home"); }
+            if (!ChkAuthor.CheckSession() && (AuthorModel.Current.Role == "User" || AuthorModel.Current.Role == "Admin")) { return RedirectToAction("LogOut", "Home"); }
             var ACID = AuthorModel.Current.ACID;
             AccountVM result = UserService.EditPersonal(ACID);
 
@@ -60,7 +61,7 @@ namespace JoinGo.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditPersonal(AccountVM data)
         {
-            if (!ChkAuthor.CheckSession()) { return RedirectToAction("LogOut", "Home"); }
+            if (!ChkAuthor.CheckSession() && (AuthorModel.Current.Role == "User" || AuthorModel.Current.Role == "Admin")) { return RedirectToAction("LogOut", "Home"); }
             JsonResultModel result = UserService.EditPersonal(data);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -71,11 +72,11 @@ namespace JoinGo.Controllers
         //帳號管理
         public ActionResult Account()
         {
-            if (!ChkAuthor.CheckSession() && AuthorModel.Current.Role == "User") { return RedirectToAction("LogOut", "Home"); }
+            if (!ChkAuthor.CheckSession() && (AuthorModel.Current.Role == "User" || AuthorModel.Current.Role == "Admin")) { return RedirectToAction("LogOut", "Home"); }
             var ACID = AuthorModel.Current.ACID;
             AccountVM result = UserService.EditAccount(ACID);
 
-            return View(result);
+           return View(result);
         }
 
 
@@ -141,56 +142,148 @@ namespace JoinGo.Controllers
         public ActionResult LoadMoreActivities(int page = 1, int tab = 1)
         {
             int pageSize = 9; // 每次載入 9 個活動
-            using (JoinGoEntities db = new JoinGoEntities())
+            using (var db = new JoinGoEntities())
             {
-                IQueryable<Activity> query;
-
-                switch (tab)
+                var today = DateTime.Today;
+                int? currentUserId = null;
+                if (ChkAuthor.CheckSession())
                 {
-                    case 1: // 精選推薦 (允許 Start/EndDate 為 null 也顯示)
-                        query = db.Activity.Where(a =>
-                            (a.ApplyStartDate == null || a.ApplyStartDate.Value.Date <= DateTime.Now.Date) &&
-                            (a.ApplyEndDate == null || a.ApplyEndDate.Value.Date >= DateTime.Now.Date)
-                        );
-                        break;
-
-                    case 2: // 學習活動
-                        query = db.Activity.Where(a => a.Category == 1);
-                        break;
-
-                    case 3: // 旅遊活動
-                        query = db.Activity.Where(a => a.Category == 2);
-                        break;
-
-                    case 4: // 美食活動
-                        query = db.Activity.Where(a => a.Category == 3);
-                        break;
-
-                    case 5: // 運動活動
-                        query = db.Activity.Where(a => a.Category == 4);
-                        break;
-
-                    case 6: // 其他
-                        query = db.Activity.Where(a => a.Category == 5);
-                        break;
-
-                    default: // 不篩選，顯示全部
-                        query = db.Activity;
-                        break;
+                    currentUserId = AuthorModel.Current.ACID;
                 }
 
+                IQueryable<Activity> query = db.Activity;
+                // 篩選有效活動 (日期在範圍內)
+                query = query.Where(a =>
+                    DbFunctions.TruncateTime(a.ApplyStartDate) <= today &&
+                    DbFunctions.TruncateTime(a.ApplyEndDate) >= today
+                );
+
+                // 分類篩選
+                switch (tab)
+                {
+                    case 2: query = query.Where(a => a.Category == 1); break; // 學習活動
+                    case 3: query = query.Where(a => a.Category == 2); break; // 旅遊活動
+                    case 4: query = query.Where(a => a.Category == 3); break; // 美食活動
+                    case 5: query = query.Where(a => a.Category == 4); break; // 運動活動
+                    case 6: query = query.Where(a => a.Category == 5); break; // 其他活動
+                    // case 1 或 default 不額外篩選，顯示全部
+                }
+
+                // 排序在實體層面
+                query = query.OrderByDescending(a => a.ApplyStartDate.HasValue)
+                             .ThenByDescending(a => a.ApplyStartDate);
+
+                // 分頁
                 var activities = query
-                    .OrderByDescending(a => a.ApplyStartDate ?? DateTime.MinValue) // null 時排最後
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
+                    .Select(a => new ActCardVM
+                    {
+                        ActID = a.ActID,
+                        Name = a.Name,
+                        ViewCount = a.ViewCount,
+                        LikeCount = a.LikeCount,
+                        IsLiked = currentUserId != null && a.ActivityLike.Any(l => l.ACID == currentUserId && l.IsLiked),
+                        PicFile = a.PicFile,
+                        Category1Name = a.Category1.Name,
+                        Category11Name = a.Category11.Name
+                    })
                     .ToList();
 
+                // 如果沒有更多活動
                 if (!activities.Any())
-                    return Content(""); // 沒有更多活動
+                    return Content("");
 
+                // 回傳 PartialView
                 return PartialView("_ActivityCardsPartial", activities);
             }
         }
+
+        //public ActionResult LoadMoreActivities(int page = 1, int tab = 1)
+        //{
+        //    int pageSize = 9; // 每次載入 9 個活動
+        //    using (JoinGoEntities db = new JoinGoEntities())
+        //    {
+        //        IQueryable<ActCardVM> query;
+        //        var now = DateTime.Now;
+        //        query = db.Activity
+        //                    .Where(a => a.ApplyStartDate <= now && a.ApplyEndDate >= now)
+        //                    .OrderByDescending(a => a.ApplyStartDate)
+        //                    .Take(10)
+        //                    .Select(a => new ActCardVM
+        //                    {
+        //                        ActID = a.ActID,
+        //                        Name = a.Name,
+        //                        ViewCount = a.ViewCount,
+        //                        LikeCount = a.LikeCount,
+        //                        IsLiked = a.ActivityLike.Any(l => l.ACID == AuthorModel.Current.ACID && l.IsLiked),
+        //                        PicFile = a.PicFile,
+        //                        Category1Name = a.Category1.Name,
+        //                        Category11Name = a.Category11.Name
+        //                    });
+
+        //        switch (tab)
+        //        {
+        //            case 1: // 精選推薦 (允許 Start/EndDate 為 null 也顯示)
+        //                    //query = db.Activity.Where(a =>
+        //                    //    (a.ApplyStartDate == null || a.ApplyStartDate.Value.Date <= DateTime.Now.Date) &&
+        //                    //    (a.ApplyEndDate == null || a.ApplyEndDate.Value.Date >= DateTime.Now.Date)
+        //                    //);
+
+        //                //因為LINQ不可以直接用.Date會出錯。結束日期多一天。假設結束資料庫存09/25 00:00 ，到9/25 23:59都可以報名。(資料庫存datetime但使用者介面只選日期)，以下只會有日期對日期比對:
+
+        //                //query = db.Activity.Where(a =>
+        //                //    (a.ApplyStartDate == null || DbFunctions.TruncateTime(a.ApplyStartDate) <= DateTime.Today) &&
+        //                //    (a.ApplyEndDate == null || DbFunctions.TruncateTime(a.ApplyEndDate) >= DateTime.Today)
+        //                //);
+
+        //                break;
+
+        //            case 2: // 學習活動
+        //                query = query.Where(a => a.Category == 1);
+        //                break;
+
+        //            case 3: // 旅遊活動
+        //                query = query.Where(a => a.Category == 2);
+        //                break;
+
+        //            case 4: // 美食活動
+        //                query = query.Where(a => a.Category == 3);
+        //                break;
+
+        //            case 5: // 運動活動
+        //                query = query.Where(a => a.Category == 4); 
+        //                break;
+
+        //            case 6: // 其他
+        //                query = query.Where(a => a.Category == 5);
+        //                break;
+
+        //            default: // 不篩選，顯示全部
+        //                //query = db.Activity;
+        //                break;
+        //        }
+
+
+        //        var activities = query
+        //            .OrderByDescending(a => a.ApplyStartDate.HasValue) // 有值的排前面
+        //            .ThenByDescending(a => a.ApplyStartDate)          // 再依日期排序(晚到早?看你覺得)
+        //            .Skip((page - 1) * pageSize)
+        //            .Take(pageSize)
+        //            .ToList();
+
+        //        //var activities = query
+        //        //    .OrderByDescending(a => a.ApplyStartDate ?? DateTime.MinValue) // null 時排最後
+        //        //    .Skip((page - 1) * pageSize)
+        //        //    .Take(pageSize)
+        //        //    .ToList();
+
+        //        if (!activities.Any())
+        //            return Content(""); // 沒有更多活動
+
+        //        return PartialView("_ActivityCardsPartial", activities);
+        //    }
+        //}
 
 
         public ActionResult DetailsAct(int ActID)
@@ -204,6 +297,8 @@ namespace JoinGo.Controllers
                 {
                     return HttpNotFound();
                 }
+                activity.ViewCount = (activity.ViewCount ?? 0) + 1; //瀏覽數增加
+                db.SaveChanges();
 
                 return View(activity);
             }
@@ -235,6 +330,11 @@ namespace JoinGo.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Register(ApplyVM model)
         {
+            if (!ChkAuthor.CheckSession())
+            {
+                return Json(new { success = false, message = "請先登入再報名" });
+            }
+            
             if (ModelState.IsValid)
             {
                 try
@@ -262,7 +362,9 @@ namespace JoinGo.Controllers
                 }
                 catch (Exception ex)
                 {
+                    logger.Debug("[UserController]錯誤function：Register 送出報名,錯誤訊息：" + ex.InnerException + ex.ToString());
                     return Json(new { success = false, message = "報名失敗：" + ex.Message });
+
                 }
             }
             return Json(new { success = false, message = "資料驗證失敗" });
@@ -387,6 +489,64 @@ namespace JoinGo.Controllers
 
             return Json(new { success = true, message = "編輯完成！" });
         }
+
+
+
+        //按愛心
+        [HttpPost]
+        public JsonResult ToggleLike(int actId)
+        {
+            int? currentUserId = null;
+            if (ChkAuthor.CheckSession())
+            {
+                currentUserId = AuthorModel.Current.ACID;
+            }
+            if (currentUserId == null)
+            {
+                return Json(new { success = false, message = "請先登入再收藏活動" });
+            }
+            using (var db = new JoinGoEntities())
+            {
+                var like = db.ActivityLike.FirstOrDefault(l => l.ACID == currentUserId && l.ActID == actId);
+                var activity = db.Activity.FirstOrDefault(a => a.ActID == actId);
+
+
+                if (like == null)
+                {
+                    // 新增按讚紀錄
+                    like = new ActivityLike
+                    {
+                        ACID = currentUserId,
+                        ActID = actId,
+                        IsLiked = true,
+                        Creator = currentUserId,
+                        Created = DateTime.Now
+                    };
+                    db.ActivityLike.Add(like);
+
+                    // 活動讚數 +1
+                    activity.LikeCount = (activity.LikeCount ?? 0) + 1;
+                }
+                else
+                {
+                    // 切換讚 / 取消
+                    like.IsLiked = !like.IsLiked;
+                    like.Updator = currentUserId;
+                    like.Updated = DateTime.Now;
+
+                    // 活動讚數增減
+                    if (like.IsLiked)
+                        activity.LikeCount = (activity.LikeCount ?? 0) + 1;
+                    else
+                        activity.LikeCount = Math.Max((activity.LikeCount ?? 0) - 1, 0); // 避免負數
+                }
+
+                db.SaveChanges();
+
+                return Json(new { success = true, likeCount = activity.LikeCount, isLiked = like.IsLiked });
+            }
+        }
+
     }
 }
     

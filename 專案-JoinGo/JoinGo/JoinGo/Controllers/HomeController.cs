@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using JoinGo.Service;
+using JoinGo.Service.User;
 
 namespace JoinGo.Controllers
 {
@@ -24,11 +25,13 @@ namespace JoinGo.Controllers
 		private static CommonFunctions CommonFunctions = new CommonFunctions();
 		private static HomeService HomeService = new HomeService();
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+		private static UserService UserService = new UserService();
 
 		//首頁
 		public ActionResult Index()
 		{
-			return View();
+			ActCardVM result = UserService.GetActCard();
+			return View(result);
 		}
 
 
@@ -216,7 +219,7 @@ namespace JoinGo.Controllers
 			}
 			else if (AuthorModel.Current.Role == "Admin")
 			{
-				return RedirectToAction("Index", "Admin");
+				return RedirectToAction("Index", "User");
 			}
 			else
 			{
@@ -446,7 +449,7 @@ namespace JoinGo.Controllers
 						}
 						else if (AuthorModel.Current.Role == "Admin")
 						{
-							return RedirectToAction("Index", "Admin");
+							return RedirectToAction("Index", "User");
 						}
 						else
 						{

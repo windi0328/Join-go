@@ -39,11 +39,73 @@
                 <div class="align-items-center d-none d-lg-block">
                     <div class="nav-user text-right mb-2">
                         <div class="nav-user text-right mb-2">
-
+                            <a href="javascript:void(0)" class="ShowRegister" tabindex="0">註冊</a>
+                            <span class="text-black-50 mx-1">|</span>
+                            <a href="javascript:void(0)" class="ShowLogin" tabindex="0">登入</a>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="">
+                <!-- 漢堡選單按鈕 -->
+                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="展開或折疊主選單">
+                    <span> </span>
+                    <span> </span>
+                    <span> </span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-lg-center align-items-center navbar-dark bg-main p-2" id="navbarNav">
+                    @* 漢堡選單顯示選單 *@
+                    <div class="navbar-nav align-items-center" id="navbarTogglerDemo02">
+                        <!-- 選單 -->
+                        <ul class="navbar-nav nav nav-tabs border-0" id="CagegoryTab" role="tablist">
+                            <li class="nav-item mx-5">
+                                <a class="nav-link active text-center" data-bs-toggle="tab" href="#section1" role="tab">
+                                    <i class="fa fa-star mx-2" "></i> 精選
+                                </a>
+                            </li>
+                            <li class="nav-item mx-3">
+                                <a class="nav-link" data-bs-toggle="tab" href="#section2" role="tab">
+                                    <i class="fa fa-book mx-2" " aria-hidden="true"></i> 學習成長
+                                </a>
+                            </li>
+                            <li class="nav-item mx-3">
+                                <a class="nav-link" data-bs-toggle="tab" href="#section3" role="tab">
+                                    <i class="fa fa-paint-brush mx-2" " aria-hidden="true"></i> 藝文休閒
+                                </a>
+                            </li>
+                            <li class="nav-item mx-3">
+                                <a class="nav-link" data-bs-toggle="tab" href="#section4" role="tab">
+                                    <i class="fa fa-plane mx-2" " aria-hidden="true"></i> 生活體驗
+                                </a>
+                            </li>
+
+                            <li class="nav-item mx-3">
+                                <a class="nav-link" data-bs-toggle="tab" href="#section5" role="tab">
+                                    <i class="fa fa-heartbeat mx-2" " aria-hidden="true"></i>健康樂活
+                                </a>
+                            </li>
+
+                            <li class="nav-item mx-3">
+                                <a class="nav-link" data-bs-toggle="tab" href="#section6" role="tab">
+                                    <i class="fa fa-american-sign-language-interpreting mx-2" aria-hidden="true"></i>生活關懷
+                                </a>
+                            </li>
+                        </ul>
+
+
+                        <div class="nav-user text-right mt-4 d-lg-none">
+                            @* 僅在<=991顯示 *@
+                            <a href="javascript:void(0)" class="ShowRegister nav-link" tabindex="0">註冊</a>
+                            <span class="text-black-50 mx-1">|</span>
+                            <a href="javascript:void(0)" class="ShowLogin nav-link" tabindex="0">登入</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </nav>
 
@@ -97,6 +159,71 @@
 
 
 
+    @* 註冊modal *@
+    <div class="modal fade" id="RegisterModal" tabindex="-1" aria-labelledby="RegisterModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="RegisterModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    @* 登入modal *@
+    <div class="modal fade" id="LoginModal" tabindex="-1" aria-labelledby="LoginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="LoginModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--  忘記密碼Modal -->
+    <div class="modal fade" id="ForgotPasswordModal" tabindex="-1" aria-labelledby="ForgotPasswordLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="ForgotPasswordModalContent">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--  重設密碼Modal -->
+    <div class="modal fade" id="ResetPasswordModal" tabindex="-1" aria-labelledby="ResetPasswordLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="ResetPasswordModalContent">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
 
 
 
@@ -110,11 +237,54 @@
 
 
 
-    <script>
+<script>
+    $(document).on('click', '#ChgVCodeBtn', function () {
+        $('#Veri1').attr("src", "/Home/VerificationCode?t=" + Math.random());
+    });
+    $(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('resetToken');
 
-        $(function () {
+        if (token) {
+            // 載入 ResetPasswordPartial 並顯示 Modal
+            $.get('/Home/ResetPasswordPartial', { token: token }, function (html) {
+                $('#ResetPasswordModal .modal-body').html(html);
+                $('#ResetPasswordModal').modal('show');
+            });
+        }
 
+
+        if ('@TempData["Error"]' != '') {
+            Swal.fire({
+                title: "@TempData["Error"]",
+                icon: "error",
+                confirmButtonText: "確定"
+            });
+        }
+
+        @*if ('@TempData["Msg"]' != '') {
+            Swal.fire({
+                title: "@TempData["Msg"]",
+                icon: "success",
+                confirmButtonText: "確定"
+            });
+        }*@
+
+         $('.ShowRegister').click(function () {
+                $.get('@Url.Action("RegisterPartial", "Home")', function (html) {
+                $('#RegisterModalBody').html(html);
+                $('#RegisterModal').modal('show');
+                });
+            });
+
+
+            $('.ShowLogin').click(function () {
+                $.get('@Url.Action("LoginPartial", "Home")', function (html) {
+                $('#LoginModalBody').html(html);
+                $('#LoginModal').modal('show');
+                });
+            });
         })
-    </script>
+</script>
 </body>
 </html>

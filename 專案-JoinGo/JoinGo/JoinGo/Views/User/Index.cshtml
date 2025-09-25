@@ -63,6 +63,19 @@
         .main-content .nav-link:hover::after {
             transform: translateX(-50%) scaleX(1);
         }
+
+    .like-btn:hover {
+        opacity: 0.8;
+    }
+
+    .like-btn {
+        color: gray; /* 空心顏色 */
+        transition: color 0.3s;
+    }
+
+        .like-btn.liked {
+            color: red; /* 已按讚顏色 */
+        }
 </style>
 
 
@@ -70,8 +83,8 @@
 
 <!-- 對應內容 -->
 <div class="tab-content mt-3 m-auto" style="width:90%;background:none;">
+    <!-- 精選推薦 -->
     <div class="tab-pane fade show active" id="section1" role="tabpanel">
-        <!-- 輪播banner -->
         <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -102,50 +115,70 @@
 
 
         <h2 class="p-4 fa-2x font-weight-bold">精選推薦</h2>
-        <div id="activity-container-1" class="row row-cols-1 row-cols-md-3 g-4">
-            @foreach (var m in Model.ActList1)
+        <div id="activity-container-1" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @if (Model.ActList1.Count > 1)
             {
-                <div class="col">
-                    <a href="@Url.Action("DetailsAct", "User", new {ActID = m.ActID })">
-                        <div class="card h-100 shadow-sm">
-                            <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)" class="card-img-top" alt=@m.Name>
-                            <div class="card-body">
-                                <p class="text-secondary fa">@(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "" )  ~   @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "" )</p>
-                                <h5 class="card-title">@m.Name</h5>
-                                <hr />
-                                <div class="d-flex justify-content-between align-items-center py-2 bg-light" style="max-width: 300px;">
-                                    <!-- 標籤連結 -->
-                                    <!--<a href="/search?q=藝文" class="text-decoration-none text-primary fw-semibold me-3">#藝文</a>-->
-                                    <!-- 統計數據 -->
-                                    <div class="d-flex align-items-center gap-3 text-muted small">
-                                        <!-- 瀏覽數 -->
-                                        <span class="d-flex align-items-center">
-                                            <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg" alt="views" width="16" class="me-1"> 879
-                                        </span>
-                                        <!-- 喜歡數 -->
-                                        <span class="d-flex align-items-center">
-                                            <img src="https://static.accupass.com/frontend/image/common/event_card_heart.svg" alt="likes" width="16" class="me-1">
-                                            16
-                                        </span>
+                foreach (var m in Model.ActList1)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm d-flex flex-column">
+                            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })">
+                                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)"
+                                     class="card-img-top" alt="@m.Name">
+                                <div class="card-body">
+                                    <p class="text-secondary fa">
+                                        @(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "") ~
+                                        @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "")
+                                    </p>
+                                    <h5 class="card-title">@m.Name</h5>
+                                    <hr />
+                                </div>
+                            </a>
+                            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 mt-auto">
+                                <!-- 標籤 -->
+                                <div class="d-flex">
+                                    @if (!string.IsNullOrEmpty(m.Category1Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(m.Category11Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                                    }
+                                </div>
+
+                                <!-- 瀏覽數 & 喜歡數 -->
+                                <div class="d-flex align-items-center gap-3 text-muted small">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                                             alt="views" width="16" class="me-1">
+                                        <span>@(m.ViewCount ?? 0)</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o") like-btn me-1"
+                                           data-actid="@m.ActID" style="cursor:pointer;"></i>
+                                        <span class="like-count">@(m.LikeCount ?? 0)</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </a>
-                </div>
-
-
+                    </div>
+                }
             }
-            <div class="d-flex justify-content-center my-4 w-100">
+        </div>
+        @if (Model.IsMore1)
+        {
+            <div class="d-flex justify-content-center w-100 mb-4">
                 <button id="load-more-btn-1" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold">
                     更多活動 <i class="fa fa-arrow-right ms-2"></i>
                 </button>
             </div>
-        </div>
+        }
     </div>
 
-    <div class="tab-pane fade " id="section2" role="tabpanel">
-        <!-- 輪播banner -->
+    <!-- 學習成長 -->
+    <div class="tab-pane fade" id="section2" role="tabpanel">
         <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -175,52 +208,71 @@
 
 
 
-        <h2 class="p-4 fa-2x font-weight-bold">學習活動</h2>
-        <div id="activity-container-2" class="row row-cols-1 row-cols-md-3 g-4">
-
-            @foreach (var m in Model.ActList2)
+        <h2 class="p-4 fa-2x font-weight-bold">學習成長</h2>
+        <div id="activity-container-2" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @if (Model.ActList2.Count > 1)
             {
-                <div class="col">
-                    <a href="@Url.Action("DetailsAct", "User", new {ActID = m.ActID })">
-                        <div class="card">
-                            <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)" class="card-img-top" alt=@m.Name>
-                            <div class="card-body">
-                                <p class="text-secondary fa">@(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "" )  ~   @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "" )</p>
-                                <h5 class="card-title">@m.Name</h5>
-                                <hr />
-                                <div class="d-flex justify-content-between align-items-center py-2 bg-light" style="max-width: 300px;">
-                                    <!-- 標籤連結 -->
-                                    @*<a href="/search?q=藝文" class="text-decoration-none text-primary fw-semibold me-3">#藝文</a>*@
-                                    <!-- 統計數據 -->
-                                    <div class="d-flex align-items-center gap-3 text-muted small">
-                                        <!-- 瀏覽數 -->
-                                        <span class="d-flex align-items-center">
-                                            <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg" alt="views" width="16" class="me-1"> 879
-                                        </span>
-                                        <!-- 喜歡數 -->
-                                        <span class="d-flex align-items-center">
-                                            <img src="https://static.accupass.com/frontend/image/common/event_card_heart.svg" alt="likes" width="16" class="me-1">
-                                            16
-                                        </span>
+                foreach (var m in Model.ActList2)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm d-flex flex-column">
+                            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })">
+                                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)"
+                                     class="card-img-top" alt="@m.Name">
+                                <div class="card-body">
+                                    <p class="text-secondary fa">
+                                        @(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "") ~
+                                        @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "")
+                                    </p>
+                                    <h5 class="card-title">@m.Name</h5>
+                                    <hr />
+                                </div>
+                            </a>
+                            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 mt-auto">
+                                <!-- 標籤 -->
+                                <div class="d-flex">
+                                    @if (!string.IsNullOrEmpty(m.Category1Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(m.Category11Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                                    }
+                                </div>
+
+                                <!-- 瀏覽數 & 喜歡數 -->
+                                <div class="d-flex align-items-center gap-3 text-muted small">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                                             alt="views" width="16" class="me-1">
+                                        <span>@(m.ViewCount ?? 0)</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o") like-btn me-1"
+                                           data-actid="@m.ActID" style="cursor:pointer;"></i>
+                                        <span class="like-count">@(m.LikeCount ?? 0)</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </a>
-                </div>
-
+                    </div>
+                }
             }
-            <div class="d-flex justify-content-center my-4 w-100">
+        </div>
+        @if (Model.IsMore2)
+        {
+            <div class="d-flex justify-content-center  w-100 mb-4">
                 <button id="load-more-btn-2" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold">
                     更多活動 <i class="fa fa-arrow-right ms-2"></i>
                 </button>
             </div>
-        </div>
+        }
     </div>
 
-
-    <div class="tab-pane fade " id="section3" role="tabpanel">
-        <!-- 輪播banner -->
+    <!-- 藝文休閒 -->
+    <div class="tab-pane fade" id="section3" role="tabpanel">
         <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -251,50 +303,70 @@
 
 
         <h2 class="p-4 fa-2x font-weight-bold">藝文休閒</h2>
-        <div id="activity-container-3" class="row row-cols-1 row-cols-md-3 g-4">
-
-            @foreach (var m in Model.ActList3)
+        <div id="activity-container-3" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @if (Model.ActList3.Count > 1)
             {
-                <div class="col">
-                    <a href="@Url.Action("DetailsAct", "User", new {ActID = m.ActID })">
-                        <div class="card">
-                            <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)" class="card-img-top" alt=@m.Name>
-                            <div class="card-body">
-                                <p class="text-secondary fa">@(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "" )  ~   @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "" )</p>
-                                <h5 class="card-title">@m.Name</h5>
-                                <hr />
-                                <div class="d-flex justify-content-between align-items-center py-2 bg-light" style="max-width: 300px;">
-                                    <!-- 標籤連結 -->
-                                    @*<a href="/search?q=藝文" class="text-decoration-none text-primary fw-semibold me-3">#藝文</a>*@
-                                    <!-- 統計數據 -->
-                                    <div class="d-flex align-items-center gap-3 text-muted small">
-                                        <!-- 瀏覽數 -->
-                                        <span class="d-flex align-items-center">
-                                            <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg" alt="views" width="16" class="me-1"> 879
-                                        </span>
-                                        <!-- 喜歡數 -->
-                                        <span class="d-flex align-items-center">
-                                            <img src="https://static.accupass.com/frontend/image/common/event_card_heart.svg" alt="likes" width="16" class="me-1">
-                                            16
-                                        </span>
+                foreach (var m in Model.ActList3)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm d-flex flex-column">
+                            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })">
+                                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)"
+                                     class="card-img-top" alt="@m.Name">
+                                <div class="card-body">
+                                    <p class="text-secondary fa">
+                                        @(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "") ~
+                                        @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "")
+                                    </p>
+                                    <h5 class="card-title">@m.Name</h5>
+                                    <hr />
+                                </div>
+                            </a>
+                            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 mt-auto">
+                                <!-- 標籤 -->
+                                <div class="d-flex">
+                                    @if (!string.IsNullOrEmpty(m.Category1Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(m.Category11Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                                    }
+                                </div>
+
+                                <!-- 瀏覽數 & 喜歡數 -->
+                                <div class="d-flex align-items-center gap-3 text-muted small">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                                             alt="views" width="16" class="me-1">
+                                        <span>@(m.ViewCount ?? 0)</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o") like-btn me-1"
+                                           data-actid="@m.ActID" style="cursor:pointer;"></i>
+                                        <span class="like-count">@(m.LikeCount ?? 0)</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </a>
-                </div>
-
+                    </div>
+                }
             }
-            <div class="d-flex justify-content-center my-4 w-100">
+        </div>
+        @if (Model.IsMore3)
+        {
+            <div class="d-flex justify-content-center w-100 mb-4">
                 <button id="load-more-btn-3" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold">
                     更多活動 <i class="fa fa-arrow-right ms-2"></i>
                 </button>
             </div>
-        </div>
+        }
     </div>
 
-    <div class="tab-pane fade " id="section4" role="tabpanel">
-        <!-- 輪播banner -->
+    <!-- 生活體驗 -->
+    <div class="tab-pane fade" id="section4" role="tabpanel">
         <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -325,50 +397,70 @@
 
 
         <h2 class="p-4 fa-2x font-weight-bold">生活體驗</h2>
-        <div id="activity-container-4" class="row row-cols-1 row-cols-md-3 g-4">
-
-            @foreach (var m in Model.ActList4)
+        <div id="activity-container-4" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @if (Model.ActList4.Count > 1)
             {
-                <div class="col">
-                    <a href="@Url.Action("DetailsAct", "User", new {ActID = m.ActID })">
-                        <div class="card">
-                            <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)" class="card-img-top" alt=@m.Name>
-                            <div class="card-body">
-                                <p class="text-secondary fa">@(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "" )  ~   @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "" )</p>
-                                <h5 class="card-title">@m.Name</h5>
-                                <hr />
-                                <div class="d-flex justify-content-between align-items-center py-2 bg-light" style="max-width: 300px;">
-                                    <!-- 標籤連結 -->
-                                    @*<a href="/search?q=藝文" class="text-decoration-none text-primary fw-semibold me-3">#藝文</a>*@
-                                    <!-- 統計數據 -->
-                                    <div class="d-flex align-items-center gap-3 text-muted small">
-                                        <!-- 瀏覽數 -->
-                                        <span class="d-flex align-items-center">
-                                            <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg" alt="views" width="16" class="me-1"> 879
-                                        </span>
-                                        <!-- 喜歡數 -->
-                                        <span class="d-flex align-items-center">
-                                            <img src="https://static.accupass.com/frontend/image/common/event_card_heart.svg" alt="likes" width="16" class="me-1">
-                                            16
-                                        </span>
+                foreach (var m in Model.ActList4)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm d-flex flex-column">
+                            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })">
+                                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)"
+                                     class="card-img-top" alt="@m.Name">
+                                <div class="card-body">
+                                    <p class="text-secondary fa">
+                                        @(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "") ~
+                                        @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "")
+                                    </p>
+                                    <h5 class="card-title">@m.Name</h5>
+                                    <hr />
+                                </div>
+                            </a>
+                            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 mt-auto">
+                                <!-- 標籤 -->
+                                <div class="d-flex">
+                                    @if (!string.IsNullOrEmpty(m.Category1Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(m.Category11Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                                    }
+                                </div>
+
+                                <!-- 瀏覽數 & 喜歡數 -->
+                                <div class="d-flex align-items-center gap-3 text-muted small">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                                             alt="views" width="16" class="me-1">
+                                        <span>@(m.ViewCount ?? 0)</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o") like-btn me-1"
+                                           data-actid="@m.ActID" style="cursor:pointer;"></i>
+                                        <span class="like-count">@(m.LikeCount ?? 0)</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </a>
-                </div>
-
+                    </div>
+                }
             }
-            <div class="d-flex justify-content-center my-4 w-100">
+        </div>
+        @if (Model.IsMore4)
+        {
+            <div class="d-flex justify-content-center w-100 mb-4">
                 <button id="load-more-btn-4" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold">
                     更多活動 <i class="fa fa-arrow-right ms-2"></i>
                 </button>
             </div>
-        </div>
+        }
     </div>
 
-    <div class="tab-pane fade " id="section5" role="tabpanel">
-        <!-- 輪播banner -->
+    <!-- 健康樂活 -->
+    <div class="tab-pane fade" id="section5" role="tabpanel">
         <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -399,50 +491,70 @@
 
 
         <h2 class="p-4 fa-2x font-weight-bold">健康樂活</h2>
-        <div id="activity-container-5" class="row row-cols-1 row-cols-md-3 g-4">
-
-            @foreach (var m in Model.ActList5)
+        <div id="activity-container-5" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @if (Model.ActList5.Count > 1)
             {
-                <div class="col">
-                    <a href="@Url.Action("DetailsAct", "User", new {ActID = m.ActID })">
-                        <div class="card">
-                            <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)" class="card-img-top" alt=@m.Name>
-                            <div class="card-body">
-                                <p class="text-secondary fa">@(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "" )  ~   @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "" )</p>
-                                <h5 class="card-title">@m.Name</h5>
-                                <hr />
-                                <div class="d-flex justify-content-between align-items-center py-2 bg-light" style="max-width: 300px;">
-                                    <!-- 標籤連結 -->
-                                    @*<a href="/search?q=藝文" class="text-decoration-none text-primary fw-semibold me-3">#藝文</a>*@
-                                    <!-- 統計數據 -->
-                                    <div class="d-flex align-items-center gap-3 text-muted small">
-                                        <!-- 瀏覽數 -->
-                                        <span class="d-flex align-items-center">
-                                            <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg" alt="views" width="16" class="me-1"> 879
-                                        </span>
-                                        <!-- 喜歡數 -->
-                                        <span class="d-flex align-items-center">
-                                            <img src="https://static.accupass.com/frontend/image/common/event_card_heart.svg" alt="likes" width="16" class="me-1">
-                                            16
-                                        </span>
+                foreach (var m in Model.ActList5)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm d-flex flex-column">
+                            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })">
+                                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)"
+                                     class="card-img-top" alt="@m.Name">
+                                <div class="card-body">
+                                    <p class="text-secondary fa">
+                                        @(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "") ~
+                                        @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "")
+                                    </p>
+                                    <h5 class="card-title">@m.Name</h5>
+                                    <hr />
+                                </div>
+                            </a>
+                            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 mt-auto">
+                                <!-- 標籤 -->
+                                <div class="d-flex">
+                                    @if (!string.IsNullOrEmpty(m.Category1Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(m.Category11Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                                    }
+                                </div>
+
+                                <!-- 瀏覽數 & 喜歡數 -->
+                                <div class="d-flex align-items-center gap-3 text-muted small">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                                             alt="views" width="16" class="me-1">
+                                        <span>@(m.ViewCount ?? 0)</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o") like-btn me-1"
+                                           data-actid="@m.ActID" style="cursor:pointer;"></i>
+                                        <span class="like-count">@(m.LikeCount ?? 0)</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </a>
-                </div>
-
+                    </div>
+                }
             }
-            <div class="d-flex justify-content-center my-4 w-100">
+        </div>
+        @if (Model.IsMore5)
+        {
+            <div class="d-flex justify-content-center w-100 mb-4">
                 <button id="load-more-btn-5" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold">
                     更多活動 <i class="fa fa-arrow-right ms-2"></i>
                 </button>
             </div>
-        </div>
+        }
     </div>
 
-    <div class="tab-pane fade " id="section6" role="tabpanel">
-        <!-- 輪播banner -->
+    <!-- 生活關懷 -->
+    <div class="tab-pane fade" id="section6" role="tabpanel">
         <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -473,88 +585,149 @@
 
 
         <h2 class="p-4 fa-2x font-weight-bold">生活關懷</h2>
-        <div id="activity-container-6" class="row row-cols-1 row-cols-md-3 g-4">
-
-            @foreach (var m in Model.ActList6)
+        <div id="activity-container-6" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @if (Model.ActList6.Count > 1)
             {
-                <div class="col">
-                    <a href="@Url.Action("DetailsAct", "User", new {ActID = m.ActID })">
-                        <div class="card">
-                            <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)" class="card-img-top" alt=@m.Name>
-                            <div class="card-body">
-                                <p class="text-secondary fa">@(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "" )  ~   @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "" )</p>
-                                <h5 class="card-title">@m.Name</h5>
-                                <hr />
-                                <div class="d-flex justify-content-between align-items-center py-2 bg-light" style="max-width: 300px;">
-                                    <!-- 標籤連結 -->
-                                    @*<a href="/search?q=藝文" class="text-decoration-none text-primary fw-semibold me-3">#藝文</a>*@
-                                    <!-- 統計數據 -->
-                                    <div class="d-flex align-items-center gap-3 text-muted small">
-                                        <!-- 瀏覽數 -->
-                                        <span class="d-flex align-items-center">
-                                            <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg" alt="views" width="16" class="me-1"> 879
-                                        </span>
-                                        <!-- 喜歡數 -->
-                                        <span class="d-flex align-items-center">
-                                            <img src="https://static.accupass.com/frontend/image/common/event_card_heart.svg" alt="likes" width="16" class="me-1">
-                                            16
-                                        </span>
+                foreach (var m in Model.ActList6)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm d-flex flex-column">
+                            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })">
+                                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)"
+                                     class="card-img-top" alt="@m.Name">
+                                <div class="card-body">
+                                    <p class="text-secondary fa">
+                                        @(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "") ~
+                                        @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "")
+                                    </p>
+                                    <h5 class="card-title">@m.Name</h5>
+                                    <hr />
+                                </div>
+                            </a>
+                            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 mt-auto">
+                                <!-- 標籤 -->
+                                <div class="d-flex">
+                                    @if (!string.IsNullOrEmpty(m.Category1Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(m.Category11Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                                    }
+                                </div>
+
+                                <!-- 瀏覽數 & 喜歡數 -->
+                                <div class="d-flex align-items-center gap-3 text-muted small">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                                             alt="views" width="16" class="me-1">
+                                        <span>@(m.ViewCount ?? 0)</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o") like-btn me-1"
+                                           data-actid="@m.ActID" style="cursor:pointer;"></i>
+                                        <span class="like-count">@(m.LikeCount ?? 0)</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </a>
-                </div>
-
+                    </div>
+                }
             }
-            <div class="d-flex justify-content-center my-4 w-100">
+        </div>
+        @if (Model.IsMore6)
+        {
+            <div class="d-flex justify-content-center w-100 mb-4">
                 <button id="load-more-btn-6" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold">
                     更多活動 <i class="fa fa-arrow-right ms-2"></i>
                 </button>
             </div>
-        </div>
+        }
     </div>
 
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script>
-function initLoadMore(tabIndex) {
-    let page = 1;
-    let btn = $(`#load-more-btn-${tabIndex}`);
-    let container = $(`#activity-container-${tabIndex}`);
+<script>
+    //無限滾動
+    function initLoadMore(tabIndex) {
+        let page = 1;
+        let btn = $(`#load-more-btn-${tabIndex}`);
+        let container = $(`#activity-container-${tabIndex}`);
 
-    btn.click(function () {
-        page++;
-        console.log(`Tab ${tabIndex} 載入第 ${page} 頁`);
+        btn.click(function () {
+            page++;
+            console.log(`Tab ${tabIndex} 載入第 ${page} 頁`);
+
+            $.ajax({
+                url: '@Url.Action("LoadMoreActivities", "User")',
+                type: 'GET',
+                data: { page: page, tab: tabIndex },
+                success: function (data) {
+                    if (data.trim() === '') {
+                        btn.hide();
+                    } else {
+                        container.append(data);
+                    }
+                },
+                error: function () {
+                    alert('載入更多活動失敗');
+                }
+            });
+        });
+    }
+   //按愛心
+    $(document).on('click', '.like-btn', function (e) {
+        e.stopPropagation(); // 阻止冒泡，避免觸發外層 <a>
+        let btn = $(this);
+        let actId = btn.data('actid');
 
         $.ajax({
-            url: '@Url.Action("LoadMoreActivities", "User")',
-            type: 'GET',
-            data: { page: page, tab: tabIndex },
+            url: '@Url.Action("ToggleLike", "User")',
+            type: 'POST',
+            data: { actId: actId },
             success: function (data) {
-                if (data.trim() === '') {
-                    btn.hide();
-                } else {
-                    container.append(data);
+                if (!data.success) {
+                    // 未登入處理
+                    Swal.fire({
+                        icon: 'warning',
+                        title: data.message,
+                        confirmButtonText: '確定'
+                    });
+                    return;
+                }
 
-                    // 滾動到最後一個新增卡片
-                    container.children().last()[0].scrollIntoView({ behavior: 'smooth', block: 'end' });
+                // 更新數字
+                btn.siblings('.like-count').text(data.likeCount);
+
+                // 切換愛心實心/空心
+                if (data.isLiked) {
+                    btn.removeClass('fa-heart-o').addClass('fa-heart liked');
+                } else {
+                    btn.removeClass('fa-heart liked').addClass('fa-heart-o');
                 }
             },
             error: function () {
-                alert('載入更多活動失敗');
+                Swal.fire({
+                    icon: 'error',
+                    title: '錯誤',
+                    text: '按讚失敗，請稍後再試'
+                });
             }
         });
     });
-}
 
-$(function(){
-    for (let i = 1; i <= 6; i++) {
-        initLoadMore(i);
-    }
-});
-    </script>
+
+    //1-6代表精選、學習成長頁籤
+    $(function(){
+        for (let i = 1; i <= 6; i++) {
+            initLoadMore(i);
+        }
+    });
+</script>
 
 
 

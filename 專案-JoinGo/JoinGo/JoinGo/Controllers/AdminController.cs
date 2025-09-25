@@ -16,7 +16,7 @@ namespace JoinGo.Controllers
 
 		private static AdminService AdminService = new AdminService();
 		// GET: Admin
-		public ActionResult Index()
+		public ActionResult Index()//沒用到
         {
             if (!ChkAuthor.CheckSession() && AuthorModel.Current.Role == "Admin") { return RedirectToAction("LogOut", "Home"); }
             return View();
@@ -243,6 +243,17 @@ namespace JoinGo.Controllers
 			return View(result.ToPagedList(page, pageSize));
 		}
 
+		#endregion
+
+
+		#region 我的收藏
+		public ActionResult ActivityLike()
+		{
+			if (!ChkAuthor.CheckSession() && (AuthorModel.Current.Role == "User" || AuthorModel.Current.Role == "Admin")) { return RedirectToAction("LogOut", "Home"); }
+			var result = AdminService.GetActivityLike();
+			return View(result);
+		}
+		
 		#endregion
 
 	}

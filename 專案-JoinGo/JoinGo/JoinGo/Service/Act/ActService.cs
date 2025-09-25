@@ -25,9 +25,32 @@ namespace JoinGo.Service.Act
             using (JoinGoEntities db = new JoinGoEntities())
             {
                 search = search?.Trim();
-                var edulink = db.Activity
-                               .Where(mf => mf.Name.Contains(search)).OrderByDescending(mf => mf.Created).ThenBy(mf => mf.StartDate).ToList();
 
+                var edulink = db.Activity.AsQueryable();
+
+                // 搜尋條件
+                if (!string.IsNullOrEmpty(search))
+                {
+                    edulink = edulink.Where(mf => mf.Name.Contains(search));
+                }
+
+                // 如果是普通使用者，只能看自己建立的
+                if (AuthorModel.Current.Role == "User")
+                {
+                    edulink = edulink.Where(mf => mf.Creator == AuthorModel.Current.ACID);
+                }
+
+                // 排序
+                edulink = edulink
+                    .OrderByDescending(mf => mf.Created)
+                    .ThenBy(mf => mf.StartDate);
+
+                if (AuthorModel.Current.Role == "User")
+                {
+                    var currentUserId = AuthorModel.Current.ACID;
+                    edulink = edulink.Where(mf => mf.Creator == currentUserId);
+                }
+                
                 var query = edulink.Select(mf => new ActivityVM
                 {
                     ActID = mf.ActID,
@@ -36,7 +59,7 @@ namespace JoinGo.Service.Act
                     EndDate = mf.EndDate,
                     ApplyStartDate = mf.ApplyStartDate,
                     ApplyEndDate = mf.ApplyEndDate,
-                    CategoryName = mf.Category1?.Name
+                    CategoryName = mf.Category1 != null ? mf.Category1.Name : null
                 }).ToList();
 
                 return query;

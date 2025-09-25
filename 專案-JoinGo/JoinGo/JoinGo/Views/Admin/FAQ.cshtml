@@ -1,10 +1,22 @@
 ﻿@using PagedList;
 @using PagedList.Mvc;
+@using JoinGo.Models.Author;
 @model PagedList.IPagedList<JoinGo.Models.ViewModels.QuestionVM>
 @{
     ViewBag.Title = "常見問題";
+
+}
+
+@if (!ChkAuthor.CheckSession())
+{
     Layout = "~/Views/Shared/_LayoutHome.cshtml";
 }
+else {
+    Layout = "~/Views/Shared/_LayoutBack.cshtml";
+}
+
+
+
 <style>
     /* 展開時題目底色變淺藍，文字變藍色 */
     .accordion-button:not(.collapsed) {
@@ -29,7 +41,9 @@
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-3">
-                <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">首頁</a></li>
+                <li class="breadcrumb-item">
+                    <a href="@(AuthorModel.Current.Role == "User" ? "/User/Index" : AuthorModel.Current.Role == "Admin" ? "/User/Index"  : "/Home/Index" )">首頁</a>
+                </li>
                 <li class="breadcrumb-item active" aria-current="page">常見問題</li>
             </ol>
         </nav>

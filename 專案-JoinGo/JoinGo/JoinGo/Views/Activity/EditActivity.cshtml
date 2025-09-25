@@ -1,4 +1,5 @@
 ﻿@model JoinGo.Models.ViewModels.ActivityVM
+@using JoinGo.Models.Author;
 @{
     ViewBag.Title = "編輯活動";
     Layout = "~/Views/Shared/_LayoutBack.cshtml";
@@ -19,7 +20,7 @@
                         <nav aria-label="breadCrumbs">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="@Url.Action("Index", "User")">首頁</a>
+                                    <a href="@(AuthorModel.Current.Role == "User" ? "/User/Index" : AuthorModel.Current.Role == "Admin" ? "/User/Index"  : "/Home/Index" )">首頁</a>
                                 </li>
                                 <li class="breadcrumb-item">
                                     <a href="@Url.Action("ActivityList", "Activity")">活動管理</a>
@@ -55,7 +56,7 @@
                                                 {
                                                     @class = "form-select",
                                                     @id = "MainCategory",@*//確保 ID 可被 JS 抓*@aria_label = "請選擇活動類型"
-                                                })
+})
                                             </div>
                                             <div class="row">
                                                 <!-- 活動子分類 -->
@@ -179,7 +180,7 @@
                                             <div class="form-group">
                                                 <label for="Description" class="control-label"></label>
                                                 <div class="editor-container__editor"><div class="editor1"></div></div>
-                                                <input type="hidden" id="CKContent1" name="Content1" value="@Model.Description"/>
+                                                <input type="hidden" id="CKContent1" name="Content1" value="@Model.Description" />
                                                 @*@Html.TextAreaFor(m => m.Description, new { @class = "form-control", @id = "Description", rows = "8" })*@
 
                                             </div>
@@ -378,5 +379,5 @@
             // 綁定送出事件
             $('#submitBtn').on('click', EditFun);
         });
-        </script>
-    }
+    </script>
+}

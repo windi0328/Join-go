@@ -1,9 +1,53 @@
-﻿@model List<JoinGo.Models.Activity>
+﻿@model List<JoinGo.Models.ViewModels.ActCardVM>
 
 @foreach (var m in Model)
 {
-  
+
     <div class="col">
+        <div class="card h-100 shadow-sm d-flex flex-column">
+            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })">
+                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)"
+                     class="card-img-top" alt="@m.Name">
+                <div class="card-body">
+                    <p class="text-secondary fa">
+                        @(m.StartDate.HasValue ? m.StartDate.Value.ToString("yyyy/MM/dd") : "") ~
+                        @(m.EndDate.HasValue ? m.EndDate.Value.ToString("yyyy/MM/dd") : "")
+                    </p>
+                    <h5 class="card-title">@m.Name</h5>
+                    <hr />
+                </div>
+            </a>
+            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 mt-auto">
+                <!-- 標籤 -->
+                <div class="d-flex">
+                    @if (!string.IsNullOrEmpty(m.Category1Name))
+                    {
+                        <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                    }
+                    @if (!string.IsNullOrEmpty(m.Category11Name))
+                    {
+                        <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                    }
+                </div>
+
+                <!-- 瀏覽數 & 喜歡數 -->
+                <div class="d-flex align-items-center gap-3 text-muted small">
+                    <div class="d-flex align-items-center">
+                        <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                             alt="views" width="16" class="me-1">
+                        <span>@(m.ViewCount ?? 0)</span>
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o") like-btn me-1"
+                           data-actid="@m.ActID" style="cursor:pointer;"></i>
+                        <span class="like-count">@(m.LikeCount ?? 0)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div class="col">
         <a href="@Url.Action("DetailsAct", "User", new {ActID = m.ActID })">
             <div class="card h-100 shadow-sm">
                 <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)" class="card-img-top" alt="@m.Name">
@@ -15,7 +59,7 @@
                 </div>
             </div>
         </a>
-    </div>
+    </div>*@
 }
 
 <style>
@@ -26,5 +70,4 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
 </style>

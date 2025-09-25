@@ -5,33 +5,13 @@ using System.Web;
 
 namespace JoinGo.Models.ViewModels
 {
-    public class ActCardVM
-    {
-        public List<ActCardVM> ActList1 { get; set; }
-        public List<ActCardVM> ActList2 { get; set; }
-        public List<ActCardVM> ActList3 { get; set; }
-        public List<ActCardVM> ActList4 { get; set; }
-        public List<ActCardVM> ActList5 { get; set; }
-        public List<ActCardVM> ActList6 { get; set; }
-
-		public bool IsMore1 { get; set; }
-        public bool IsMore2 { get; set; }
-        public bool IsMore3 { get; set; }
-        public bool IsMore4 { get; set; }
-        public bool IsMore5 { get; set; }
-        public bool IsMore6 { get; set; }
-
+	public class ActLinkVM
+	{
         public bool IsLiked { get; set; } // 用戶是否按過讚
         public string Category1Name { get; set; }
         public string Category11Name { get; set; }
-
-
         public int ActID { get; set; }
         public string Name { get; set; }
-
-
-        public string Description { get; set; }
-
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
         public Nullable<System.DateTime> ApplyStartDate { get; set; }

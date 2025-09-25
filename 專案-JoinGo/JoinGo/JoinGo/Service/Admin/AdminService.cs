@@ -492,7 +492,35 @@ namespace JoinGo.Service.Admin
 
         #endregion
 
+        #region 我的收藏
+        public List<ActLinkVM> GetActivityLike()
+        {
+            using (JoinGoEntities db = new JoinGoEntities())
+			{
+				var query = db.ActivityLike.AsQueryable();
+                query = query.Where(mf => mf.ACID == AuthorModel.Current.ACID && mf.IsLiked == true)//取出自己收藏的資料
+                             .OrderByDescending(mf => mf.Created);   // 新到舊
 
+			
+				//將資料存到ViewModel
+				var result = query.Select(a => new ActLinkVM
+                {
+                    ActID = a.ActID,
+                    Name = a.Activity.Name,
+                    ViewCount = a.Activity.ViewCount,
+                    LikeCount = a.Activity.LikeCount,
+                    IsLiked =  true,
+                    PicFile = a.Activity.PicFile,
+                    Category1Name = a.Activity.Category1.Name,
+                    Category11Name = a.Activity.Category11.Name
+				}).ToList();
+
+				return result;
+            }
+        }
+
+        
+        #endregion
 
 
     }

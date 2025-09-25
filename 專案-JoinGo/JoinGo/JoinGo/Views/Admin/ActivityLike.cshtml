@@ -1,0 +1,155 @@
+﻿@model List<JoinGo.Models.ViewModels.ActLinkVM>
+@using JoinGo.Models.Author;
+@{
+    ViewBag.Title = "我的收藏";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+
+<article class="main-content" id="content">
+    <section class="containerArea">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <nav aria-label="breadCrumbs">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="@(AuthorModel.Current.Role == "User" ? "/User/Index" : AuthorModel.Current.Role == "Admin" ? "/User/Index"  : "/Home/Index" )">首頁</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">我的收藏</li>
+                        </ol>
+                    </nav>
+                    <div>
+                        <a href="#C" id="AC" name="C" title="中央內容區塊 Alt + C" accesskey="C" class="d-none d-lg-inline-block mb-2">:::</a>
+                    </div>
+                    <div class="container card">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="titleText">
+                                    <h2>我的收藏</h2>
+                                </div>
+                                <div class="container my-4">
+                                    <div class="row g-4">
+                                        @if (Model.Any())
+                                        {
+                                            foreach (var m in Model)
+                                            {
+                                                <!-- 單一收藏卡片 -->
+                                                <div class="col-12 col-sm-6 col-lg-4">
+                                                    <div class="card h-100 shadow-sm border-0">
+                                                        <div class="position-relative">
+                                                            <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)" class="card-img-top rounded-top" alt="活動圖片">
+                                                            <!-- 收藏愛心 -->
+                                                            <button class="btn btn-light position-absolute top-0 end-0 m-2 rounded-circle like-btn" data-actid="@m.ActID">
+                                                                <i class="fa fa-heart text-danger"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="card-body d-flex flex-column">
+                                                            <h5 class="card-title text-truncate">@m.Name</h5>
+                                                            <p class="card-text text-muted mb-2">
+                                                                <i class="fa fa-calendar me-2"></i> @(m?.StartDate?.ToString("yyyy/MM/dd") ?? "") ~ @(m?.EndDate?.ToString("yyyy/MM/dd") ?? "")
+                                                            </p>
+
+                                                            <p class="card-text text-muted mb-2">
+                                                                <i class="fa fa-map-marker me-2"></i>@m.Location
+                                                            </p>
+
+                                                            <!-- 標籤 -->
+                                                            <div class="d-flex">
+                                                                @if (!string.IsNullOrEmpty(m.Category1Name))
+                                                                {
+                                                                    <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                                                                }
+                                                                @if (!string.IsNullOrEmpty(m.Category11Name))
+                                                                {
+                                                                    <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                                                                }
+                                                            </div>
+
+
+                                                            <!-- 瀏覽數 & 喜歡數 -->
+                                                            <div class="d-flex align-items-center gap-3 text-muted small">
+                                                                <div class="d-flex align-items-center">
+                                                                    <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                                                                         alt="views" width="16" class="me-1">
+                                                                    <span>@(m.ViewCount ?? 0)</span>
+                                                                </div>
+
+                                                                <div class="d-flex align-items-center">
+                                                                    <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o")  me-1"
+                                                                       data-actid="@m.ActID"></i>
+                                                                    <span class="like-count">@(m.LikeCount ?? 0)</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })" class="btn btn-primary w-100 mt-auto">查看詳情</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>
+
+
+
+
+@section Scripts {
+    <script>
+
+
+$(document).on('click', '.like-btn', function (e) {
+    e.stopPropagation();
+    let btn = $(this);
+    let actId = btn.data('actid');
+    let card = btn.closest('.col-12');
+
+    // 點擊時先把 UI 標記為取消 (立即反應)
+    btn.find("i").removeClass('fa-heart').addClass('fa-heart-o');
+
+    $.ajax({
+        url: '@Url.Action("ToggleLike", "User")',
+        type: 'POST',
+        data: { actId: actId },
+        success: function (data) {
+            if (!data.success) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: data.message,
+                    confirmButtonText: '確定'
+                });
+                // 如果失敗就把 UI 狀態切回來
+                btn.find("i").removeClass('fa-heart-o').addClass('fa-heart text-danger');
+                return;
+            }
+
+            if (!data.isLiked) {
+                // 成功取消收藏 → 移除卡片
+                card.fadeOut(300, function () { $(this).remove(); });
+            }
+        },
+        error: function () {
+            Swal.fire({
+                icon: 'error',
+                title: '錯誤',
+                text: '取消收藏失敗，請稍後再試'
+            });
+            // 如果失敗就把 UI 狀態切回來
+            btn.find("i").removeClass('fa-heart-o').addClass('fa-heart text-danger');
+        }
+    });
+});
+
+
+
+
+    </script>
+}

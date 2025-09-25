@@ -1,4 +1,5 @@
 ﻿@model JoinGo.Models.ViewModels.ActivityVM
+@using JoinGo.Models.Author;
 @{
     ViewBag.Title = "查看活動";
     //Layout = "~/Views/Shared/_LayoutUser.cshtml";
@@ -10,7 +11,9 @@
 
             <nav aria-label="breadCrumbs">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "User")">首頁</a></li>
+                    <li class="breadcrumb-item">
+                        <a href="@(AuthorModel.Current.Role == "User" ? "/User/Index" : AuthorModel.Current.Role == "Admin" ? "/User/Index"  : "/Home/Index" )">首頁</a>
+                    </li>
                     <li class="breadcrumb-item"><a href="@Url.Action("ActivityList", "Activity")">活動管理</a></li>
                     <li class="breadcrumb-item active" aria-current="page">查看活動</li>
                 </ol>
@@ -74,26 +77,26 @@
                                 <tr>
                                     <th scope="row" class="align-middle gray-dark">詳細說明</th>
                                     <td class="align-middle">@Html.Raw(Model.Description)</td>
-                               
-                                @*</tr>
-                                <tr>
-                                    <th scope="row" class="align-middle gray-dark">建檔人員</th>
-                                    <td class="align-middle">@Model.CreatorName</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row" class="align-middle gray-dark">建檔時間</th>
-                                    <td class="align-middle">@(Model.Created?.ToString("yyyy年MM月dd日 HH:mm"))</td>
-                                </tr>
-                               
-                                <tr>
-                                    <th scope="row" class="align-middle gray-dark">更新人員</th>
-                                    <td class="align-middle">@Model.UpdatorName</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row" class="align-middle gray-dark">更新時間</th>
-                                    <td class="align-middle">@Model.Updated</td>
-                                </tr>*@
-                                        
+
+                                    @*</tr>
+                                        <tr>
+                                            <th scope="row" class="align-middle gray-dark">建檔人員</th>
+                                            <td class="align-middle">@Model.CreatorName</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="align-middle gray-dark">建檔時間</th>
+                                            <td class="align-middle">@(Model.Created?.ToString("yyyy年MM月dd日 HH:mm"))</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th scope="row" class="align-middle gray-dark">更新人員</th>
+                                            <td class="align-middle">@Model.UpdatorName</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="align-middle gray-dark">更新時間</th>
+                                            <td class="align-middle">@Model.Updated</td>
+                                        </tr>*@
+
                             </tbody>
                         </table>
                     </div>

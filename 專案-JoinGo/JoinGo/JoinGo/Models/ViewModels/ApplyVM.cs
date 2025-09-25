@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
@@ -12,13 +13,16 @@ namespace JoinGo.Models.ViewModels
         public int ActID { get; set; }
         public int ACID { get; set; }
         [Required(ErrorMessage = "請輸入姓名")]
+        [DisplayName("姓名")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "請輸入Email")]
         [EmailAddress(ErrorMessage = "Email格式不正確")]
+        [DisplayName("Email")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "請輸入電話")]
+        [DisplayName("聯絡電話")]
         public string Phone { get; set; }
         public Nullable<System.DateTime> RegistrationDate { get; set; }
         public Nullable<int> Status { get; set; }

@@ -1,133 +1,654 @@
 ﻿@{
     ViewBag.Title = "首頁";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
 }
 
-
-@TempData["Msg"]
-@TempData["Error"]
-
-@* 註冊modal *@
-<div class="modal fade" id="RegisterModal" tabindex="-1" aria-labelledby="RegisterModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-4">
-            <div class="d-flex justify-content-end">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- 對應內容 -->
+<div class="tab-content mt-3 m-auto" style="width:90%;background:none;">
+    <!-- 精選推薦 -->
+    <div class="tab-pane fade show active" id="section1" role="tabpanel">
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2" aria-label="Slide 3"></button>
             </div>
-            <div class="modal-body" id="RegisterModalBody">
-
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/image/Banner1.png" class="d-block rounded-4 m-auto w-100" alt="第一張圖片">
+                </div>
+                <div class="carousel-item">
+                    <img src="/image/Banner2.png" class="d-block rounded-4 m-auto w-100" alt="第二張圖片">
+                </div>
+                <div class="carousel-item">
+                    <img src="/image/Banner3.png" class="d-block rounded-4 m-auto w-100" alt="第三張圖片">
+                </div>
             </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">上一張</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">下一張</span>
+            </button>
         </div>
+
+
+
+        <h2 class="p-4 fa-2x font-weight-bold">精選推薦</h2>
+        <div id="activity-container-1" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @if (Model.ActList1.Count > 1)
+            {
+                foreach (var m in Model.ActList1)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm d-flex flex-column">
+                            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })">
+                                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)"
+                                     class="card-img-top" alt="@m.Name">
+                                <div class="card-body">
+                                    <p class="text-secondary fa">
+                                        @(m?.StartDate?.ToString("yyyy/MM/dd") ?? "") ~ @(m?.EndDate?.ToString("yyyy/MM/dd") ?? "")
+                                    </p>
+                                    <h5 class="card-title">@m.Name</h5>
+                                    <hr />
+                                </div>
+                            </a>
+                            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 mt-auto">
+                                <!-- 標籤 -->
+                                <div class="d-flex">
+                                    @if (!string.IsNullOrEmpty(m.Category1Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(m.Category11Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                                    }
+                                </div>
+
+                                <!-- 瀏覽數 & 喜歡數 -->
+                                <div class="d-flex align-items-center gap-3 text-muted small">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                                             alt="views" width="16" class="me-1">
+                                        <span>@(m.ViewCount ?? 0)</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o") like-btn me-1"
+                                           data-actid="@m.ActID" style="cursor:pointer;"></i>
+                                        <span class="like-count">@(m.LikeCount ?? 0)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        @if (Model.IsMore1)
+        {
+            <div class="d-flex justify-content-center w-100 mb-4">
+                <button id="load-more-btn-1" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold">
+                    更多活動 <i class="fa fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        }
     </div>
+
+    <!-- 學習成長 -->
+    <div class="tab-pane fade" id="section2" role="tabpanel">
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/image/Banner1.png" class="d-block rounded-4 m-auto w-100" alt="第一張圖片">
+                </div>
+                <div class="carousel-item">
+                    <img src="/image/Banner2.png" class="d-block rounded-4 m-auto w-100" alt="第二張圖片">
+                </div>
+                <div class="carousel-item">
+                    <img src="/image/Banner3.png" class="d-block rounded-4 m-auto w-100" alt="第三張圖片">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">上一張</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">下一張</span>
+            </button>
+        </div>
+
+
+
+        <h2 class="p-4 fa-2x font-weight-bold">學習成長</h2>
+        <div id="activity-container-2" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @if (Model.ActList2.Count > 1)
+            {
+                foreach (var m in Model.ActList2)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm d-flex flex-column">
+                            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })">
+                                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)"
+                                     class="card-img-top" alt="@m.Name">
+                                <div class="card-body">
+                                    <p class="text-secondary fa">
+                                        @(m?.StartDate?.ToString("yyyy/MM/dd") ?? "") ~ @(m?.EndDate?.ToString("yyyy/MM/dd") ?? "")
+                                    </p>
+                                    <h5 class="card-title">@m.Name</h5>
+                                    <hr />
+                                </div>
+                            </a>
+                            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 mt-auto">
+                                <!-- 標籤 -->
+                                <div class="d-flex">
+                                    @if (!string.IsNullOrEmpty(m.Category1Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(m.Category11Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                                    }
+                                </div>
+
+                                <!-- 瀏覽數 & 喜歡數 -->
+                                <div class="d-flex align-items-center gap-3 text-muted small">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                                             alt="views" width="16" class="me-1">
+                                        <span>@(m.ViewCount ?? 0)</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o") like-btn me-1"
+                                           data-actid="@m.ActID" style="cursor:pointer;"></i>
+                                        <span class="like-count">@(m.LikeCount ?? 0)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        @if (Model.IsMore2)
+        {
+            <div class="d-flex justify-content-center  w-100 mb-4">
+                <button id="load-more-btn-2" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold">
+                    更多活動 <i class="fa fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        }
+    </div>
+
+    <!-- 藝文休閒 -->
+    <div class="tab-pane fade" id="section3" role="tabpanel">
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/image/Banner1.png" class="d-block rounded-4 m-auto w-100" alt="第一張圖片">
+                </div>
+                <div class="carousel-item">
+                    <img src="/image/Banner2.png" class="d-block rounded-4 m-auto w-100" alt="第二張圖片">
+                </div>
+                <div class="carousel-item">
+                    <img src="/image/Banner3.png" class="d-block rounded-4 m-auto w-100" alt="第三張圖片">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">上一張</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">下一張</span>
+            </button>
+        </div>
+
+
+
+        <h2 class="p-4 fa-2x font-weight-bold">藝文休閒</h2>
+        <div id="activity-container-3" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @if (Model.ActList3.Count > 1)
+            {
+                foreach (var m in Model.ActList3)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm d-flex flex-column">
+                            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })">
+                                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)"
+                                     class="card-img-top" alt="@m.Name">
+                                <div class="card-body">
+                                    <p class="text-secondary fa">
+                                        @(m?.StartDate?.ToString("yyyy/MM/dd") ?? "") ~ @(m?.EndDate?.ToString("yyyy/MM/dd") ?? "")
+                                    </p>
+                                    <h5 class="card-title">@m.Name</h5>
+                                    <hr />
+                                </div>
+                            </a>
+                            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 mt-auto">
+                                <!-- 標籤 -->
+                                <div class="d-flex">
+                                    @if (!string.IsNullOrEmpty(m.Category1Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(m.Category11Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                                    }
+                                </div>
+
+                                <!-- 瀏覽數 & 喜歡數 -->
+                                <div class="d-flex align-items-center gap-3 text-muted small">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                                             alt="views" width="16" class="me-1">
+                                        <span>@(m.ViewCount ?? 0)</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o") like-btn me-1"
+                                           data-actid="@m.ActID" style="cursor:pointer;"></i>
+                                        <span class="like-count">@(m.LikeCount ?? 0)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        @if (Model.IsMore3)
+        {
+            <div class="d-flex justify-content-center w-100 mb-4">
+                <button id="load-more-btn-3" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold">
+                    更多活動 <i class="fa fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        }
+    </div>
+
+    <!-- 生活體驗 -->
+    <div class="tab-pane fade" id="section4" role="tabpanel">
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/image/Banner1.png" class="d-block rounded-4 m-auto w-100" alt="第一張圖片">
+                </div>
+                <div class="carousel-item">
+                    <img src="/image/Banner2.png" class="d-block rounded-4 m-auto w-100" alt="第二張圖片">
+                </div>
+                <div class="carousel-item">
+                    <img src="/image/Banner3.png" class="d-block rounded-4 m-auto w-100" alt="第三張圖片">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">上一張</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">下一張</span>
+            </button>
+        </div>
+
+
+
+        <h2 class="p-4 fa-2x font-weight-bold">生活體驗</h2>
+        <div id="activity-container-4" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @if (Model.ActList4.Count > 1)
+            {
+                foreach (var m in Model.ActList4)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm d-flex flex-column">
+                            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })">
+                                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)"
+                                     class="card-img-top" alt="@m.Name">
+                                <div class="card-body">
+                                    <p class="text-secondary fa">
+                                        @(m?.StartDate?.ToString("yyyy/MM/dd") ?? "") ~ @(m?.EndDate?.ToString("yyyy/MM/dd") ?? "")
+                                    </p>
+                                    <h5 class="card-title">@m.Name</h5>
+                                    <hr />
+                                </div>
+                            </a>
+                            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 mt-auto">
+                                <!-- 標籤 -->
+                                <div class="d-flex">
+                                    @if (!string.IsNullOrEmpty(m.Category1Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(m.Category11Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                                    }
+                                </div>
+
+                                <!-- 瀏覽數 & 喜歡數 -->
+                                <div class="d-flex align-items-center gap-3 text-muted small">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                                             alt="views" width="16" class="me-1">
+                                        <span>@(m.ViewCount ?? 0)</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o") like-btn me-1"
+                                           data-actid="@m.ActID" style="cursor:pointer;"></i>
+                                        <span class="like-count">@(m.LikeCount ?? 0)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        @if (Model.IsMore4)
+        {
+            <div class="d-flex justify-content-center w-100 mb-4">
+                <button id="load-more-btn-4" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold">
+                    更多活動 <i class="fa fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        }
+    </div>
+
+    <!-- 健康樂活 -->
+    <div class="tab-pane fade" id="section5" role="tabpanel">
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/image/Banner1.png" class="d-block rounded-4 m-auto w-100" alt="第一張圖片">
+                </div>
+                <div class="carousel-item">
+                    <img src="/image/Banner2.png" class="d-block rounded-4 m-auto w-100" alt="第二張圖片">
+                </div>
+                <div class="carousel-item">
+                    <img src="/image/Banner3.png" class="d-block rounded-4 m-auto w-100" alt="第三張圖片">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">上一張</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">下一張</span>
+            </button>
+        </div>
+
+
+
+        <h2 class="p-4 fa-2x font-weight-bold">健康樂活</h2>
+        <div id="activity-container-5" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @if (Model.ActList5.Count > 1)
+            {
+                foreach (var m in Model.ActList5)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm d-flex flex-column">
+                            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })">
+                                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)"
+                                     class="card-img-top" alt="@m.Name">
+                                <div class="card-body">
+                                    <p class="text-secondary fa">
+                                        @(m?.StartDate?.ToString("yyyy/MM/dd") ?? "") ~ @(m?.EndDate?.ToString("yyyy/MM/dd") ?? "")
+                                    </p>
+                                    <h5 class="card-title">@m.Name</h5>
+                                    <hr />
+                                </div>
+                            </a>
+                            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 mt-auto">
+                                <!-- 標籤 -->
+                                <div class="d-flex">
+                                    @if (!string.IsNullOrEmpty(m.Category1Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(m.Category11Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                                    }
+                                </div>
+
+                                <!-- 瀏覽數 & 喜歡數 -->
+                                <div class="d-flex align-items-center gap-3 text-muted small">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                                             alt="views" width="16" class="me-1">
+                                        <span>@(m.ViewCount ?? 0)</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o") like-btn me-1"
+                                           data-actid="@m.ActID" style="cursor:pointer;"></i>
+                                        <span class="like-count">@(m.LikeCount ?? 0)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        @if (Model.IsMore5)
+        {
+            <div class="d-flex justify-content-center w-100 mb-4">
+                <button id="load-more-btn-5" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold">
+                    更多活動 <i class="fa fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        }
+    </div>
+
+    <!-- 生活關懷 -->
+    <div class="tab-pane fade" id="section6" role="tabpanel">
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/image/Banner1.png" class="d-block rounded-4 m-auto w-100" alt="第一張圖片">
+                </div>
+                <div class="carousel-item">
+                    <img src="/image/Banner2.png" class="d-block rounded-4 m-auto w-100" alt="第二張圖片">
+                </div>
+                <div class="carousel-item">
+                    <img src="/image/Banner3.png" class="d-block rounded-4 m-auto w-100" alt="第三張圖片">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">上一張</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">下一張</span>
+            </button>
+        </div>
+
+
+
+        <h2 class="p-4 fa-2x font-weight-bold">生活關懷</h2>
+        <div id="activity-container-6" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @if (Model.ActList6.Count > 1)
+            {
+                foreach (var m in Model.ActList6)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm d-flex flex-column">
+                            <a href="@Url.Action("DetailsAct", "User", new { ActID = m.ActID })">
+                                <img src="@Url.Content("~/Uploads/ActivityPics/" + m.PicFile)"
+                                     class="card-img-top" alt="@m.Name">
+                                <div class="card-body">
+                                    <p class="text-secondary fa">
+                                        @(m?.StartDate?.ToString("yyyy/MM/dd") ?? "") ~ @(m?.EndDate?.ToString("yyyy/MM/dd") ?? "")
+                                    </p>
+                                    <h5 class="card-title">@m.Name</h5>
+                                    <hr />
+                                </div>
+                            </a>
+                            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 mt-auto">
+                                <!-- 標籤 -->
+                                <div class="d-flex">
+                                    @if (!string.IsNullOrEmpty(m.Category1Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category1Name</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(m.Category11Name))
+                                    {
+                                        <span class="text-primary fw-semibold me-2">#@m.Category11Name</span>
+                                    }
+                                </div>
+
+                                <!-- 瀏覽數 & 喜歡數 -->
+                                <div class="d-flex align-items-center gap-3 text-muted small">
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://static.accupass.com/frontend/image/common/event_card_view.svg"
+                                             alt="views" width="16" class="me-1">
+                                        <span>@(m.ViewCount ?? 0)</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa @(m.IsLiked ? "fa-heart liked" : "fa-heart-o") like-btn me-1"
+                                           data-actid="@m.ActID" style="cursor:pointer;"></i>
+                                        <span class="like-count">@(m.LikeCount ?? 0)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        @if (Model.IsMore6)
+        {
+            <div class="d-flex justify-content-center w-100 mb-4">
+                <button id="load-more-btn-6" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold">
+                    更多活動 <i class="fa fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        }
+    </div>
+
 </div>
 
 
-
-@* 登入modal *@
-<div class="modal fade" id="LoginModal" tabindex="-1" aria-labelledby="LoginModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-4">
-            <div class="d-flex justify-content-end">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="LoginModalBody">
-
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-<!--  忘記密碼Modal -->
-<div class="modal fade" id="ForgotPasswordModal" tabindex="-1" aria-labelledby="ForgotPasswordLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-4">
-            <div class="d-flex justify-content-end">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="ForgotPasswordModalContent">
-
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!--  重設密碼Modal -->
-<div class="modal fade" id="ResetPasswordModal" tabindex="-1" aria-labelledby="ResetPasswordLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-4">
-            <div class="d-flex justify-content-end">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="ResetPasswordModalContent">
-
-            </div>
-        </div>
-    </div>
-</div>
 
 
 @section Scripts {
     <script>
 
-        $(document).on('click', '#ChgVCodeBtn', function () {
-            $('#Veri1').attr("src", "/Home/VerificationCode?t=" + Math.random());
-        });
 
-        $(function () {
+         //無限滾動
+        function initLoadMore(tabIndex) {
+            let page = 1;
+            let btn = $(`#load-more-btn-${tabIndex}`);
+            let container = $(`#activity-container-${tabIndex}`);
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('resetToken');
+            btn.click(function () {
+                page++;
+                console.log(`Tab ${tabIndex} 載入第 ${page} 頁`);
 
-            if (token) {
-                // 載入 ResetPasswordPartial 並顯示 Modal
-                $.get('/Home/ResetPasswordPartial', { token: token }, function (html) {
-                    $('#ResetPasswordModal .modal-body').html(html);
-                    $('#ResetPasswordModal').modal('show');
-                });
-            }
-
-
-           if ('@TempData["Error"]' != '') {
-                Swal.fire({
-                    title: "@TempData["Error"]",
-                    icon: "error",
-                    confirmButtonText: "確定"
-                });
-            }
-
-            if ('@TempData["Msg"]' != '') {
-                Swal.fire({
-                    title: "@TempData["Msg"]",
-                    icon: "success",
-                    confirmButtonText: "確定"
-                });
-            }
-
-            $('.ShowRegister').click(function () {
-                $.get('@Url.Action("RegisterPartial", "Home")', function (html) {
-                $('#RegisterModalBody').html(html);
-                $('#RegisterModal').modal('show');
+                $.ajax({
+                    url: '@Url.Action("LoadMoreActivities", "User")',
+                    type: 'GET',
+                    data: { page: page, tab: tabIndex },
+                    success: function (data) {
+                        if (data.trim() === '') {
+                            btn.hide();
+                        } else {
+                            container.append(data);
+                        }
+                    },
+                    error: function () {
+                        alert('載入更多活動失敗');
+                    }
                 });
             });
+        }
 
+    //按愛心
+    $(document).on('click', '.like-btn', function (e) {
+        e.stopPropagation(); // 阻止冒泡，避免觸發外層 <a>
+        let btn = $(this);
+        let actId = btn.data('actid');
 
-            $('.ShowLogin').click(function () {
-                $.get('@Url.Action("LoginPartial", "Home")', function (html) {
-                $('#LoginModalBody').html(html);
-                $('#LoginModal').modal('show');
+        $.ajax({
+            url: '@Url.Action("ToggleLike", "User")',
+            type: 'POST',
+            data: { actId: actId },
+            success: function (data) {
+                if (!data.success) {
+                    // 未登入處理
+                    Swal.fire({
+                        icon: 'warning',
+                        title: data.message,
+                        confirmButtonText: '確定'
+                    });
+                    return;
+                }
+
+                // 更新數字
+                btn.siblings('.like-count').text(data.likeCount);
+
+                // 切換愛心實心/空心
+                if (data.isLiked) {
+                    btn.removeClass('fa-heart-o').addClass('fa-heart liked');
+                } else {
+                    btn.removeClass('fa-heart liked').addClass('fa-heart-o');
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: '錯誤',
+                    text: '按讚失敗，請稍後再試'
                 });
-            });
-
-
-
-
-
+            }
         });
+    });
 
 
 
+    //1-6代表精選、學習成長頁籤
+    $(function(){
+        for (let i = 1; i <= 6; i++) {
+            initLoadMore(i);
+        }
+    });
 
     </script>
 }

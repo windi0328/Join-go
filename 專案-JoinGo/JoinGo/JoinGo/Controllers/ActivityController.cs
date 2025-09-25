@@ -51,7 +51,7 @@ namespace JoinGo.Controllers
         //新增(活動管理)
         public ActionResult CreateActivity()
         {
-            if (!ChkAuthor.CheckSession()) { return RedirectToAction("LogOut", "Home"); }
+            if (!ChkAuthor.CheckSession() && (AuthorModel.Current.Role == "User" || AuthorModel.Current.Role == "Admin")) { return RedirectToAction("LogOut", "Home"); }
             using (JoinGoEntities db = new JoinGoEntities())
             {
 
@@ -80,6 +80,8 @@ namespace JoinGo.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateActivity(ActivityVM data, HttpPostedFileBase PicFile)
         {
+            if (!ChkAuthor.CheckSession() && (AuthorModel.Current.Role == "User" || AuthorModel.Current.Role == "Admin")) { return RedirectToAction("LogOut", "Home"); }
+
             if (!ModelState.IsValid)
             {
                 return Json(new { success = false, message = "資料驗證失敗" });
@@ -126,7 +128,7 @@ namespace JoinGo.Controllers
         // 編輯 (活動管理)
         public ActionResult EditActivity(int ActID)
         {
-            if (!ChkAuthor.CheckSession()) { return RedirectToAction("LogOut", "Home"); }
+            if (!ChkAuthor.CheckSession() && (AuthorModel.Current.Role == "User" || AuthorModel.Current.Role == "Admin")) { return RedirectToAction("LogOut", "Home"); }
             using (JoinGoEntities db = new JoinGoEntities())
             {
                 var activity = db.Activity.Find(ActID);
@@ -164,6 +166,8 @@ namespace JoinGo.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditActivity(int ActID, ActivityVM data, HttpPostedFileBase PicFile)
         {
+            if (!ChkAuthor.CheckSession() && (AuthorModel.Current.Role == "User" || AuthorModel.Current.Role == "Admin")) { return RedirectToAction("LogOut", "Home"); }
+
             if (!ModelState.IsValid)
             {
                 return Json(new { success = false, message = "資料驗證失敗" });
@@ -210,6 +214,7 @@ namespace JoinGo.Controllers
 
         public ActionResult DetailsActivity(int ActID)
         {
+            if (!ChkAuthor.CheckSession() && (AuthorModel.Current.Role == "User" || AuthorModel.Current.Role == "Admin")) { return RedirectToAction("LogOut", "Home"); }
             // 驗證登入或權限
             if (!ChkAuthor.CheckSession())
             {
@@ -278,7 +283,7 @@ namespace JoinGo.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteActivity(int ActID)
         {
-            if (!ChkAuthor.CheckSession()) { return RedirectToAction("LogOut", "Home"); }
+            if (!ChkAuthor.CheckSession() && (AuthorModel.Current.Role == "User" || AuthorModel.Current.Role == "Admin")) { return RedirectToAction("LogOut", "Home"); }
             string result = ActService.DeleteActivity(ActID);
             return Json(result, JsonRequestBehavior.AllowGet);
 
