@@ -124,22 +124,23 @@
         <tbody>
             @foreach (var item in Model)
             {
-                var rowClass = item.Status == 2 ? "cancelled-row" : "";
+                bool isCancelled = item.Status == 2;
                 bool isStarted = item.StartDate.HasValue && item.StartDate.Value <= DateTime.Now;
-
-                <tr class="@rowClass">
+                string statusColor = isCancelled ? "red" : "green";
+                <tr>
                     <td>@item.ActTitle</td>
                     <td>@item.RegistrationDate</td>
                     <td>@(item.StartDate.HasValue ? item.StartDate.Value.ToString("yyyy-MM-dd HH:mm") : "-")</td>
-                    <td>@(item.Status == 1 ? "已報名" : "已取消")</td>
+                    <td style="color:@statusColor;">@(isCancelled ? "已取消" : "已報名")</td>
                     <td>
                         <a href="@Url.Action("MyApplyDetails", "User", new { id = item.AID })" class="btn-detail">查看詳細</a>
-                        <a href="@Url.Action("MyEditApply", "User", new { id = item.AID })" class="btn-edit @(isStarted ? "disabled" : "")">編輯</a>
-                        <button type="button" class="btn-cancel btn-cancel-apply @(isStarted ? "disabled" : "")" data-id="@item.AID">取消</button>
+                        <a href="@Url.Action("MyEditApply", "User", new { id = item.AID })" class="btn-edit @(isStarted || isCancelled ? "disabled" : "")">編輯</a>
+                        <button type="button" class="btn-cancel btn-cancel-apply @(isStarted || isCancelled ? "disabled" : "")" data-id="@item.AID">取消</button>
                     </td>
                 </tr>
             }
         </tbody>
+
     </table>
 </div>
 <script>
@@ -170,6 +171,15 @@
                                 Swal.fire("錯誤", data.message, "error");
                             }
                         });
+                    if (data.success) {
+                        Swal.fire("已取消！", data.message, "success").then(() => {
+                            const row = btn.closest("tr");
+                            row.querySelector(".btn-edit").classList.add("disabled");
+                            btn.classList.add("disabled");
+                            row.querySelector("td:nth-child(4)").style.color = "red"; // 狀態改紅
+                            row.querySelector("td:nth-child(4)").textContent = "已取消";
+                        });
+                    }
                 }
             });
         });

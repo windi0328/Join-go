@@ -290,6 +290,39 @@ namespace JoinGo.Controllers
 
 
         }
+
+        public ActionResult ApplyList(int ActID)
+        {
+            if (!ChkAuthor.CheckSession() && (AuthorModel.Current.Role == "User" || AuthorModel.Current.Role == "Admin"))
+            {
+                return RedirectToAction("LogOut", "Home");
+            }
+
+            using (JoinGoEntities db = new JoinGoEntities())
+            {
+                var activity = db.Activity.Find(ActID);
+                if (activity == null) return HttpNotFound();
+
+                var model = db.Apply
+                    .Where(a => a.ActID == ActID)
+                    .Select(a => new ApplyListVM
+                    {
+                        AID = a.AID,
+                        ActID = a.ActID,
+                        ActTitle = activity.Name,
+                        RegistrationDate = a.RegistrationDate,
+                        StartDate = activity.StartDate,
+                        Status = (int)a.Status,
+                        ApplyID = a.AID,
+                        Name = a.Name,
+                        Email = a.Email,
+                        Phone = a.Phone
+                    })
+                    .ToList();
+
+                return View(model);
+            }
+        }
     }
 }
 

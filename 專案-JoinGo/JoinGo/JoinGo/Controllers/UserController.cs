@@ -334,13 +334,19 @@ namespace JoinGo.Controllers
             {
                 return Json(new { success = false, message = "請先登入再報名" });
             }
-            
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     using (var db = new JoinGoEntities())
                     {
+                        var activity = db.Activity.FirstOrDefault(a => a.ActID == model.ActID);
+                        if (activity == null)
+                        {
+                            return Json(new { success = false, message = "找不到活動" });
+                        }
+
                         var apply = new Apply
                         {
                             ActID = model.ActID,
@@ -349,22 +355,32 @@ namespace JoinGo.Controllers
                             Email = model.Email,
                             Phone = model.Phone,
                             RegistrationDate = DateTime.Now,
-                            Status = 1, // 1代表已報名
-                            Creator = AuthorModel.Current?.ACID, // 可選，當前使用者ID
+                            Status = 1,
+                            Creator = AuthorModel.Current?.ACID,
                             Created = DateTime.Now,
                             CreatedIP = Request.UserHostAddress
                         };
 
                         db.Apply.Add(apply);
                         db.SaveChanges();
+
+                        // ✅ 報名成功後寄信
+                        var userService = new UserService();
+                        userService.SendRegisterMail(
+                            model.Email,
+                            model.Name,
+                            activity.Name,
+                            activity.StartDate,
+                            activity.EndDate
+                        );
                     }
-                    return Json(new { success = true, message = "報名成功！" });
+
+                    return Json(new { success = true, message = "報名成功！確認信已寄至您的信箱" });
                 }
                 catch (Exception ex)
                 {
                     logger.Debug("[UserController]錯誤function：Register 送出報名,錯誤訊息：" + ex.InnerException + ex.ToString());
                     return Json(new { success = false, message = "報名失敗：" + ex.Message });
-
                 }
             }
             return Json(new { success = false, message = "資料驗證失敗" });

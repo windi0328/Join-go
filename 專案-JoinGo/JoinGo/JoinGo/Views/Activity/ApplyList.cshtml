@@ -1,0 +1,67 @@
+﻿@model List<JoinGo.Models.ViewModels.ApplyListVM>
+
+@{
+    ViewBag.Title = "報名名單";
+    Layout = "~/Views/Shared/_LayoutBack.cshtml";
+}
+
+<div class="container mt-4">
+    <h3 class="mb-4" style="font-size:28px; color:darkblue;">
+    <i class="bi bi-people-fill"></i> @ViewBag.Title</h3>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover table-bordered mb-0 text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col"class="align-middle gray-dark" width="5%">序號</th>
+                        <th scope="col"class="align-middle gray-dark" width="20%">姓名</th>
+                        <th scope="col"class="align-middle gray-dark" width="25%">Email</th>
+                        <th scope="col"class="align-middle gray-dark" width="15%">電話</th>
+                        <th scope="col"class="align-middle gray-dark" width="20%">報名日期</th>
+                        <th scope="col"class="align-middle gray-dark" width="15%">狀態</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        int serial = 1;
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@serial</td>
+                                <td class="fw-bold">@item.Name</td>
+                                <td>@item.Email</td>
+                                <td>@item.Phone</td>
+                                <td>@(item.RegistrationDate?.ToString("yyyy/MM/dd") ?? "")</td>
+                                <td>
+                                    @if (item.Status == 1)
+                                    {
+                                        <span class="badge bg-success">已報名</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">已取消</span>
+                                    }
+                                </td>
+                            </tr>
+                            serial++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-3">目前沒有任何報名資料</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="@Url.Action("ActivityList", "Activity")" class="btn btn-primary">
+            <i class="bi bi-arrow-left-circle"></i> 返回活動列表
+        </a>
+    </div>
+</div>

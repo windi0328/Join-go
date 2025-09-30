@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
-using JoinGo.Models;
+﻿using JoinGo.Models;
 using JoinGo.Models.Author;
 using JoinGo.Models.ViewModels;
 using JoinGo.Service.Fn;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;  
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Web;
 
 
 namespace JoinGo.Service.User
@@ -213,7 +216,10 @@ namespace JoinGo.Service.User
                                         IsLiked = currentUserId != null && a.ActivityLike.Any(l => l.ACID == currentUserId && l.IsLiked),
                                         PicFile = a.PicFile,
                                         Category1Name = a.Category1.Name,
-                                        Category11Name = a.Category11.Name
+                                        Category11Name = a.Category11.Name,
+                                        StartDate = a.StartDate,
+                                        EndDate = a.EndDate,
+
                                     })
                                     .ToList();
 
@@ -233,7 +239,9 @@ namespace JoinGo.Service.User
                                              IsLiked = currentUserId != null && a.ActivityLike.Any(l => l.ACID == currentUserId && l.IsLiked),
                                              PicFile = a.PicFile,
                                              Category1Name = a.Category1.Name,
-                                             Category11Name = a.Category11.Name
+                                             Category11Name = a.Category11.Name,
+                                             StartDate = a.StartDate,
+                                             EndDate = a.EndDate,
                                          })
                                          .ToList();
 
@@ -251,7 +259,9 @@ namespace JoinGo.Service.User
                                                IsLiked = currentUserId != null && a.ActivityLike.Any(l => l.ACID == currentUserId && l.IsLiked),
                                                PicFile = a.PicFile,
                                                Category1Name = a.Category1.Name,
-                                               Category11Name = a.Category11.Name
+                                               Category11Name = a.Category11.Name,
+                                               StartDate = a.StartDate,
+                                               EndDate = a.EndDate,
                                            })
                                            .ToList();
                     var ActList4Full = db.Activity
@@ -268,7 +278,9 @@ namespace JoinGo.Service.User
                                       IsLiked = currentUserId != null && a.ActivityLike.Any(l => l.ACID == currentUserId && l.IsLiked),
                                       PicFile = a.PicFile,
                                       Category1Name = a.Category1.Name,
-                                      Category11Name = a.Category11.Name
+                                      Category11Name = a.Category11.Name,
+                                      StartDate = a.StartDate,
+                                      EndDate = a.EndDate,
                                   })
                                   .ToList();
 
@@ -286,7 +298,10 @@ namespace JoinGo.Service.User
                                        IsLiked = currentUserId != null && a.ActivityLike.Any(l => l.ACID == currentUserId && l.IsLiked),
                                        PicFile = a.PicFile,
                                        Category1Name = a.Category1.Name,
-                                       Category11Name = a.Category11.Name
+                                       Category11Name = a.Category11.Name,
+                                       StartDate = a.StartDate,
+                                       EndDate = a.EndDate,
+
                                    })
                                    .ToList();
 
@@ -305,7 +320,9 @@ namespace JoinGo.Service.User
                                        IsLiked = currentUserId != null && a.ActivityLike.Any(l => l.ACID == currentUserId && l.IsLiked),
                                        PicFile = a.PicFile,
                                        Category1Name = a.Category1.Name,
-                                       Category11Name = a.Category11.Name
+                                       Category11Name = a.Category11.Name,
+                                       StartDate = a.StartDate,
+                                       EndDate = a.EndDate,
                                    })
                                    .ToList();
                     // 組裝 ActCardVM
@@ -337,40 +354,68 @@ namespace JoinGo.Service.User
             }
         }
 
-            //public ActCardVM GetActCard()
-            //{
-            //    using (JoinGoEntities db = new JoinGoEntities())
-            //    {
+        //public ActCardVM GetActCard()
+        //{
+        //    using (JoinGoEntities db = new JoinGoEntities())
+        //    {
 
-            //        var ActList1 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now).OrderByDescending(o=>o.ApplyStartDate).Take(9); //精選
-            //        var ActList2 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==1).OrderByDescending(o => o.ApplyStartDate).Take(9); //學習成長
-            //        var ActList3 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==2).OrderByDescending(o => o.ApplyStartDate).Take(9); //藝文休閒
-            //        var ActList4 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==3).OrderByDescending(o => o.ApplyStartDate).Take(9); //生活體驗
-            //        var ActList5 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==4).OrderByDescending(o => o.ApplyStartDate).Take(9); //健康樂活
-            //        var ActList6 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==5).OrderByDescending(o => o.ApplyStartDate).Take(9); //生活關懷
+        //        var ActList1 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now).OrderByDescending(o=>o.ApplyStartDate).Take(9); //精選
+        //        var ActList2 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==1).OrderByDescending(o => o.ApplyStartDate).Take(9); //學習成長
+        //        var ActList3 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==2).OrderByDescending(o => o.ApplyStartDate).Take(9); //藝文休閒
+        //        var ActList4 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==3).OrderByDescending(o => o.ApplyStartDate).Take(9); //生活體驗
+        //        var ActList5 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==4).OrderByDescending(o => o.ApplyStartDate).Take(9); //健康樂活
+        //        var ActList6 = db.Activity.Where(o => o.ApplyStartDate <= DateTime.Now && o.ApplyEndDate >= DateTime.Now && o.Category==5).OrderByDescending(o => o.ApplyStartDate).Take(9); //生活關懷
 
-            //        var query = new ActCardVM
-            //        {
-            //            ActList1 = ActList1.ToList(),
-            //            ActList2 = ActList2.ToList(),
-            //            ActList3 = ActList3.ToList(),
-            //            ActList4 = ActList4.ToList(),
-            //            ActList5 = ActList5.ToList(),
-            //            ActList6 = ActList6.ToList(),
-            //            //為了判斷是否需要出現更多活動按鈕
-            //            IsMore1 = ActList1.Count() > 9,
-            //            IsMore2 = ActList2.Count() > 9,
-            //            IsMore3 = ActList3.Count() > 9,
-            //            IsMore4 = ActList4.Count() > 9,
-            //            IsMore5 = ActList5.Count() > 9,
-            //            IsMore6 = ActList6.Count() > 9,
-            //        };
-            //        return query;
-            //    }
-            //}
-            #endregion
+        //        var query = new ActCardVM
+        //        {
+        //            ActList1 = ActList1.ToList(),
+        //            ActList2 = ActList2.ToList(),
+        //            ActList3 = ActList3.ToList(),
+        //            ActList4 = ActList4.ToList(),
+        //            ActList5 = ActList5.ToList(),
+        //            ActList6 = ActList6.ToList(),
+        //            //為了判斷是否需要出現更多活動按鈕
+        //            IsMore1 = ActList1.Count() > 9,
+        //            IsMore2 = ActList2.Count() > 9,
+        //            IsMore3 = ActList3.Count() > 9,
+        //            IsMore4 = ActList4.Count() > 9,
+        //            IsMore5 = ActList5.Count() > 9,
+        //            IsMore6 = ActList6.Count() > 9,
+        //        };
+        //        return query;
+        //    }
+        //}
+        #endregion
 
+        public void SendRegisterMail(string toEmail, string userName, string actTitle, DateTime? actStart, DateTime? actEnd)
+        {
+            string account = ConfigurationManager.AppSettings["MailAccount"];
+            string password = ConfigurationManager.AppSettings["MailPassword"];
+            string host = ConfigurationManager.AppSettings["MailHost"];
+            int port = int.Parse(ConfigurationManager.AppSettings["MailPort"]);
 
+            string subject = $"活動報名成功通知 - {actTitle}";
+            string body = $@"
+                <p>親愛的 {userName} 您好，</p>
+                <p>您已成功報名活動：<strong>{actTitle}</strong></p>
+                <p>活動時間：{actStart?.ToString("yyyy/MM/dd")} ~ {actEnd?.ToString("yyyy/MM/dd")}</p>
+                <br/>
+                <p style='color:gray;font-size:12px;'>本信件由系統自動發送，請勿回覆。</p>
+                ";
 
+            using (var message = new MailMessage(account, toEmail))
+            {
+                message.Subject = subject;
+                message.Body = body;
+                message.IsBodyHtml = true;
+
+                using (var client = new SmtpClient(host, port))
+                {
+                    client.Credentials = new NetworkCredential(account, password);
+                    client.EnableSsl = true;
+                    client.Send(message);
+                }
+            }
         }
+    }
 }

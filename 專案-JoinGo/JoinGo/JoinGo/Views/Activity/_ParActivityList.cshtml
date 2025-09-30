@@ -17,9 +17,9 @@
             <th scope="col" class="align-middle gray-dark" width="5%">序號</th>
              <th scope="col" class="align-middle gray-dark" width="10%">活動類別</th>
             <th scope="col" class="align-middle gray-dark" width="10%">活動名稱</th>
-            <th scope="col" class="align-middle gray-dark" width="15%">活動時間</th>
-            <th scope="col" class="align-middle gray-dark" width="15%">活動報名期間</th>
-            <th scope="col" class="align-middle gray-dark" width="15%">操作</th>
+            <th scope="col" class="align-middle gray-dark" width="13%">活動時間</th>
+            <th scope="col" class="align-middle gray-dark" width="13%">活動報名期間</th>
+            <th scope="col" class="align-middle gray-dark" width="19%">操作</th>
         </tr>
     </thead>
     <tbody>
@@ -37,9 +37,9 @@
                     <td>
                         <a href="javascript:void(0);" onclick="Details(@m.ActID);" class="btn btn-secondary">查看</a>
 
-                        <a href="@Url.Action("EditActivity", "Activity",new{ActID = m.ActID, page = @ViewBag.page, SearchArea = @ViewBag.SearchArea, SearchNineArea = @ViewBag.SearchNineArea, SearchSchoolType = @ViewBag.SearchSchoolType, SearchClassProp = @ViewBag.SearchClassProp, Search = @ViewBag.Search})"onclick="Edit(@m.ActID);" class="btn btn-main">編輯</a>
-
+                        <a href="@Url.Action("EditActivity", "Activity",new{ActID = m.ActID, page = @ViewBag.page, SearchArea = @ViewBag.SearchArea, SearchNineArea = @ViewBag.SearchNineArea, SearchSchoolType = @ViewBag.SearchSchoolType, SearchClassProp = @ViewBag.SearchClassProp, Search = @ViewBag.Search})" onclick="Edit(@m.ActID);" class="btn btn-main">編輯</a>
                         <a href="javascript:void(0);" onclick="DeleteFun(@m.ActID);" class="btn btn-danger">刪除</a>
+                        <a href="@Url.Action("ApplyList", "Activity", new { ActID = m.ActID })" class="btn btn-info">查看報名名單</a>
                     </td>
                 </tr>
                 serialNumber++;
@@ -77,9 +77,6 @@
         });
     }
 
-
-
-
     function DeleteFun(ActID) {
             var page = $("#Page").val();
             Swal.fire({
@@ -107,6 +104,7 @@
                     });
                 }
             })
+            
         }
 
 </script>
